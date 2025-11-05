@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MemberController {
 
-    // 로그인
+    // 로그인 
     @PutMapping("/api/members/login")
     public String loginMember(){
         
