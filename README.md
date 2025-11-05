@@ -7,6 +7,7 @@
 ---
 
 ## 📁 프로젝트 구조
+```
 src
 ├── main
 │ ├── java
@@ -23,6 +24,7 @@ src
 │ ├── application-local.yml
 │ └── application-prod.yml
 └── test/
+```
 
 ---
 
