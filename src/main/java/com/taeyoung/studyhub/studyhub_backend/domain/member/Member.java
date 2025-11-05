@@ -1,11 +1,12 @@
 package com.taeyoung.studyhub.studyhub_backend.domain.member;
 
+import com.taeyoung.studyhub.studyhub_backend.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Member {
+public class Member extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
