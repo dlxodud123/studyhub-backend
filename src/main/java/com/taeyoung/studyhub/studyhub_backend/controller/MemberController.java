@@ -25,6 +25,12 @@ public class MemberController {
         memberService.login();
         return "login2";
     }
+    // 로그인 2
+    @PutMapping("/api/members/login3")
+    public String loginMember3(){
+        memberService.login();
+        return "login3";
+    }
 
     // 회원가입
     @PutMapping("/api/members/signup")
