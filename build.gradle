@@ -50,7 +50,7 @@ dependencies {
 	runtimeOnly 'mysql:mysql-connector-java:8.0.33'
 
 	// dev
-	developmentOnly("org.springframework.boot:spring-boot-devtools")
+//	developmentOnly("org.springframework.boot:spring-boot-devtools")
 }
 
 tasks.named('test') {
