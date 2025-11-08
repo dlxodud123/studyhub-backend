@@ -2,12 +2,18 @@ spring:
   profiles:
     active: local
   datasource:
-    url: jdbc:h2:tcp://localhost/~/studyhub
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    url: jdbc:mysql://http://studyhub-db.cyhu008wm212.us-east-1.rds.amazonaws.com:3306/studyhub-db?useSSL=false&serverTimezone=Asia/Seoul
+    username: admin
+    password: vltmxhs12
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+#    url: jdbc:h2:tcp://localhost/~/studyhub
+#    username: sa
+#    password:
+#    driver-class-name: org.h2.Driver
+#  jpa:
+#    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: update
     properties:
