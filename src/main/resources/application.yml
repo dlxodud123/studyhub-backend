@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: prod
+    active: local
   datasource:
 #    url: jdbc:mysql://studyhub-db.cyhu008wm212.us-east-1.rds.amazonaws.com:3306/studyhub-db?useSSL=false&serverTimezone=Asia/Seoul
 #    username: admin
