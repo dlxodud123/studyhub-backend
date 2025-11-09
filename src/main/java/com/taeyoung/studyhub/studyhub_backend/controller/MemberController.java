@@ -25,11 +25,17 @@ public class MemberController {
         memberService.login();
         return "login2";
     }
-    // 로그인 2
+    // 로그인 3
     @PutMapping("/api/members/login3")
     public String loginMember3(){
         memberService.login();
         return "login3";
+    }
+    // 로그인 4
+    @PutMapping("/api/members/login3")
+    public String loginMember4(){
+        memberService.login();
+        return "login4";
     }
 
     // 회원가입
