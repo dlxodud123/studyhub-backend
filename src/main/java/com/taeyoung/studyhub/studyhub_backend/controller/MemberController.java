@@ -32,7 +32,7 @@ public class MemberController {
         return "login3";
     }
     // 로그인 4
-    @PutMapping("/api/members/login3")
+    @PutMapping("/api/members/login4")
     public String loginMember4(){
         memberService.login();
         return "login4";
