@@ -41,14 +41,9 @@ jobs:
         username: ec2-user
         key: ${{ secrets.EC2_KEY }}
         script: |
-          echo "cd /home/ec2-user"
           cd /home/ec2-user
-          echo "chmod +x JAR"
           chmod +x studyhub-backend-0.0.1-SNAPSHOT.jar
-          echo "copy latest jar"
           cp studyhub-backend-0.0.1-SNAPSHOT.jar studyhub-backend.jar
-          echo "stop existing process"
           pkill -f studyhub-backend.jar || true
-          echo "start new process"
-          nohup /usr/bin/java -jar studyhub-backend.jar > backend.log 2>&1
-          echo "finished"
+          nohup java -jar studyhub-backend.jar > backend.log 2>&1 &
+        background: true
