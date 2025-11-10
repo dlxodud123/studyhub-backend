@@ -1,4 +1,4 @@
-name: Deploy to EC2  # 워크플로우 이름 
+name: Deploy to EC2  # 워크플로우 이름
 
 on:
   push:
