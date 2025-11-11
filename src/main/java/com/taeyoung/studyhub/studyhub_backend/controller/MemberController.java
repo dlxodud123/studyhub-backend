@@ -1,11 +1,9 @@
 package com.taeyoung.studyhub.studyhub_backend.controller;
 
+import com.taeyoung.studyhub.studyhub_backend.dto.member.request.LoginRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -15,27 +13,9 @@ public class MemberController {
 
     // 로그인 
     @PutMapping("/api/members/login")
-    public String loginMember(){
-        memberService.login();
+    public String loginMember(@RequestBody LoginRequestDto loginRequestDto){
+        memberService.login(loginRequestDto);
         return "login";
-    }
-    // 로그인 2
-    @PutMapping("/api/members/login2")
-    public String loginMember2(){
-        memberService.login();
-        return "login2";
-    }
-    // 로그인 3
-    @PutMapping("/api/members/login3")
-    public String loginMember3(){
-        memberService.login();
-        return "login3";
-    }
-    // 로그인 4 
-    @PutMapping("/api/members/login4")
-    public String loginMember4(){
-        memberService.login();
-        return "login4";
     }
 
     // 회원가입
