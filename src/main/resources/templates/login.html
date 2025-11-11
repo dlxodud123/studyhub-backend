@@ -53,12 +53,27 @@
 <body>
 <div class="login-container">
     <h2>로그인</h2>
-    <form method="post" action="/api/members/login">
-        <input type="text" name="username" placeholder="아이디" required>
-        <input type="password" name="password" placeholder="비밀번호" required>
-        <input type="email" name="email" placeholder="이메일" required>
-        <button type="submit">로그인</button>
-    </form>
+    <input id="username" type="text" name="username" placeholder="아이디" required>
+    <input id="password" type="password" name="password" placeholder="비밀번호" required>
+    <input id="email" type="email" name="email" placeholder="이메일" required>
+    <button id="loginBtn" type="button">로그인</button>
+    <script>
+        document.getElementById("loginBtn").addEventListener("click", async (e) => {
+            e.preventDefault();
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            const email = document.getElementById("email").value;
+
+            const res = await fetch("/api/members/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password, email })
+            });
+
+            const data = await res.json();
+            console.log("JWT Token:", data.token);
+        });
+    </script>
 </div>
 </body>
 </html>

@@ -1,14 +1,28 @@
 package com.taeyoung.studyhub.studyhub_backend.service;
 
+import com.taeyoung.studyhub.studyhub_backend.dto.member.request.LoginRequestDto;
+import com.taeyoung.studyhub.studyhub_backend.security.JwtUtil;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class MemberService {
 
-    // 로그인
-    public String login(){
+    private final JwtUtil jwtUtil;
 
-        return "login";
+    // 로그인
+    public ResponseEntity<String> login(LoginRequestDto loginRequestDto){
+        System.out.println("username : " + loginRequestDto.getUsername());
+        System.out.println("password : " + loginRequestDto.getPassword());
+        System.out.println("email : " + loginRequestDto.getEmail());
+
+        String token = jwtUtil.generateToken(loginRequestDto.getUsername());
+
+        System.out.println("token : " + token);
+
+        return ResponseEntity.ok(token);
     }
 
     // 회원가입
