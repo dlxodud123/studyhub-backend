@@ -17,6 +17,11 @@ public class MemberController {
     // 로그인 
     @PostMapping("/api/members/login")
     public ResponseEntity<String> loginMember(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response){
+
+        memberService.login2(loginRequestDto);
+
+
+
         ResponseEntity<String> responseEntity = memberService.login(loginRequestDto);
         String jwt = responseEntity.getBody();
 
