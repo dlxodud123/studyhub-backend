@@ -20,7 +20,7 @@ public class MemberController {
 
         memberService.login2(loginRequestDto);
 
-
+ 
 
         ResponseEntity<String> responseEntity = memberService.login(loginRequestDto);
         String jwt = responseEntity.getBody();
