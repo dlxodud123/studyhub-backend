@@ -1,6 +1,7 @@
 package com.taeyoung.studyhub.studyhub_backend.controller;
 
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.LoginRequestDto;
+import com.taeyoung.studyhub.studyhub_backend.dto.member.request.SignupRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.service.MemberService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,10 +19,6 @@ public class MemberController {
     @PostMapping("/api/members/login")
     public ResponseEntity<String> loginMember(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response){
 
-        memberService.login2(loginRequestDto);
-
- 
-
         ResponseEntity<String> responseEntity = memberService.login(loginRequestDto);
         String jwt = responseEntity.getBody();
 
@@ -36,7 +33,7 @@ public class MemberController {
 
     // 회원가입
     @PutMapping("/api/members/signup")
-    public String registerMember(){
+    public String registerMember(@RequestBody SignupRequestDto signupRequestDto){
         memberService.registerMember();
         return "signup";
     }
