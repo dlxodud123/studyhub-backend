@@ -1,9 +1,11 @@
 package com.taeyoung.studyhub.studyhub_backend.service;
 
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.LoginRequestDto;
+import com.taeyoung.studyhub.studyhub_backend.dto.member.request.SignupRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Service;
 public class MemberService {
 
     private final JwtUtil jwtUtil;
+    private final PasswordEncoder passwordEncoder;
+
 
     // 로그인
     public ResponseEntity<String> login(LoginRequestDto loginRequestDto){
@@ -25,8 +29,10 @@ public class MemberService {
     }
 
     // 회원가입
-    public String registerMember(){
-
+    public String registerMember(SignupRequestDto signupRequestDto){
+        System.out.println("username : " + signupRequestDto.getUsername());
+        System.out.println("password : " + signupRequestDto.getPassword());
+        System.out.println("email : " + signupRequestDto.getEmail());
         return "signup";
     }
 

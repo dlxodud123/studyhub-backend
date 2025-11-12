@@ -32,9 +32,9 @@ public class MemberController {
     }
 
     // 회원가입
-    @PutMapping("/api/members/signup")
+    @PostMapping("/api/members/signup")
     public String registerMember(@RequestBody SignupRequestDto signupRequestDto){
-        memberService.registerMember();
+        memberService.registerMember(signupRequestDto);
         return "signup";
     }
 
