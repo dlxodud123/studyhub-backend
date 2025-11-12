@@ -27,4 +27,9 @@ public class ViewController {
         // JWT 없거나 유효하지 않으면 로그인 페이지 보여주기
         return "login";
     }
+
+    @GetMapping("/signup")
+    public String signupPage(HttpServletRequest request) {
+        return "signup";
+    }
 }
