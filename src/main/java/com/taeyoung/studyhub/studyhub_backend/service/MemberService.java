@@ -1,7 +1,10 @@
 package com.taeyoung.studyhub.studyhub_backend.service;
 
+import com.taeyoung.studyhub.studyhub_backend.domain.member.Member;
+import com.taeyoung.studyhub.studyhub_backend.domain.member.Role;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.LoginRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.SignupRequestDto;
+import com.taeyoung.studyhub.studyhub_backend.repository.member.MemberRepository;
 import com.taeyoung.studyhub.studyhub_backend.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +17,7 @@ public class MemberService {
 
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
-
+    private final MemberRepository memberRepository;
 
     // 로그인
     public ResponseEntity<String> login(LoginRequestDto loginRequestDto){
@@ -33,6 +36,16 @@ public class MemberService {
         System.out.println("username : " + signupRequestDto.getUsername());
         System.out.println("password : " + signupRequestDto.getPassword());
         System.out.println("email : " + signupRequestDto.getEmail());
+
+        String encodedPassword = passwordEncoder.encode(signupRequestDto.getPassword());
+
+        memberRepository.save(new Member(
+                signupRequestDto.getUsername(),
+                encodedPassword,
+                signupRequestDto.getEmail(),
+                Role.USER
+        ));
+
         return "signup";
     }
 
