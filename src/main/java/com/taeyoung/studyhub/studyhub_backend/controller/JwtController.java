@@ -49,10 +49,10 @@ public class JwtController {
     @GetMapping("/my-page/jwt")
     public String myPage(Authentication auth){
         // SecurityContext에서 Authentication 객체를 찾아서 가져옴
-        System.out.println(auth);
-        System.out.println(auth.getName());
-        System.out.println(auth.isAuthenticated());
-        System.out.println(auth.getAuthorities().contains(new SimpleGrantedAuthority("일반유저")));
+//        System.out.println(auth);
+//        System.out.println(auth.getName());
+//        System.out.println(auth.isAuthenticated());
+//        System.out.println(auth.getAuthorities().contains(new SimpleGrantedAuthority("일반유저")));
 
 //        if (auth != null && auth.isAuthenticated()){
 //            return "mypage.html";
