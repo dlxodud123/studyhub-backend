@@ -1,6 +1,7 @@
 package com.taeyoung.studyhub.studyhub_backend.service;
 
 import com.taeyoung.studyhub.studyhub_backend.domain.member.Member;
+import com.taeyoung.studyhub.studyhub_backend.domain.member.ProviderType;
 import com.taeyoung.studyhub.studyhub_backend.domain.member.Role;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.SignupRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.repository.member.MemberRepository;
@@ -21,11 +22,20 @@ public class MemberService {
     public String registerMember(SignupRequestDto signupRequestDto){
         String encodedPassword = passwordEncoder.encode(signupRequestDto.getPassword());
 
+        if (memberRepository.existsByUsername(signupRequestDto.getUsername())) {
+            throw new IllegalArgumentException("이미 사용중인 아이디입니다.");
+        }
+
+        if (memberRepository.existsByEmail(signupRequestDto.getEmail())) {
+            throw new IllegalArgumentException("이미 사용중인 이메일입니다.");
+        }
+
         memberRepository.save(new Member(
                 signupRequestDto.getUsername(),
                 encodedPassword,
                 signupRequestDto.getEmail(),
-                Role.USER
+                Role.USER,
+                ProviderType.LOCAL
         ));
 
         return "signup";

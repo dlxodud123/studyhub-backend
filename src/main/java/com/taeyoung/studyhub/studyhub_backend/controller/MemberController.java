@@ -64,8 +64,14 @@ public class MemberController {
                     .body(bindingResult.getAllErrors().get(0).getDefaultMessage());
         }
 
-        memberService.registerMember(signupRequestDto);
-        return ResponseEntity.ok("회원가입 성공!");
+        try {
+            memberService.registerMember(signupRequestDto);
+            return ResponseEntity.ok("회원가입 성공!");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+        }
     }
 
     // 회원 정보 조회

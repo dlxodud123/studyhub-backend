@@ -21,6 +21,9 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Enumerated(EnumType.STRING)
+    private ProviderType provider;
+
 //    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<Comment> comments = new ArrayList<>();
 //
@@ -31,11 +34,12 @@ public class Member extends BaseEntity {
     public Member() {
     }
 
-    public Member(String username, String password, String email, Role role) {
+    public Member(String username, String password, String email, Role role, ProviderType provider) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.role = role;
+        this.provider = provider;
     }
 }
 
