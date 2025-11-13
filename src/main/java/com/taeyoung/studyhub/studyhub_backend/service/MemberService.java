@@ -10,9 +10,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MemberService {
 
     private final JwtUtil jwtUtil;
@@ -33,9 +35,6 @@ public class MemberService {
 
     // 회원가입
     public String registerMember(SignupRequestDto signupRequestDto){
-        System.out.println("username : " + signupRequestDto.getUsername());
-        System.out.println("password : " + signupRequestDto.getPassword());
-        System.out.println("email : " + signupRequestDto.getEmail());
 
         String encodedPassword = passwordEncoder.encode(signupRequestDto.getPassword());
 

@@ -13,11 +13,11 @@ import java.security.Key;
 @Component
 @Getter
 public class JwtConfig  {
-    private final Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);;
+    private final Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     private final long expirationMs = 60000; // 1분
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+//    @Bean
+//    public PasswordEncoder passwordEncoder() {
+//        return new BCryptPasswordEncoder();
+//    }
 }

@@ -28,4 +28,9 @@ public class MemberServiceTest {
         assertThat(existsByEmail).isTrue();
     }
 
+    @Test
+    public void deleteTest() {
+
+    }
+
 }
