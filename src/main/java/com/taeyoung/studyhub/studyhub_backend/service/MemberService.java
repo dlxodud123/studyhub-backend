@@ -2,7 +2,6 @@ package com.taeyoung.studyhub.studyhub_backend.service;
 
 import com.taeyoung.studyhub.studyhub_backend.domain.member.Member;
 import com.taeyoung.studyhub.studyhub_backend.domain.member.Role;
-import com.taeyoung.studyhub.studyhub_backend.dto.member.request.LoginRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.SignupRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;

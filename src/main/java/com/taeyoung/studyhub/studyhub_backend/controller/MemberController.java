@@ -6,10 +6,13 @@ import com.taeyoung.studyhub.studyhub_backend.jwt.JwtUtil;
 import com.taeyoung.studyhub.studyhub_backend.service.MemberService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,7 +24,14 @@ public class MemberController {
 
     // 로그인
     @PostMapping("/api/members/login")
-    public String loginMember(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response){
+    public ResponseEntity<String> loginMember(@Valid @RequestBody LoginRequestDto loginRequestDto, BindingResult bindingResult, HttpServletResponse response){
+        // username, password, email 필수 검증
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(bindingResult.getAllErrors().get(0).getDefaultMessage());
+        }
+
         // Authentication 객체를 생성하고 SecurityContext에 적용
         var authToken = new UsernamePasswordAuthenticationToken(loginRequestDto.getUsername(), loginRequestDto.getPassword());
         var auth = authenticationManagerBuilder.getObject().authenticate(authToken);
@@ -41,14 +51,21 @@ public class MemberController {
         //  브라우저에 저장
         response.addCookie(cookie);
 
-        return jwt;
+        return ResponseEntity.ok(jwt);
     }
 
     // 회원가입
     @PostMapping("/api/members/signup")
-    public String registerMember(@RequestBody SignupRequestDto signupRequestDto){
+    public ResponseEntity<String> registerMember(@Valid @RequestBody SignupRequestDto signupRequestDto, BindingResult bindingResult){
+        // username, password, email 필수 검증
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(bindingResult.getAllErrors().get(0).getDefaultMessage());
+        }
+
         memberService.registerMember(signupRequestDto);
-        return "signup";
+        return ResponseEntity.ok("회원가입 성공!");
     }
 
     // 회원 정보 조회

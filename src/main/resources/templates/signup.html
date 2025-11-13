@@ -70,8 +70,14 @@
             body: JSON.stringify({ username, password, email })
         });
 
-        const data = await res.json();
-        console.log("JWT Token:", data.token);
+        const text = await res.text();
+
+        if (res.ok) {
+            alert("회원가입 성공!");
+            window.location.href = "/login";
+        } else {
+            alert(text);
+        }
     });
   </script>
 </div>
