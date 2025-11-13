@@ -1,4 +1,4 @@
-package com.taeyoung.studyhub.studyhub_backend.security;
+package com.taeyoung.studyhub.studyhub_backend.jwt;
 
 import com.taeyoung.studyhub.studyhub_backend.domain.member.CustomUser;
 import io.jsonwebtoken.Claims;
@@ -11,7 +11,7 @@ import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.stream.Collectors;
 
-public class JwtUtil2 {
+public class JwtUtil {
 
     static final SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);;
 

@@ -64,7 +64,7 @@
             const password = document.getElementById("password").value;
             const email = document.getElementById("email").value;
 
-            const res = await fetch("/login/jwt", {
+            const res = await fetch("/api/members/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ username, password, email })

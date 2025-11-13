@@ -2,11 +2,14 @@ package com.taeyoung.studyhub.studyhub_backend.controller;
 
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.LoginRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.SignupRequestDto;
+import com.taeyoung.studyhub.studyhub_backend.jwt.JwtUtil;
 import com.taeyoung.studyhub.studyhub_backend.service.MemberService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,21 +17,31 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
 
     private final MemberService memberService;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     // 로그인
     @PostMapping("/api/members/login")
-    public ResponseEntity<String> loginMember(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response){
+    public String loginMember(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response){
+        // Authentication 객체를 생성하고 SecurityContext에 적용
+        var authToken = new UsernamePasswordAuthenticationToken(loginRequestDto.getUsername(), loginRequestDto.getPassword());
+        var auth = authenticationManagerBuilder.getObject().authenticate(authToken);
+        SecurityContextHolder.getContext().setAuthentication(auth);
 
-        ResponseEntity<String> responseEntity = memberService.login(loginRequestDto);
-        String jwt = responseEntity.getBody();
+        // Authentication는 스레드 로컬을 사용하므로 각 요청마다 독립적이다.
+        // Authentication에 auth를 createToken메서드에 보냄
+        var jwt = JwtUtil.createToken(SecurityContextHolder.getContext().getAuthentication());
 
-        Cookie cookie = new Cookie("jwt", jwt);
+        var cookie = new Cookie("jwt", jwt);
+        //  JWT만들었을때의 기간이랑 같게
+        cookie.setMaxAge(100);
+        //  쿠키를 자바스크립트로 조작 못하게
         cookie.setHttpOnly(true);
+        //  쿠키가 전송될 URL
         cookie.setPath("/");
-        cookie.setMaxAge(60);
+        //  브라우저에 저장
         response.addCookie(cookie);
 
-        return ResponseEntity.ok("로그인 성공");
+        return jwt;
     }
 
     // 회원가입

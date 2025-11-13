@@ -1,7 +1,6 @@
-package com.taeyoung.studyhub.studyhub_backend.config;
+package com.taeyoung.studyhub.studyhub_backend.jwt;
 
 import com.taeyoung.studyhub.studyhub_backend.domain.member.CustomUser;
-import com.taeyoung.studyhub.studyhub_backend.security.JwtUtil2;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -17,7 +16,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class JwtFilter2 extends OncePerRequestFilter {
+public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         Cookie[] cookies = request.getCookies();
@@ -34,7 +33,7 @@ public class JwtFilter2 extends OncePerRequestFilter {
 
         if (jwtCookie != null) {
             try {
-                Claims claim = JwtUtil2.extractToken(jwtCookie);
+                Claims claim = JwtUtil.extractToken(jwtCookie);
 
                 var arr = claim.get("authorities").toString().split(",");
                 var authorities = Arrays.stream(arr)
@@ -54,7 +53,6 @@ public class JwtFilter2 extends OncePerRequestFilter {
                         "none",
                         authorities
                 );
-//                customUser.displayName = claim.get("displayName").toString();
 
                 var authToken = new UsernamePasswordAuthenticationToken(customUser, "", authorities);
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

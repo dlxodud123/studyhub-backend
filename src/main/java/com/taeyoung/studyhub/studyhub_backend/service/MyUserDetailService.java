@@ -15,7 +15,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class JwtService implements UserDetailsService {
+public class MyUserDetailService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
 
@@ -29,12 +29,7 @@ public class JwtService implements UserDetailsService {
         var user = result.get();
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("일반유저"));
-        //  return new User(유저아이디, 비번, 권한) 해주세요
-        //  var a = new User(user.getUsername(), user.getPassword(), authorities);
         var a = new CustomUser(user.getId(), user.getUsername(), user.getPassword(), authorities);
-//        a.displayName = user.getDisplayName();
-        //  id 변수 추가
-//        a.id = user.getId();
 
         return a;
     }
