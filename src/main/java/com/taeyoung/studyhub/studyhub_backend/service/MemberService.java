@@ -25,7 +25,6 @@ public class MemberService {
         if (memberRepository.existsByUsername(signupRequestDto.getUsername())) {
             throw new IllegalArgumentException("이미 사용중인 아이디입니다.");
         }
-
         if (memberRepository.existsByEmail(signupRequestDto.getEmail())) {
             throw new IllegalArgumentException("이미 사용중인 이메일입니다.");
         }
@@ -42,16 +41,15 @@ public class MemberService {
     }
 
     // 회원 정보 조회
-    public String getMyInfo(){
-
-        return "me";
-    }
+//    public String getMyInfo(){
+//        return "me";
+//    }
 
     // 회원 정보 수정
-    public String updateMember(){
-
-        return "update";
-    }
+//    public String updateMember(){
+//
+//        return "update";
+//    }
 
     // 회원 탈퇴
     public String deleteMember(){

@@ -5,6 +5,7 @@ import com.taeyoung.studyhub.studyhub_backend.dto.member.request.SignupRequestDt
 import com.taeyoung.studyhub.studyhub_backend.jwt.JwtUtil;
 import com.taeyoung.studyhub.studyhub_backend.service.MemberService;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +44,7 @@ public class MemberController {
 
         var cookie = new Cookie("jwt", jwt);
         //  JWT만들었을때의 기간이랑 같게
-        cookie.setMaxAge(100);
+        cookie.setMaxAge(1000);
         //  쿠키를 자바스크립트로 조작 못하게
         cookie.setHttpOnly(true);
         //  쿠키가 전송될 URL
@@ -77,21 +78,36 @@ public class MemberController {
     // 회원 정보 조회
     @GetMapping("/api/members/me")
     public String getMyInfo(){
-        memberService.getMyInfo();
+//        memberService.getMyInfo();
         return "me";
     }
 
     // 회원 정보 수정
     @PutMapping("/api/members/me")
     public String updateMyInfo(){
-        memberService.updateMember();
+//        memberService.updateMember();
         return "update";
     }
 
     // 회원 탈퇴
-    @DeleteMapping("/api/members/me")
-    public String deleteMyAccount(){
+    @DeleteMapping("/api/members/delete")
+    public ResponseEntity<String> deleteMyAccount(HttpServletRequest request){
+        Cookie[] cookies = request.getCookies();
+        String jwtToken = null;
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("jwt".equals(cookie.getName())) {
+                    jwtToken = cookie.getValue();
+                    break;
+                }
+            }
+        }
+        if (jwtToken != null) {
+            Long userId = Long.valueOf(JwtUtil.extractToken(jwtToken).get("id").toString());
+            System.out.println("쿠키 id : " + userId);
+        }
         memberService.deleteMember();
-        return "delete";
+        return ResponseEntity.ok("회원탈퇴 성공!");
     }
 }

@@ -1,10 +1,65 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>MyPage</title>
+    <title>회원 탈퇴</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f9f9f9;
+        }
+
+        .delete-container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            background-color: #e74c3c;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #c0392b;
+        }
+    </style>
 </head>
 <body>
+<div class="delete-container">
+    <h2>마이 페이지</h2>
+    <button id="deleteBtn">회원 탈퇴</button>
+</div>
 
+<script>
+    document.getElementById("deleteBtn").addEventListener("click", async () => {
+
+        const res = await fetch("/api/members/delete", {
+            method: "DELETE",
+            credentials: "include" // 쿠키(JWT) 전송
+        });
+
+        const text = await res.text();
+
+        if (res.ok) {
+            alert(text);
+            window.location.href = "/login";
+        } else {
+            alert("오류 발생: " + text);
+        }
+    });
+</script>
 </body>
 </html>
