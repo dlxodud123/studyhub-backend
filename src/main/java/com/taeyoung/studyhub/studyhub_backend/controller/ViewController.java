@@ -22,4 +22,9 @@ public class ViewController {
     public String myPage(){
         return "mypage.html";
     }
+
+    @GetMapping("/modify")
+    public String modify(){
+        return "modify.html";
+    }
 }

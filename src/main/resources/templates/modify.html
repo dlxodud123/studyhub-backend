@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>회원 정보 수정</title>
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .update-container {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        width: 320px;
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 12px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+    }
+
+    input[readonly] {
+        background-color: #f0f0f0;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 6px;
+        background-color: #4CAF50;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+<div class="update-container">
+  <h2>회원 정보 수정</h2>
+  <input id="username" type="text" name="username" placeholder="아이디" readonly>
+  <input id="email" type="email" name="email" placeholder="이메일" required>
+  <input id="password" type="password" name="password" placeholder="새 비밀번호">
+  <button id="updateBtn" type="button">정보 수정</button>
+
+  <script>
+    fetch('/api/members/me', { method: 'GET', credentials: 'include' })
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('username').value = data.username;
+            document.getElementById('email').value = data.email;
+        });
+
+    document.getElementById('updateBtn').addEventListener('click', async (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        const res = await fetch('/api/members/update', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ email, password })
+        });
+
+        const text = await res.text();
+
+        if (res.ok) {
+            alert("회원 정보가 수정되었습니다.");
+            window.location.href = "/my-page";
+        } else {
+            alert(text);
+        }
+    });
+  </script>
+</div>
+</body>
+</html>
