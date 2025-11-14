@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -99,15 +100,22 @@ public class MemberController {
             for (Cookie cookie : cookies) {
                 if ("jwt".equals(cookie.getName())) {
                     jwtToken = cookie.getValue();
-                    break;
+                    Long userId = Long.valueOf(JwtUtil.extractToken(jwtToken).get("id").toString());
+                    System.out.println("쿠키 id : " + userId);
+                    try {
+                        memberService.deleteMember(userId);
+                        return ResponseEntity.ok("회원탈퇴 성공!");
+                    } catch (RuntimeException e) {
+                        // 서비스에서 던진 메시지 그대로 내려줌
+                        return ResponseEntity
+                                .status(HttpStatus.BAD_REQUEST)
+                                .body(e.getMessage());
+                    }
                 }
             }
         }
-        if (jwtToken != null) {
-            Long userId = Long.valueOf(JwtUtil.extractToken(jwtToken).get("id").toString());
-            System.out.println("쿠키 id : " + userId);
-        }
-        memberService.deleteMember();
-        return ResponseEntity.ok("회원탈퇴 성공!");
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body("로그인 정보(JWT)가 없습니다.");
     }
 }

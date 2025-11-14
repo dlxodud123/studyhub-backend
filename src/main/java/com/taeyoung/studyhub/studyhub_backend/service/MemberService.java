@@ -6,6 +6,8 @@ import com.taeyoung.studyhub.studyhub_backend.domain.member.Role;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.SignupRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,8 +54,13 @@ public class MemberService {
 //    }
 
     // 회원 탈퇴
-    public String deleteMember(){
-
-        return "delete";
+    public void deleteMember(Long id){
+        try {
+            memberRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new RuntimeException("이미 삭제되었거나 존재하지 않는 사용자입니다.");
+        } catch (DataIntegrityViolationException e) {
+            throw new RuntimeException("연관된 데이터가 있어 회원을 삭제할 수 없습니다.");
+        }
     }
 }
