@@ -4,10 +4,9 @@ import com.taeyoung.studyhub.studyhub_backend.domain.member.Member;
 import com.taeyoung.studyhub.studyhub_backend.domain.member.ProviderType;
 import com.taeyoung.studyhub.studyhub_backend.domain.member.Role;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.SignupRequestDto;
+import com.taeyoung.studyhub.studyhub_backend.dto.member.response.MemberResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,9 +42,12 @@ public class MemberService {
     }
 
     // 회원 정보 조회
-//    public String getMyInfo(){
-//        return "me";
-//    }
+    @Transactional(readOnly = true)
+    public MemberResponseDto getMyInfo(Long id){
+        Member findMember = memberRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+        return new MemberResponseDto(findMember.getUsername(), findMember.getEmail());
+    }
 
     // 회원 정보 수정
 //    public String updateMember(){
@@ -55,12 +57,6 @@ public class MemberService {
 
     // 회원 탈퇴
     public void deleteMember(Long id){
-        try {
-            memberRepository.deleteById(id);
-        } catch (EmptyResultDataAccessException e) {
-            throw new RuntimeException("이미 삭제되었거나 존재하지 않는 사용자입니다.");
-        } catch (DataIntegrityViolationException e) {
-            throw new RuntimeException("연관된 데이터가 있어 회원을 삭제할 수 없습니다.");
-        }
+        memberRepository.deleteById(id);
     }
 }

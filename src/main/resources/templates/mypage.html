@@ -40,10 +40,33 @@
 <body>
 <div class="delete-container">
     <h2>마이 페이지</h2>
-    <button id="deleteBtn">회원 탈퇴</button>
+    <div>
+        <p>Username: <span id="username"></span></p>
+        <p>Email: <span id="email"></span></p>
+    </div>
+    <div>
+        <button id="deleteBtn">회원 탈퇴</button>
+    </div>
 </div>
 
 <script>
+    fetch('/api/members/me', {
+        method: 'GET',
+        credentials: 'include' // 쿠키(JWT) 포함
+    })
+    .then(response => {
+        if (!response.ok) throw new Error("회원 정보를 불러올 수 없습니다.");
+        return response.json();
+    })
+    .then(data => {
+        document.getElementById("username").innerText = data.username;
+        document.getElementById("email").innerText = data.email;
+    })
+    .catch(err => {
+        console.error(err);
+        alert(err.message);
+    });
+
     document.getElementById("deleteBtn").addEventListener("click", async () => {
 
         const res = await fetch("/api/members/delete", {
