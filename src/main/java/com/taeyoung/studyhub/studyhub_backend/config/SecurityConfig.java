@@ -1,6 +1,6 @@
 package com.taeyoung.studyhub.studyhub_backend.config;
 
-import com.taeyoung.studyhub.studyhub_backend.jwt.JwtFilter;
+import com.taeyoung.studyhub.studyhub_backend.auth.jwt.JwtFilter;
 import jakarta.servlet.http.Cookie;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

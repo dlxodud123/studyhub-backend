@@ -1,4 +1,4 @@
-package com.taeyoung.studyhub.studyhub_backend.jwt;
+package com.taeyoung.studyhub.studyhub_backend.auth.jwt;
 
 import com.taeyoung.studyhub.studyhub_backend.domain.member.CustomUser;
 import io.jsonwebtoken.Claims;

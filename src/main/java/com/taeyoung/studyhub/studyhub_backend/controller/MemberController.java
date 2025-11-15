@@ -5,7 +5,7 @@ import com.taeyoung.studyhub.studyhub_backend.dto.member.request.LoginRequestDto
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.SignupRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.UpdateRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.response.MemberResponseDto;
-import com.taeyoung.studyhub.studyhub_backend.jwt.JwtUtil;
+import com.taeyoung.studyhub.studyhub_backend.auth.jwt.JwtUtil;
 import com.taeyoung.studyhub.studyhub_backend.service.MemberService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
