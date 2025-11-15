@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Google Login Success</title>
+</head>
+<body>
+<h1>Google 로그인 성공!</h1>
+<p>사용자 정보:</p>
+<ul>
+  <li>ID: <span th:text="${user['id']}"></span></li>
+  <li>Email: <span th:text="${user['email']}"></span></li>
+  <li>Name: <span th:text="${user['name']}"></span></li>
+</ul>
+</body>
+</html>

@@ -15,18 +15,19 @@ public class GoogleLoginController {
     private final GoogleOAuthService googleOAuthService;
 
     // 구글 로그인 버튼 클릭 → 로그인 URL로 리다이렉트
-    @GetMapping("/auth/google/login")
+    @GetMapping("/oauth/google/login")
     public String login() {
         return "redirect:" + googleOAuthService.getLoginUrl();
     }
 
     // 구글 인증 후 콜백
-    @GetMapping("/auth/google/callback")
+    @GetMapping("/oauth/google/callback")
     public String callback(@RequestParam String code, Model model) {
         String accessToken = googleOAuthService.getAccessToken(code);
         Map<String, Object> userInfo = googleOAuthService.getUserInfo(accessToken);
 
+        System.out.println("userInfo : " + userInfo);
         model.addAttribute("user", userInfo);
-        return "googleSuccess"; // 로그인 성공 페이지
+        return "googleSuccess";
     }
 }

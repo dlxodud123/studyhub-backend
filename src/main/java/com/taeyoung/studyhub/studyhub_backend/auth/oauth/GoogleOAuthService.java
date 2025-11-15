@@ -1,9 +1,9 @@
 package com.taeyoung.studyhub.studyhub_backend.auth.oauth;
 
-import lombok.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Map;
 
