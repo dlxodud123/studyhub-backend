@@ -1,6 +1,7 @@
 package com.taeyoung.studyhub.studyhub_backend.controller;
 
 import com.taeyoung.studyhub.studyhub_backend.domain.member.CustomUser;
+import com.taeyoung.studyhub.studyhub_backend.domain.member.Member;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.LoginRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.SignupRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.UpdateRequestDto;
@@ -32,7 +33,7 @@ public class MemberController {
     // 로그인
     @PostMapping("/api/members/login")
     public ResponseEntity<String> loginMember(@Valid @RequestBody LoginRequestDto loginRequestDto, BindingResult bindingResult, HttpServletResponse response){
-        // username, password, email 필수 검증
+        // username, password, email 입력 검증
         if (bindingResult.hasErrors()) {
             return ResponseEntity
                     .badRequest()
@@ -40,9 +41,31 @@ public class MemberController {
         }
 
         // Authentication 객체를 생성하고 SecurityContext에 적용
-        var authToken = new UsernamePasswordAuthenticationToken(loginRequestDto.getUsername(), loginRequestDto.getPassword());
-        var auth = authenticationManagerBuilder.getObject().authenticate(authToken);
-        SecurityContextHolder.getContext().setAuthentication(auth);
+        // username, password 검증
+        try {
+            // 1) username이 존재하는지 먼저 확인
+            Member member = memberService.findByUsernameOrThrow(loginRequestDto.getUsername());
+
+            // 2) email 검증
+            if (!member.getEmail().equals(loginRequestDto.getEmail())) {
+                return ResponseEntity.status(401).body("email이 올바르지 않습니다.");
+            }
+
+            // 3) password 검증 (마지막)
+            try {
+                var authToken = new UsernamePasswordAuthenticationToken(
+                        loginRequestDto.getUsername(),
+                        loginRequestDto.getPassword()
+                );
+                var auth = authenticationManagerBuilder.getObject().authenticate(authToken);
+                SecurityContextHolder.getContext().setAuthentication(auth);
+            } catch (Exception e) {
+                return ResponseEntity.status(401).body("password가 올바르지 않습니다.");
+            }
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(401).body("username이 올바르지 않습니다.");
+        }
 
         // Authentication는 스레드 로컬을 사용하므로 각 요청마다 독립적이다.
         // Authentication에 auth를 createToken메서드에 보냄

@@ -65,4 +65,20 @@ public class MemberService {
     public void deleteMember(Long id){
         memberRepository.deleteById(id);
     }
+
+    // email 검증
+    public void validateEmailForLogin(String username, String email){
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("아이디가 존재하지 않습니다."));
+
+        if (!member.getEmail().equals(email)) {
+            throw new IllegalArgumentException("email이 일치하지 않습니다.");
+        }
+    }
+
+    // username을 통해 member 찾기
+    public Member findByUsernameOrThrow(String username){
+        return memberRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+    }
 }
