@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@Transactional
 public class MemberServiceTest {
 
     @Autowired private MemberRepository memberRepository;
@@ -26,11 +28,11 @@ public class MemberServiceTest {
 
     @BeforeEach
     public void before() {
-        Member member1 = new Member("user1", "password1", "email1", Role.USER, ProviderType.LOCAL);
-        Member member2 = new Member("user2", "password2", "email2", Role.USER, ProviderType.GOOGLE);
+        SignupRequestDto signupRequestDto1 = new SignupRequestDto("user1", "password1", "email1");
+        SignupRequestDto signupRequestDto2 = new SignupRequestDto("user2", "password2", "email2");
 
-        memberRepository.save(member1);
-        memberRepository.save(member2);
+        memberService.registerMember(signupRequestDto1);
+        memberService.registerMember(signupRequestDto2);
     }
 
     @Test
@@ -52,8 +54,14 @@ public class MemberServiceTest {
 
     @Test
     public void login() {
-        String username = "user3";
-        String password = "password3";
-//        Optional<Member> findMember = memberRepository.findByUsername("user1");
+        String username = "user2";
+        String password = "password2";
+        String email = "email2";
+
+        Member findMember = memberRepository.findByUsername(username).get();
+
+        assertThat(findMember.getUsername()).isEqualTo(username);
+        assertThat(passwordEncoder.matches(password, findMember.getPassword())).isTrue();
+        assertThat(findMember.getEmail()).isEqualTo(email);
     }
 }
