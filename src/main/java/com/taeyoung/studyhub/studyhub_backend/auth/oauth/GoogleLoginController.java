@@ -47,6 +47,9 @@ public class GoogleLoginController {
             model.addAttribute("readonlyUsername", true);
         }
 
+        // socialSignup.html부분에서 controller로 넘길때 구글 로그인이걸 이해할만한 변수 넘겨서 provider 적용
+        // 확실하지는 않아, 이 롲기이 맞는지
+
         return "socialSignup";
     }
 }
