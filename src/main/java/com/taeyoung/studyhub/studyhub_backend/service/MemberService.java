@@ -23,7 +23,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     // 회원가입
-    public String registerMember(SignupRequestDto signupRequestDto){
+    public Member registerMember(SignupRequestDto signupRequestDto){
         String encodedPassword = passwordEncoder.encode(signupRequestDto.getPassword());
 
         if (memberRepository.existsByUsername(signupRequestDto.getUsername())) {
@@ -33,15 +33,13 @@ public class MemberService {
             throw new IllegalArgumentException("이미 사용중인 이메일입니다.");
         }
 
-        memberRepository.save(new Member(
+        return memberRepository.save(new Member(
                 signupRequestDto.getUsername(),
                 encodedPassword,
                 signupRequestDto.getEmail(),
                 Role.USER,
                 ProviderType.LOCAL
         ));
-
-        return "signup";
     }
 
     // 회원 정보 조회

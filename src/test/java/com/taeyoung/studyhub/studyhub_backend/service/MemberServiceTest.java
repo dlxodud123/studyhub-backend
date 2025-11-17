@@ -1,9 +1,8 @@
 package com.taeyoung.studyhub.studyhub_backend.service;
 
 import com.taeyoung.studyhub.studyhub_backend.domain.member.Member;
-import com.taeyoung.studyhub.studyhub_backend.domain.member.ProviderType;
-import com.taeyoung.studyhub.studyhub_backend.domain.member.Role;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.SignupRequestDto;
+import com.taeyoung.studyhub.studyhub_backend.dto.member.response.MemberResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.repository.member.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -63,5 +62,16 @@ public class MemberServiceTest {
         assertThat(findMember.getUsername()).isEqualTo(username);
         assertThat(passwordEncoder.matches(password, findMember.getPassword())).isTrue();
         assertThat(findMember.getEmail()).isEqualTo(email);
+    }
+
+    @Test
+    public void searchOne() {
+
+        Member findMember = memberService.registerMember(new SignupRequestDto("user3", "password3", "email3"));
+
+        MemberResponseDto responseDto = memberService.getMyInfo(findMember.getId());
+
+        assertThat(responseDto.getUsername()).isEqualTo("user3");
+        assertThat(responseDto.getEmail()).isEqualTo("email3");
     }
 }
