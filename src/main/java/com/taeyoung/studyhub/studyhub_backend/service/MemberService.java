@@ -83,7 +83,7 @@ public class MemberService {
 
     // username 찾기
     public String findByUsernameByEmail(String email) {
-        Member findMember = memberRepository.findUsernameByEmail(email)
+        Member findMember = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
 
         return findMember.getUsername();
@@ -91,7 +91,7 @@ public class MemberService {
 
     // password 찾기
     public String findByPasswordByUsername(String username) {
-        Member findMember = memberRepository.findPasswordByUsername(username)
+        Member findMember = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
 
         // 임시 비밀번호 생성 (UUID 앞 8자리)
@@ -109,4 +109,15 @@ public class MemberService {
     }
 
     // email 찾기
+    public String findByEmailByPassword(String username, String password) {
+        Member findMember = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+
+        // 입력한 비밀번호와 암호화된 비밀번호 비교
+        if (passwordEncoder.matches(password, findMember.getPassword())) {
+            return findMember.getEmail();
+        } else {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+    }
 }

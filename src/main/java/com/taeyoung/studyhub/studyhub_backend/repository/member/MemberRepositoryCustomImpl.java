@@ -10,23 +10,23 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberRepositoryCustomImpl implements MemberRepositoryCustom{
 
-    private final EntityManager em;
-
-    @Override
-    public Optional<Member> findUsernameByEmail(String email) {
-        List<Member> list = em.createQuery("select m from Member m where m.email = :email")
-                .setParameter("email", email)
-                .getResultList();
-
-        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
-    }
-
-    @Override
-    public Optional<Member> findPasswordByUsername(String username) {
-        List<Member> list = em.createQuery("select m from Member m where m.username = :username")
-                .setParameter("username", username)
-                .getResultList();
-
-        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
-    }
+//    private final EntityManager em;
+//
+//    @Override
+//    public Optional<Member> findByEmail(String email) {
+//        List<Member> list = em.createQuery("select m from Member m where m.email = :email")
+//                .setParameter("email", email)
+//                .getResultList();
+//
+//        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
+//    }
+//
+//    @Override
+//    public Optional<Member> findByUsername(String username) {
+//        List<Member> list = em.createQuery("select m from Member m where m.username = :username")
+//                .setParameter("username", username)
+//                .getResultList();
+//
+//        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
+//    }
 }
