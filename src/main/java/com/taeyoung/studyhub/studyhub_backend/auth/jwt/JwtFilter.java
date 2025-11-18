@@ -1,6 +1,7 @@
 package com.taeyoung.studyhub.studyhub_backend.auth.jwt;
 
 import com.taeyoung.studyhub.studyhub_backend.domain.member.CustomUser;
+import com.taeyoung.studyhub.studyhub_backend.domain.member.ProviderType;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -47,14 +48,12 @@ public class JwtFilter extends OncePerRequestFilter {
                     id = (long) Double.parseDouble(claim.get("id").toString());
                 }
 
-                System.out.println("claim : " + claim);
-                System.out.println("claim2 : " + claim.get("email").toString());
-
                 var customUser = new CustomUser(
                         id,
                         claim.get("username").toString(),
                         "none",
                         claim.get("email").toString(),
+                        ProviderType.valueOf(claim.get("provider").toString()),
                         authorities
                 );
 

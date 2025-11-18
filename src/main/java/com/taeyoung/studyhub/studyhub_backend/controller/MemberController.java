@@ -110,6 +110,8 @@ public class MemberController {
     public ResponseEntity<?> getMyInfo(Authentication authentication){
         CustomUser user = (CustomUser) authentication.getPrincipal();
 
+        System.out.println("user : " + user.getProvider());
+
         try {
             return ResponseEntity.ok(user);
         } catch (IllegalArgumentException e) {

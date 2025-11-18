@@ -37,8 +37,8 @@ public class MemberService {
                 signupRequestDto.getUsername(),
                 encodedPassword,
                 signupRequestDto.getEmail(),
-                Role.USER,
-                ProviderType.LOCAL
+                signupRequestDto.getProvider(),
+                Role.USER
         ));
     }
 
