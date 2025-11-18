@@ -65,7 +65,7 @@ public class MemberServiceTest {
     }
 
     @Test
-    public void searchOne() {
+    public void searchOneById() {
 
         Member findMember = memberService.registerMember(new SignupRequestDto("user3", "password3", "email3"));
 
@@ -73,5 +73,31 @@ public class MemberServiceTest {
 
         assertThat(responseDto.getUsername()).isEqualTo("user3");
         assertThat(responseDto.getEmail()).isEqualTo("email3");
+    }
+
+    @Test
+    public void searchOneByUsername() {
+        Member findMember = memberService.registerMember(new SignupRequestDto("user3", "password3", "email3"));
+
+        Member searchMember = memberService.findByUsernameOrThrow(findMember.getUsername());
+
+        assertThat(searchMember.getUsername()).isEqualTo("user3");
+        assertThat(searchMember.getEmail()).isEqualTo("email3");
+        assertThat(passwordEncoder.matches("password3", searchMember.getPassword())).isTrue();
+    }
+
+    @Test
+    public void update() {
+
+    }
+
+    @Test
+    public void delete() {
+
+    }
+
+    @Test
+    public void validateEmail() {
+
     }
 }
