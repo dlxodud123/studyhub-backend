@@ -84,11 +84,12 @@
       const username = document.getElementById("username").value;
       const password = document.getElementById("password").value;
       const email = document.getElementById("email").value;
+      const provider = "GOOGLE";
 
       const res = await fetch("/api/members/signup", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, password, email })
+          body: JSON.stringify({ username, password, email, provider })
       });
 
       const text = await res.text();
