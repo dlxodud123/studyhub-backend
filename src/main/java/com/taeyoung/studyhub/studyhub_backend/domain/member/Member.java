@@ -46,5 +46,9 @@ public class Member extends BaseEntity {
         this.password = password;
         this.email = email;
     }
+
+    public void setRandomPassword(String password) {
+        this.password = password;
+    }
 }
 

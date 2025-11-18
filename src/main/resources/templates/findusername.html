@@ -99,10 +99,11 @@
           const text = await res.text(); // 서버에서 반환한 유저네임
 
           if (res.ok) {
-              alert("회원님의 유저네임: " + text);
+              alert("회원님의 유저네임 : " + text);
               window.location.href = "/login";
           } else {
-              alert(text); // 오류 메시지 출력
+              alert("이메일을 다시 입력해주세요"); // 오류 메시지 출력
+              window.location.href = "/find-username";
           }
       } catch (err) {
           console.error(err);

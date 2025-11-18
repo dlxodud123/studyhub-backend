@@ -2,12 +2,12 @@ package com.taeyoung.studyhub.studyhub_backend.controller;
 
 import com.taeyoung.studyhub.studyhub_backend.domain.member.CustomUser;
 import com.taeyoung.studyhub.studyhub_backend.domain.member.Member;
-import com.taeyoung.studyhub.studyhub_backend.dto.member.request.EmailRequestDto;
+import com.taeyoung.studyhub.studyhub_backend.dto.member.request.find.EmailRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.LoginRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.SignupRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.UpdateRequestDto;
-import com.taeyoung.studyhub.studyhub_backend.dto.member.response.MemberResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.auth.jwt.JwtUtil;
+import com.taeyoung.studyhub.studyhub_backend.dto.member.request.find.UsernameRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.service.MemberService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -186,4 +186,15 @@ public class MemberController {
 
         return ResponseEntity.ok(findUsername);
     }
+
+    // password 찾기
+    @PostMapping("/api/members/find-password")
+    public ResponseEntity<String> findPassword(@RequestBody UsernameRequestDto usernameRequestDto) {
+        System.out.println("username : " + usernameRequestDto.getUsername());
+        String password = memberService.findByPasswordByUsername(usernameRequestDto.getUsername());
+
+        return ResponseEntity.ok(password);
+    }
+
+    // email 찾기
 }

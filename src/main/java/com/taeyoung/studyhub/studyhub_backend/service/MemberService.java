@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +22,6 @@ public class MemberService {
 
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
-
 
     // 회원가입
     public Member registerMember(SignupRequestDto signupRequestDto){
@@ -83,8 +83,30 @@ public class MemberService {
 
     // username 찾기
     public String findByUsernameByEmail(String email) {
-        Member findMember = memberRepository.findUsernameByEmail(email);
+        Member findMember = memberRepository.findUsernameByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
 
         return findMember.getUsername();
     }
+
+    // password 찾기
+    public String findByPasswordByUsername(String username) {
+        Member findMember = memberRepository.findPasswordByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+
+        // 임시 비밀번호 생성 (UUID 앞 8자리)
+        String tempPassword = UUID.randomUUID().toString().substring(0, 8);
+
+        // 암호화 후 member 객체에 set
+        findMember.setRandomPassword(passwordEncoder.encode(tempPassword));
+
+        // DB 업데이트
+        memberRepository.save(findMember);
+
+        System.out.println("password : " + tempPassword);
+
+        return tempPassword; // 사용자에게 보여줄 임시 비밀번호
+    }
+
+    // email 찾기
 }

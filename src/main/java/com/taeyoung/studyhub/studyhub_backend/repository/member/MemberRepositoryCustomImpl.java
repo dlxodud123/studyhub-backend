@@ -5,6 +5,7 @@ import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class MemberRepositoryCustomImpl implements MemberRepositoryCustom{
@@ -12,11 +13,20 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom{
     private final EntityManager em;
 
     @Override
-    public Member findUsernameByEmail(String email) {
+    public Optional<Member> findUsernameByEmail(String email) {
         List<Member> list = em.createQuery("select m from Member m where m.email = :email")
                 .setParameter("email", email)
                 .getResultList();
 
-        return list.get(0);
+        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
+    }
+
+    @Override
+    public Optional<Member> findPasswordByUsername(String username) {
+        List<Member> list = em.createQuery("select m from Member m where m.username = :username")
+                .setParameter("username", username)
+                .getResultList();
+
+        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 }

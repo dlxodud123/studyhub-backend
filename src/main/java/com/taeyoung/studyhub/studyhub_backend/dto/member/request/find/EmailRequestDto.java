@@ -1,4 +1,4 @@
-package com.taeyoung.studyhub.studyhub_backend.dto.member.request;
+package com.taeyoung.studyhub.studyhub_backend.dto.member.request.find;
 
 import lombok.Getter;
 

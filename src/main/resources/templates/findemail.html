@@ -1,10 +1,115 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>유저네임 찾기</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 320px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .sub-buttons {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+            width: 100%;
+        }
+        .sub-buttons button {
+            flex: 1;
+            padding: 8px;
+            font-size: 0.9em;
+            background-color: #eee;
+            color: #333;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .sub-buttons button:hover {
+            background-color: #ddd;
+        }
+    </style>
 </head>
 <body>
+<div class="login-container">
+    <h2>비밀번호 찾기</h2>
+    <input id="username" type="username" name="username" placeholder="유저네임" required>
+    <button id="findPasswordBtn" type="button">찾기</button>
+</div>
 
+<script>
+    document.getElementById("findPasswordBtn").addEventListener("click", async () => {
+        const username = document.getElementById("username").value;
+
+        if (!username) {
+            alert("유저네임을 입력해주세요.");
+            return;
+        }
+
+        try {
+            // POST 요청으로 이메일 보내기
+            const res = await fetch("/api/members/find-password", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ username }) // JSON 형식으로 이메일 전달
+            });
+
+            const text = await res.text(); // 서버에서 반환한 유저네임
+
+            if (res.ok) {
+                alert("회원님의 비밀번호는 " + text + "로 변경되었습니다.");
+                window.location.href = "/login";
+            } else {
+                alert("유저네임을 다시 입력해주세요"); // 오류 메시지 출력
+                window.location.href = "/find-password";
+            }
+        } catch (err) {
+            console.error(err);
+            alert("서버 요청 중 오류가 발생했습니다.");
+        }
+    });
+</script>
 </body>
 </html>
