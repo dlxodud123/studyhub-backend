@@ -1,6 +1,7 @@
 package com.taeyoung.studyhub.studyhub_backend.service;
 
 import com.taeyoung.studyhub.studyhub_backend.domain.member.Member;
+import com.taeyoung.studyhub.studyhub_backend.domain.member.ProviderType;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.SignupRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.response.MemberResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.repository.member.MemberRepository;
@@ -49,6 +50,7 @@ public class MemberServiceTest {
         assertThat(lastMember.getUsername()).isEqualTo("user3");
         assertThat(lastMember.getEmail()).isEqualTo("email3");
         assertThat(passwordEncoder.matches("password3", lastMember.getPassword())).isTrue();
+        assertThat(lastMember.getProvider()).isEqualTo(ProviderType.LOCAL);
     }
 
     @Test
