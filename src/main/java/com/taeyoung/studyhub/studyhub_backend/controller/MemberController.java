@@ -2,6 +2,7 @@ package com.taeyoung.studyhub.studyhub_backend.controller;
 
 import com.taeyoung.studyhub.studyhub_backend.domain.member.CustomUser;
 import com.taeyoung.studyhub.studyhub_backend.domain.member.Member;
+import com.taeyoung.studyhub.studyhub_backend.dto.member.request.EmailRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.LoginRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.SignupRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.UpdateRequestDto;
@@ -176,5 +177,13 @@ public class MemberController {
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("서버 오류가 발생했습니다.");
         }
+    }
+
+    // username 찾기
+    @PostMapping("/api/members/find-username")
+    public ResponseEntity<String> findUsername(@RequestBody EmailRequestDto emailRequestDto) {
+        String findUsername = memberService.findByUsernameByEmail(emailRequestDto.getEmail());
+
+        return ResponseEntity.ok(findUsername);
     }
 }

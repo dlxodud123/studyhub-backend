@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>유저네임 찾기</title>
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .login-container {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        width: 320px;
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 12px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 6px;
+        background-color: #4CAF50;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #45a049;
+    }
+
+    .sub-buttons {
+        display: flex;
+        gap: 5px;
+        margin-top: 10px;
+        width: 100%;
+    }
+    .sub-buttons button {
+        flex: 1;
+        padding: 8px;
+        font-size: 0.9em;
+        background-color: #eee;
+        color: #333;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+    .sub-buttons button:hover {
+        background-color: #ddd;
+    }
+  </style>
+</head>
+<body>
+<div class="login-container">
+  <h2>유저네임 찾기</h2>
+  <input id="email" type="email" name="email" placeholder="이메일" required>
+  <button id="findUsernameBtn" type="button">찾기</button>
+</div>
+
+<script>
+  document.getElementById("findUsernameBtn").addEventListener("click", async () => {
+      const email = document.getElementById("email").value;
+
+      if (!email) {
+          alert("이메일을 입력해주세요.");
+          return;
+      }
+
+      try {
+          // POST 요청으로 이메일 보내기
+          const res = await fetch("/api/members/find-username", {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json"
+              },
+              body: JSON.stringify({ email }) // JSON 형식으로 이메일 전달
+          });
+
+          const text = await res.text(); // 서버에서 반환한 유저네임
+
+          if (res.ok) {
+              alert("회원님의 유저네임: " + text);
+              window.location.href = "/login";
+          } else {
+              alert(text); // 오류 메시지 출력
+          }
+      } catch (err) {
+          console.error(err);
+          alert("서버 요청 중 오류가 발생했습니다.");
+      }
+  });
+</script>
+</body>
+</html>

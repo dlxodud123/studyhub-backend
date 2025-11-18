@@ -27,4 +27,19 @@ public class ViewController {
     public String modify(){
         return "modify.html";
     }
+
+    @GetMapping("/find-email")
+    public String findEmail(){
+        return "findemail.html";
+    }
+
+    @GetMapping("/find-password")
+    public String findPassword(){
+        return "findpassword.html";
+    }
+
+    @GetMapping("/find-username")
+    public String findUsername(){
+        return "findusername.html";
+    }
 }

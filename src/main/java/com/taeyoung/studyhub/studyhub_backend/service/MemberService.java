@@ -22,6 +22,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
 
+
     // 회원가입
     public Member registerMember(SignupRequestDto signupRequestDto){
         String encodedPassword = passwordEncoder.encode(signupRequestDto.getPassword());
@@ -78,5 +79,12 @@ public class MemberService {
     public Member findByUsername(String username){
         return memberRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+    }
+
+    // username 찾기
+    public String findByUsernameByEmail(String email) {
+        Member findMember = memberRepository.findUsernameByEmail(email);
+
+        return findMember.getUsername();
     }
 }

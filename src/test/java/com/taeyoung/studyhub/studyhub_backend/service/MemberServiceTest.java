@@ -133,8 +133,9 @@ public class MemberServiceTest {
         assertThat(lastMember.getEmail()).isEqualTo("email2");
     }
 
+
     @Test
-    public void validateEmail() {
+    public void findByUsernameByEmail() {
         // given
 
         // when
