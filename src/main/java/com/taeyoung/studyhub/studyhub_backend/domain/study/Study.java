@@ -19,6 +19,24 @@ public class Study extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "category_id")
+//    private Category category;
+
+//    @ManyToMany
+//    @JoinTable(
+//            name = "study_tag",
+//            joinColumns = @JoinColumn(name = "study_id"),
+//            inverseJoinColumns = @JoinColumn(name = "tag_id")
+//    )
+//    private List<Tag> tags = new ArrayList<>();
+
     public Study() {
+    }
+
+    public Study(String title, String content, Member member) {
+        this.title = title;
+        this.content = content;
+        this.member = member;
     }
 }

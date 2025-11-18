@@ -49,4 +49,9 @@ public class ViewController {
     public String studyList(){
         return "study/studylist.html";
     }
+
+    @GetMapping("/study/create")
+    public String studyCreate(){
+        return "study/studycreate.html";
+    }
 }
