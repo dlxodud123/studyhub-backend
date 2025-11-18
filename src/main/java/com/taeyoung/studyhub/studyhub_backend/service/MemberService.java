@@ -75,7 +75,7 @@ public class MemberService {
     }
 
     // username을 통해 member 찾기
-    public Member findByUsernameOrThrow(String username){
+    public Member findByUsername(String username){
         return memberRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
     }

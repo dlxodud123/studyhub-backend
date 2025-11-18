@@ -44,7 +44,7 @@ public class MemberController {
         // username, password 검증
         try {
             // 1) username이 존재하는지 먼저 확인
-            Member member = memberService.findByUsernameOrThrow(loginRequestDto.getUsername());
+            Member member = memberService.findByUsername(loginRequestDto.getUsername());
 
             // 2) email 검증
             if (!member.getEmail().equals(loginRequestDto.getEmail())) {

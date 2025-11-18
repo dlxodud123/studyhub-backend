@@ -90,7 +90,7 @@ public class MemberServiceTest {
 
         // when
         Member findMember = memberService.registerMember(signupRequestDto);
-        Member searchMember = memberService.findByUsernameOrThrow(findMember.getUsername());
+        Member searchMember = memberService.findByUsername(findMember.getUsername());
 
         // then
         assertThat(searchMember.getUsername()).isEqualTo("user3");
@@ -107,7 +107,7 @@ public class MemberServiceTest {
         Member findMember = memberService.registerMember(signupRequestDto);
         memberService.updateMember(new UpdateRequestDto("changePassword", "changeEmail"), findMember.getId());
         MemberResponseDto dto = memberService.getMyInfo(findMember.getId());
-        Member findMemberByUsername = memberService.findByUsernameOrThrow(dto.getUsername());
+        Member findMemberByUsername = memberService.findByUsername(dto.getUsername());
 
         // then
         assertThat(dto.getEmail()).isEqualTo("changeEmail");
@@ -117,11 +117,20 @@ public class MemberServiceTest {
     @Test
     public void delete() {
         // given
+        SignupRequestDto signupRequestDto = new SignupRequestDto("user3", "password3", "email3");
 
         // when
+        Member findMember = memberService.registerMember(signupRequestDto);
+        memberService.deleteMember(findMember.getId());
+
+        List<Member> findAll = memberRepository.findAll();
+        Member lastMember = findAll.get(findAll.size() - 1);
 
         // then
-
+        assertThat(findAll.size()).isEqualTo(2);
+        assertThat(lastMember.getUsername()).isEqualTo("user2");
+        assertThat(passwordEncoder.matches("password2", lastMember.getPassword())).isTrue();
+        assertThat(lastMember.getEmail()).isEqualTo("email2");
     }
 
     @Test
