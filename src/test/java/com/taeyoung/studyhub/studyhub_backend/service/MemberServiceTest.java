@@ -29,8 +29,8 @@ public class MemberServiceTest {
 
     @BeforeEach
     public void before() {
-        SignupRequestDto signupRequestDto1 = new SignupRequestDto("user1", "password1", "email1");
-        SignupRequestDto signupRequestDto2 = new SignupRequestDto("user2", "password2", "email2");
+        SignupRequestDto signupRequestDto1 = new SignupRequestDto("user1", "password1", "email1", ProviderType.LOCAL);
+        SignupRequestDto signupRequestDto2 = new SignupRequestDto("user2", "password2", "email2", ProviderType.LOCAL);
         memberService.registerMember(signupRequestDto1);
         memberService.registerMember(signupRequestDto2);
     }
@@ -38,7 +38,7 @@ public class MemberServiceTest {
     @Test
     public void signup() {
         // given
-        SignupRequestDto signupRequestDto = new SignupRequestDto("user3", "password3", "email3");
+        SignupRequestDto signupRequestDto = new SignupRequestDto("user3", "password3", "email3", ProviderType.LOCAL);
 
         // when
         memberService.registerMember(signupRequestDto);
@@ -72,7 +72,7 @@ public class MemberServiceTest {
     @Test
     public void searchOneById() {
         // given
-        SignupRequestDto signupRequestDto = new SignupRequestDto("user3", "password3", "email3");
+        SignupRequestDto signupRequestDto = new SignupRequestDto("user3", "password3", "email3", ProviderType.LOCAL);
 
         // when
         Member findMember = memberService.registerMember(signupRequestDto);
@@ -86,7 +86,7 @@ public class MemberServiceTest {
     @Test
     public void searchOneByUsername() {
         // given
-        SignupRequestDto signupRequestDto = new SignupRequestDto("user3", "password3", "email3");
+        SignupRequestDto signupRequestDto = new SignupRequestDto("user3", "password3", "email3", ProviderType.LOCAL);
 
         // when
         Member findMember = memberService.registerMember(signupRequestDto);
@@ -101,7 +101,7 @@ public class MemberServiceTest {
     @Test
     public void update() {
         // given
-        SignupRequestDto signupRequestDto = new SignupRequestDto("user3", "password3", "email3");
+        SignupRequestDto signupRequestDto = new SignupRequestDto("user3", "password3", "email3", ProviderType.LOCAL);
 
         // when
         Member findMember = memberService.registerMember(signupRequestDto);
@@ -117,7 +117,7 @@ public class MemberServiceTest {
     @Test
     public void delete() {
         // given
-        SignupRequestDto signupRequestDto = new SignupRequestDto("user3", "password3", "email3");
+        SignupRequestDto signupRequestDto = new SignupRequestDto("user3", "password3", "email3", ProviderType.LOCAL);
 
         // when
         Member findMember = memberService.registerMember(signupRequestDto);
