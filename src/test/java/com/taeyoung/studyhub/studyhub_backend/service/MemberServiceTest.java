@@ -152,23 +152,20 @@ public class MemberServiceTest {
     // password 찾기
     @Test
     public void findByPasswordByUsername() {
-        // given
-
         // when
         String password = memberService.findByPasswordByUsername("user1");
 
         // then
-//        assertThat(password).isNOt
+        assertThat(password).isNotNull();
     }
 
     // email 찾기
     @Test
     public void findByEmailByPassword() {
-        // given
-
         // when
+        String findEmail = memberService.findByEmailByUsernameAndPassword("user1", "password1");
 
         // then
-
+        assertThat(findEmail).isEqualTo("email1");
     }
 }

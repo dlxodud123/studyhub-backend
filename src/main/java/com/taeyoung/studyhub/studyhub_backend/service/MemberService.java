@@ -109,7 +109,7 @@ public class MemberService {
     }
 
     // email 찾기
-    public String findByEmailByPassword(String username, String password) {
+    public String findByEmailByUsernameAndPassword(String username, String password) {
         Member findMember = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
 

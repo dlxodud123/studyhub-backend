@@ -199,7 +199,7 @@ public class MemberController {
     // email 찾기
     @PostMapping("/api/members/find-email")
     public ResponseEntity<String> findEmail(@RequestBody UsernameAndPasswordRequestDto usernameAndPasswordRequestDto) {
-        String findEmail = memberService.findByEmailByPassword(
+        String findEmail = memberService.findByEmailByUsernameAndPassword(
                 usernameAndPasswordRequestDto.getUsername(),
                 usernameAndPasswordRequestDto.getPassword()
         );
