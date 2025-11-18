@@ -15,6 +15,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -134,12 +135,40 @@ public class MemberServiceTest {
     }
 
 
+    // username 찾기
     @Test
     public void findByUsernameByEmail() {
+        // given
+        SignupRequestDto signupRequestDto = new SignupRequestDto("user3", "password3", "email3", ProviderType.LOCAL);
+
+        // when
+        Member findMember = memberService.registerMember(signupRequestDto);
+        String findUsername = memberService.findByUsernameByEmail(findMember.getEmail());
+
+        // then
+        assertThat(findMember.getUsername()).isEqualTo(findUsername);
+    }
+
+    // password 찾기
+    @Test
+    public void findByPasswordByUsername() {
+        // given
+
+        // when
+        String password = memberService.findByPasswordByUsername("user1");
+
+        // then
+//        assertThat(password).isNOt
+    }
+
+    // email 찾기
+    @Test
+    public void findByEmailByPassword() {
         // given
 
         // when
 
         // then
+
     }
 }
