@@ -8,38 +8,45 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 public class ViewController {
 
+    // member
     @GetMapping("/login")
     public String loginPage() {
-        return "login";
+        return "member/login";
     }
 
     @GetMapping("/signup")
     public String signupPage() {
-        return "signup";
+        return "member/signup";
     }
 
     @GetMapping("/my-page")
     public String myPage(){
-        return "mypage.html";
+        return "member/mypage.html";
     }
 
     @GetMapping("/modify")
     public String modify(){
-        return "modify.html";
+        return "member/modify.html";
     }
 
     @GetMapping("/find-email")
     public String findEmail(){
-        return "findemail.html";
+        return "member/findemail.html";
     }
 
     @GetMapping("/find-password")
     public String findPassword(){
-        return "findpassword.html";
+        return "member/findpassword.html";
     }
 
     @GetMapping("/find-username")
     public String findUsername(){
-        return "findusername.html";
+        return "member/findusername.html";
+    }
+
+    // study
+    @GetMapping("/study/list")
+    public String studyList(){
+        return "study/studylist.html";
     }
 }

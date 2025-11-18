@@ -1,5 +1,6 @@
 package com.taeyoung.studyhub.studyhub_backend.domain.member;
 
+import com.taeyoung.studyhub.studyhub_backend.domain.study.Study;
 import com.taeyoung.studyhub.studyhub_backend.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -12,6 +13,7 @@ import java.util.List;
 public class Member extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "member_id")
     private Long id;
 
     private String username;
@@ -23,6 +25,9 @@ public class Member extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private ProviderType provider;
+
+    @OneToMany(mappedBy = "member")
+    private List<Study> studies = new ArrayList<>();
 
 //    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<Comment> comments = new ArrayList<>();
