@@ -3,6 +3,7 @@ package com.taeyoung.studyhub.studyhub_backend.service;
 import com.taeyoung.studyhub.studyhub_backend.domain.member.Member;
 import com.taeyoung.studyhub.studyhub_backend.domain.member.ProviderType;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.SignupRequestDto;
+import com.taeyoung.studyhub.studyhub_backend.dto.member.request.UpdateRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.response.MemberResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.repository.member.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,23 +31,22 @@ public class MemberServiceTest {
     public void before() {
         SignupRequestDto signupRequestDto1 = new SignupRequestDto("user1", "password1", "email1");
         SignupRequestDto signupRequestDto2 = new SignupRequestDto("user2", "password2", "email2");
-
         memberService.registerMember(signupRequestDto1);
         memberService.registerMember(signupRequestDto2);
     }
 
     @Test
     public void signup() {
+        // given
         SignupRequestDto signupRequestDto = new SignupRequestDto("user3", "password3", "email3");
 
+        // when
         memberService.registerMember(signupRequestDto);
         List<Member> findAll = memberRepository.findAll();
-
-        assertThat(findAll.size()).isEqualTo(3);
-
         Member lastMember = findAll.get(findAll.size() - 1);
 
-        // username, email, password 검증
+        // then
+        assertThat(findAll.size()).isEqualTo(3);
         assertThat(lastMember.getUsername()).isEqualTo("user3");
         assertThat(lastMember.getEmail()).isEqualTo("email3");
         assertThat(passwordEncoder.matches("password3", lastMember.getPassword())).isTrue();
@@ -55,12 +55,15 @@ public class MemberServiceTest {
 
     @Test
     public void login() {
+        // given
         String username = "user2";
         String password = "password2";
         String email = "email2";
 
+        // when
         Member findMember = memberRepository.findByUsername(username).get();
 
+        // then
         assertThat(findMember.getUsername()).isEqualTo(username);
         assertThat(passwordEncoder.matches(password, findMember.getPassword())).isTrue();
         assertThat(findMember.getEmail()).isEqualTo(email);
@@ -68,21 +71,28 @@ public class MemberServiceTest {
 
     @Test
     public void searchOneById() {
+        // given
+        SignupRequestDto signupRequestDto = new SignupRequestDto("user3", "password3", "email3");
 
-        Member findMember = memberService.registerMember(new SignupRequestDto("user3", "password3", "email3"));
-
+        // when
+        Member findMember = memberService.registerMember(signupRequestDto);
         MemberResponseDto responseDto = memberService.getMyInfo(findMember.getId());
 
+        // then
         assertThat(responseDto.getUsername()).isEqualTo("user3");
         assertThat(responseDto.getEmail()).isEqualTo("email3");
     }
 
     @Test
     public void searchOneByUsername() {
-        Member findMember = memberService.registerMember(new SignupRequestDto("user3", "password3", "email3"));
+        // given
+        SignupRequestDto signupRequestDto = new SignupRequestDto("user3", "password3", "email3");
 
+        // when
+        Member findMember = memberService.registerMember(signupRequestDto);
         Member searchMember = memberService.findByUsernameOrThrow(findMember.getUsername());
 
+        // then
         assertThat(searchMember.getUsername()).isEqualTo("user3");
         assertThat(searchMember.getEmail()).isEqualTo("email3");
         assertThat(passwordEncoder.matches("password3", searchMember.getPassword())).isTrue();
@@ -90,16 +100,36 @@ public class MemberServiceTest {
 
     @Test
     public void update() {
+        // given
+        SignupRequestDto signupRequestDto = new SignupRequestDto("user3", "password3", "email3");
 
+        // when
+        Member findMember = memberService.registerMember(signupRequestDto);
+        memberService.updateMember(new UpdateRequestDto("changePassword", "changeEmail"), findMember.getId());
+        MemberResponseDto dto = memberService.getMyInfo(findMember.getId());
+        Member findMemberByUsername = memberService.findByUsernameOrThrow(dto.getUsername());
+
+        // then
+        assertThat(dto.getEmail()).isEqualTo("changeEmail");
+        assertThat(passwordEncoder.matches("changePassword", findMemberByUsername.getPassword())).isTrue();
     }
 
     @Test
     public void delete() {
+        // given
+
+        // when
+
+        // then
 
     }
 
     @Test
     public void validateEmail() {
+        // given
 
+        // when
+
+        // then
     }
 }

@@ -10,4 +10,9 @@ public class UpdateRequestDto {
     private String password;
     @NotBlank(message = "Email은 필수입니다.")
     private String email;
+
+    public UpdateRequestDto(String password, String email) {
+        this.password = password;
+        this.email = email;
+    }
 }
