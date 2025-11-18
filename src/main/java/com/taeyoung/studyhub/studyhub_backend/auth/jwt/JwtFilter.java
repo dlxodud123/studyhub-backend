@@ -47,10 +47,14 @@ public class JwtFilter extends OncePerRequestFilter {
                     id = (long) Double.parseDouble(claim.get("id").toString());
                 }
 
+                System.out.println("claim : " + claim);
+                System.out.println("claim2 : " + claim.get("email").toString());
+
                 var customUser = new CustomUser(
                         id,
                         claim.get("username").toString(),
                         "none",
+                        claim.get("email").toString(),
                         authorities
                 );
 

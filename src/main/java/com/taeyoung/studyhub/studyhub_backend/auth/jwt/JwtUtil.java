@@ -24,6 +24,7 @@ public class JwtUtil {
         String jwt = Jwts.builder()
                 .claim("id", user.id)
                 .claim("username", user.getUsername())
+                .claim("email", user.getEmail())
                 .claim("authorities", authorities)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 1000000)) //유효기간 1000초

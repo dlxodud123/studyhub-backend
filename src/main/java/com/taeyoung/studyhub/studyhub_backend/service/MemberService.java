@@ -65,14 +65,14 @@ public class MemberService {
     }
 
     // email 검증
-    public void validateEmailForLogin(String username, String email){
-        Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("아이디가 존재하지 않습니다."));
-
-        if (!member.getEmail().equals(email)) {
-            throw new IllegalArgumentException("email이 일치하지 않습니다.");
-        }
-    }
+//    public void validateEmailForLogin(String username, String email){
+//        Member member = memberRepository.findByUsername(username)
+//                .orElseThrow(() -> new IllegalArgumentException("아이디가 존재하지 않습니다."));
+//
+//        if (!member.getEmail().equals(email)) {
+//            throw new IllegalArgumentException("email이 일치하지 않습니다.");
+//        }
+//    }
 
     // username을 통해 member 찾기
     public Member findByUsername(String username){

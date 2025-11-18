@@ -29,7 +29,7 @@ public class MyUserDetailService implements UserDetailsService {
 
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("일반유저"));
-        var a = new CustomUser(member.getId(), member.getUsername(), member.getPassword(), authorities);
+        var a = new CustomUser(member.getId(), member.getUsername(), member.getPassword(), member.getEmail(), authorities);
 
         return a;
     }

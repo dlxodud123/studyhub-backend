@@ -53,10 +53,7 @@ public class MemberController {
 
             // 3) password 검증 (마지막)
             try {
-                var authToken = new UsernamePasswordAuthenticationToken(
-                        loginRequestDto.getUsername(),
-                        loginRequestDto.getPassword()
-                );
+                var authToken = new UsernamePasswordAuthenticationToken(loginRequestDto.getUsername(), loginRequestDto.getPassword());
                 var auth = authenticationManagerBuilder.getObject().authenticate(authToken);
                 SecurityContextHolder.getContext().setAuthentication(auth);
             } catch (Exception e) {
@@ -112,11 +109,9 @@ public class MemberController {
     @GetMapping("/api/members/me")
     public ResponseEntity<?> getMyInfo(Authentication authentication){
         CustomUser user = (CustomUser) authentication.getPrincipal();
-        Long userId = user.getId();
 
         try {
-            MemberResponseDto dto = memberService.getMyInfo(userId);
-            return ResponseEntity.ok(dto);
+            return ResponseEntity.ok(user);
         } catch (IllegalArgumentException e) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
