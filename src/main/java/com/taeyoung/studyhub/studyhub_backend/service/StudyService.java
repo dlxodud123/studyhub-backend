@@ -3,6 +3,7 @@ package com.taeyoung.studyhub.studyhub_backend.service;
 import com.taeyoung.studyhub.studyhub_backend.domain.member.Member;
 import com.taeyoung.studyhub.studyhub_backend.domain.study.Study;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.request.StudyCreateRequestDto;
+import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyDetailResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyListResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.repository.member.MemberRepository;
 import com.taeyoung.studyhub.studyhub_backend.repository.study.StudyRepository;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -46,5 +48,17 @@ public class StudyService {
         );
 
         studyRepository.save(study);
+    }
+
+    public StudyDetailResponseDto findStudyById(Long id) {
+        Study study = studyRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 스터디가 존재하지 않습니다."));
+
+        return new StudyDetailResponseDto(
+                study.getTitle(),
+                study.getMember().getUsername(), // 작성자 이름
+                study.getCreatedAt().toString(), // LocalDateTime → String
+                study.getContent()
+        );
     }
 }

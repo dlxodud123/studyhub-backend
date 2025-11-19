@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>스터디 상세</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f7f7f7; margin:0; padding:20px; }
+    .container { max-width:800px; margin:0 auto; }
+    .card { background:white; padding:20px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
+
+    h1 { margin-top:0; font-size:24px; }
+    .meta { font-size:13px; color:#666; display:flex; gap:10px; margin-bottom:20px; }
+
+    .content-box {
+      white-space:pre-wrap;
+      line-height:1.6;
+      font-size:15px;
+    }
+
+    .btn-row { margin-top:20px; display:flex; gap:10px; }
+    .btn { padding:8px 14px; border:none; border-radius:6px; cursor:pointer; }
+    .primary { background:#4CAF50; color:white; }
+    .danger { background:#e74c3c; color:white; }
+    .secondary { background:#eee; color:#333; border:1px solid #ddd; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="card">
+    <h1 id="title">로딩중...</h1>
+    <div class="meta">
+      <div id="writer"></div>
+      <div id="createdAt"></div>
+    </div>
+
+    <div id="content" class="content-box"></div>
+
+    <div class="btn-row">
+      <button class="btn secondary" id="backBtn">뒤로가기</button>
+      <button class="btn primary" id="editBtn">수정하기</button>
+      <button class="btn danger" id="deleteBtn">삭제하기</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const studyId = window.location.pathname.split('/').pop(); // /studies/5 → 5
+
+  document.getElementById('backBtn').addEventListener('click', () => {
+    window.history.back();
+  });
+
+  document.getElementById('editBtn').addEventListener('click', () => {
+    window.location.href = `/study/edit/${studyId}`;
+  });
+
+  document.getElementById('deleteBtn').addEventListener('click', async () => {
+    if (!confirm("정말 삭제하시겠습니까?")) return;
+
+    try {
+      const res = await fetch(`/api/studies/${studyId}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+
+      if (res.ok) {
+        alert("삭제되었습니다.");
+        window.location.href = "/study/list";
+      } else {
+        alert("삭제 실패: " + await res.text());
+      }
+    } catch (err) {
+      console.error(err);
+      alert("서버 오류 발생");
+    }
+  });
+
+  async function fetchDetail() {
+    try {
+      const res = await fetch(`/api/studies/${studyId}`);
+      if (!res.ok) throw new Error("데이터 조회 실패");
+
+      const data = await res.json();
+      renderDetail(data);
+    } catch (err) {
+      console.error(err);
+      document.getElementById('title').innerText = "불러오기 실패";
+    }
+  }
+
+  function renderDetail(data) {
+    document.getElementById('title').innerText = escapeHtml(data.title);
+    document.getElementById('writer').innerText = "작성자: " + (escapeHtml(data.createdBy || "익명"));
+    document.getElementById('createdAt').innerText = "작성일: " + (data.createdAt || "");
+
+    // content는 태그 허용할지에 따라 다름 → 여기서는 태그 허용하지 않음 (보안)
+    document.getElementById('content').innerText = data.content || "";
+  }
+
+  function escapeHtml(str) {
+    if (!str) return "";
+    return String(str)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;");
+  }
+
+  fetchDetail();
+</script>
+</body>
+</html>
