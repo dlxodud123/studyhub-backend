@@ -57,4 +57,7 @@ public class ViewController {
 
     @GetMapping("/studies/{id}")
     public String studyDetail(){return "study/studydetail.html";}
+
+    @GetMapping("/study/edit/{id}")
+    public String studyEdit(){return "study/studyedit.html";}
 }

@@ -3,6 +3,7 @@ package com.taeyoung.studyhub.studyhub_backend.service;
 import com.taeyoung.studyhub.studyhub_backend.domain.member.Member;
 import com.taeyoung.studyhub.studyhub_backend.domain.study.Study;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.request.StudyCreateRequestDto;
+import com.taeyoung.studyhub.studyhub_backend.dto.study.request.StudyEditRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyDetailResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyListResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.repository.member.MemberRepository;
@@ -60,5 +61,12 @@ public class StudyService {
                 study.getCreatedAt().toString(), // LocalDateTime → String
                 study.getContent()
         );
+    }
+
+    public void editStudyById(StudyEditRequestDto studyEditRequestDto, Long id) {
+        Study study = studyRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 스터디입니다."));
+
+        study.editStudy(studyEditRequestDto.getTitle(), studyEditRequestDto.getContent());
     }
 }

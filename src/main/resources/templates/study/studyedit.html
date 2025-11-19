@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>스터디 수정</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      box-sizing: border-box;
+    }
+    button {
+      padding: 10px 16px;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<h2>스터디 수정</h2>
+
+<label>제목</label>
+<input type="text" id="title">
+
+<label>작성자</label>
+<input type="text" id="createdBy" readonly>
+
+<label>내용</label>
+<textarea id="content" rows="10"></textarea>
+
+<button id="saveBtn">저장</button>
+<button id="cancelBtn">취소</button>
+
+<script>
+  const studyId = window.location.pathname.split('/').pop(); // /study/edit/5 → 5
+
+  // 상세 데이터 불러오기
+  async function loadDetail() {
+    try {
+      const res = await fetch(`/api/studies/${studyId}`);
+      if (!res.ok) throw new Error("데이터 조회 실패");
+
+      const data = await res.json();
+
+      // 기존 값을 input에 채워넣기
+      document.getElementById('title').value = data.title;
+      document.getElementById('createdBy').value = data.createdBy;
+      document.getElementById('content').value = data.content;
+
+    } catch (e) {
+      alert("데이터를 불러오지 못했습니다.");
+    }
+  }
+
+  // 저장 버튼 클릭 → PUT 요청
+  document.getElementById('saveBtn').addEventListener('click', async () => {
+    const requestBody = {
+      title: document.getElementById('title').value,
+      content: document.getElementById('content').value
+    };
+
+    try {
+      const res = await fetch(`/api/studies/${studyId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify(requestBody)
+      });
+
+      if (res.ok) {
+        alert('수정이 완료되었습니다.');
+        window.location.href = `/studies/${studyId}`;
+      } else {
+        alert("수정 실패: " + await res.text());
+      }
+
+    } catch (e) {
+      console.error(e);
+      alert("서버 오류");
+    }
+  });
+
+  // 취소 → 상세페이지로 이동
+  document.getElementById('cancelBtn').addEventListener('click', () => {
+    window.location.href = `/study/${studyId}`;
+  });
+
+  loadDetail(); // 초기 데이터 로딩
+</script>
+
+</body>
+</html>

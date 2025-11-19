@@ -39,4 +39,9 @@ public class Study extends BaseEntity {
         this.content = content;
         this.member = member;
     }
+
+    public void editStudy(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 }

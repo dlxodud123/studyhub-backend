@@ -2,6 +2,7 @@ package com.taeyoung.studyhub.studyhub_backend.controller;
 
 import com.taeyoung.studyhub.studyhub_backend.domain.member.CustomUser;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.request.StudyCreateRequestDto;
+import com.taeyoung.studyhub.studyhub_backend.dto.study.request.StudyEditRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyDetailResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyListResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.service.StudyService;
@@ -42,5 +43,12 @@ public class StudyController {
     @GetMapping("/api/studies/{id}")
     public StudyDetailResponseDto getStudyDetail(@PathVariable Long id) {
         return studyService.findStudyById(id);
+    }
+
+    @PutMapping("/api/studies/{id}")
+    public ResponseEntity<String> editStudy(@PathVariable Long id, @RequestBody StudyEditRequestDto studyEditRequestDto) {
+        studyService.editStudyById(studyEditRequestDto, id);
+
+        return ResponseEntity.ok("수정 완료");
     }
 }
