@@ -52,7 +52,7 @@ public class StudyController {
         CustomUser user = (CustomUser) authentication.getPrincipal();
 
         try {
-            return ResponseEntity.ok(studyService.findStudyEditById(id, user.getUsername()));
+            return ResponseEntity.ok(studyService.findStudyEditById(id, user.getId()));
         } catch (IllegalArgumentException e) {
             // 상태 코드 403으로 권한/접근 제한 메시지 전송
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
@@ -64,5 +64,14 @@ public class StudyController {
         studyService.editStudyById(studyEditRequestDto, id);
 
         return ResponseEntity.ok("수정 완료");
+    }
+
+    @DeleteMapping("/api/studies/delete/{id}")
+    public ResponseEntity<String> deleteStudy(@PathVariable Long id, Authentication authentication){
+        CustomUser user = (CustomUser) authentication.getPrincipal();
+
+        studyService.deleteStudyById(id, user.getId());
+
+        return ResponseEntity.ok("삭제 완료");
     }
 }

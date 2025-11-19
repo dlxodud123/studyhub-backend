@@ -64,11 +64,11 @@ public class StudyService {
         );
     }
 
-    public StudyEditResponseDto findStudyEditById(Long id, String username) {
+    public StudyEditResponseDto findStudyEditById(Long id, Long userId) {
         Study study = studyRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 스터디가 존재하지 않습니다."));
 
-        if (!study.getMember().getUsername().equals(username)) {
+        if (!study.getMember().getId().equals(userId)) {
             throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
         }
 
@@ -86,4 +86,14 @@ public class StudyService {
         study.editStudy(studyEditRequestDto.getTitle(), studyEditRequestDto.getContent());
     }
 
+    public void deleteStudyById(Long id, Long userId) {
+        Study study = studyRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 스터디가 존재하지 않습니다."));
+
+        if (!study.getMember().getId().equals(userId)) {
+            throw new IllegalArgumentException("작성자만 삭제할 수 있습니다.");
+        }
+
+        studyRepository.deleteById(id);
+    }
 }
