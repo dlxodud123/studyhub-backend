@@ -26,7 +26,9 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests((authorize) -> authorize
                 .requestMatchers("/login", "/css/**", "/js/**").permitAll()
-                .requestMatchers("/my-page/**", "/modify/**", "/study/create").authenticated()
+                .requestMatchers("/my-page/**", "/modify/**",
+                        "/study/create", "/study/edit/**", "/study/delete/**"
+                ).authenticated()
                 .anyRequest().permitAll()
         );
         // auth 없이 지정된 경로 접속 시 /login으로 이동

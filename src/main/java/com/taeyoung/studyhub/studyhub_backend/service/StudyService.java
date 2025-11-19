@@ -5,6 +5,7 @@ import com.taeyoung.studyhub.studyhub_backend.domain.study.Study;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.request.StudyCreateRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.request.StudyEditRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyDetailResponseDto;
+import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyEditResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyListResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.repository.member.MemberRepository;
 import com.taeyoung.studyhub.studyhub_backend.repository.study.StudyRepository;
@@ -51,7 +52,7 @@ public class StudyService {
         studyRepository.save(study);
     }
 
-    public StudyDetailResponseDto findStudyById(Long id) {
+    public StudyDetailResponseDto findStudyDetailById(Long id) {
         Study study = studyRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 스터디가 존재하지 않습니다."));
 
@@ -63,10 +64,26 @@ public class StudyService {
         );
     }
 
+    public StudyEditResponseDto findStudyEditById(Long id, String username) {
+        Study study = studyRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 스터디가 존재하지 않습니다."));
+
+        if (!study.getMember().getUsername().equals(username)) {
+            throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
+        }
+
+        return new StudyEditResponseDto(
+            study.getTitle(),
+            study.getMember().getUsername(),
+            study.getContent()
+        );
+    }
+
     public void editStudyById(StudyEditRequestDto studyEditRequestDto, Long id) {
         Study study = studyRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 스터디입니다."));
 
         study.editStudy(studyEditRequestDto.getTitle(), studyEditRequestDto.getContent());
     }
+
 }

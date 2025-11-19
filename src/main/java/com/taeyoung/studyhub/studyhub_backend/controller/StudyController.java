@@ -1,9 +1,11 @@
 package com.taeyoung.studyhub.studyhub_backend.controller;
 
 import com.taeyoung.studyhub.studyhub_backend.domain.member.CustomUser;
+import com.taeyoung.studyhub.studyhub_backend.domain.study.Study;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.request.StudyCreateRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.request.StudyEditRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyDetailResponseDto;
+import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyEditResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyListResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.service.StudyService;
 import lombok.RequiredArgsConstructor;
@@ -40,12 +42,24 @@ public class StudyController {
         }
     }
 
-    @GetMapping("/api/studies/{id}")
+    @GetMapping("/api/studies/detail/{id}")
     public StudyDetailResponseDto getStudyDetail(@PathVariable Long id) {
-        return studyService.findStudyById(id);
+        return studyService.findStudyDetailById(id);
     }
 
-    @PutMapping("/api/studies/{id}")
+    @GetMapping("/api/studies/edit/{id}")
+    public ResponseEntity<?> getStudyEdit(@PathVariable Long id, Authentication authentication) {
+        CustomUser user = (CustomUser) authentication.getPrincipal();
+
+        try {
+            return ResponseEntity.ok(studyService.findStudyEditById(id, user.getUsername()));
+        } catch (IllegalArgumentException e) {
+            // 상태 코드 403으로 권한/접근 제한 메시지 전송
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/api/studies/edit/{id}")
     public ResponseEntity<String> editStudy(@PathVariable Long id, @RequestBody StudyEditRequestDto studyEditRequestDto) {
         studyService.editStudyById(studyEditRequestDto, id);
 

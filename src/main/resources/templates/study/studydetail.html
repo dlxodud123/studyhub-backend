@@ -77,7 +77,7 @@
 
   async function fetchDetail() {
     try {
-      const res = await fetch(`/api/studies/${studyId}`);
+      const res = await fetch(`/api/studies/detail/${studyId}`);
       if (!res.ok) throw new Error("데이터 조회 실패");
 
       const data = await res.json();
