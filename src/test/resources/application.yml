@@ -19,4 +19,6 @@ logging.level:
 #  org.hibernate.type: trace
 
 google:
+  client-id: test
+  client-secret: test
   redirect-uri: http://localhost:8080/oauth/google/callback

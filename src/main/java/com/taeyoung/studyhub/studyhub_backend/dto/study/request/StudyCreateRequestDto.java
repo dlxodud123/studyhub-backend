@@ -10,4 +10,10 @@ public class StudyCreateRequestDto {
     private String content;
 //    private Long categoryId;
 //    private List<Long> tagIds;
+
+
+    public StudyCreateRequestDto(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 }

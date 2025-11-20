@@ -41,7 +41,8 @@ public class StudyService {
     }
 
     public void createStudy(StudyCreateRequestDto studyCreateRequestDto, Long userId) {
-        Member member = memberRepository.getReferenceById(userId);
+        Member member = memberRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
 
         Study study = new Study(
             studyCreateRequestDto.getTitle(),
