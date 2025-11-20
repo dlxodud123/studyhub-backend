@@ -40,7 +40,7 @@ public class StudyService {
             .toList();
     }
 
-    public void createStudy(StudyCreateRequestDto studyCreateRequestDto, Long userId) {
+    public Study createStudy(StudyCreateRequestDto studyCreateRequestDto, Long userId) {
         Member member = memberRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
 
@@ -50,7 +50,7 @@ public class StudyService {
             member
         );
 
-        studyRepository.save(study);
+        return studyRepository.save(study);
     }
 
     public StudyDetailResponseDto findStudyDetailById(Long id) {

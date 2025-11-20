@@ -2,8 +2,10 @@ package com.taeyoung.studyhub.studyhub_backend.service;
 
 import com.taeyoung.studyhub.studyhub_backend.domain.member.Member;
 import com.taeyoung.studyhub.studyhub_backend.domain.member.ProviderType;
+import com.taeyoung.studyhub.studyhub_backend.domain.study.Study;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.SignupRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.request.StudyCreateRequestDto;
+import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyDetailResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyListResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.repository.study.StudyRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,6 +30,9 @@ public class StudyServiceTest {
 
     private Member member1;
     private Member member2;
+    private Study study1;
+    private Study study2;
+
 
     @BeforeEach
     public void before() {
@@ -35,17 +40,15 @@ public class StudyServiceTest {
         SignupRequestDto signupRequestDto2 = new SignupRequestDto("user2", "password2", "email2", ProviderType.GOOGLE);
         member1 = memberService.registerMember(signupRequestDto1);
         member2 = memberService.registerMember(signupRequestDto2);
+        StudyCreateRequestDto dto1 = new StudyCreateRequestDto("testTitle1", "testContent1");
+        StudyCreateRequestDto dto2 = new StudyCreateRequestDto("testTitle2", "testContent2");
+        study1 = studyService.createStudy(dto1, member1.getId());
+        study2 = studyService.createStudy(dto2, member2.getId());
     }
 
     @Test
-    public void getStudyListAndCreateStudy() {
-        // given
-        StudyCreateRequestDto dto1 = new StudyCreateRequestDto("testTitle1", "testContent1");
-        StudyCreateRequestDto dto2 = new StudyCreateRequestDto("testTitle2", "testContent2");
-
+    public void getStudyList() {
         // when
-        studyService.createStudy(dto1, member1.getId());
-        studyService.createStudy(dto2, member2.getId());
         List<StudyListResponseDto> studyList = studyService.getStudyList();
 
         // then
@@ -60,12 +63,13 @@ public class StudyServiceTest {
 
     @Test
     public void findDetailStudy() {
-        // given
-
         // when
+        StudyDetailResponseDto detailDto = studyService.findStudyDetailById(study1.getId());
 
         // then
-
+        assertThat(detailDto.getTitle()).isEqualTo("testTitle1");
+        assertThat(detailDto.getContent()).isEqualTo("testContent1");
+        assertThat(detailDto.getCreatedBy()).isEqualTo("user1");
     }
 
     @Test
