@@ -106,11 +106,19 @@ public class StudyServiceTest {
 
     @Test
     public void deleteStudy() {
-        // given
-
         // when
+        studyService.deleteStudyById(study1.getId(), member1.getId());
+        List<StudyListResponseDto> studyList = studyService.getStudyList();
 
         // then
-
+        assertThat(studyList.size()).isEqualTo(1);
+        assertThat(studyList.get(0).getTitle()).isEqualTo("testTitle2");
+        assertThat(studyList.get(0).getContent()).isEqualTo("testContent2");
+        assertThat(studyList.get(0).getCreatedBy()).isEqualTo("user2");
+        assertThatThrownBy(() ->
+                studyService.deleteStudyById(study2.getId(), member1.getId())
+        )
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("작성자만 삭제할 수 있습니다.");
     }
 }
