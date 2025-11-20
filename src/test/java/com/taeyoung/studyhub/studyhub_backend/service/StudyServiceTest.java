@@ -83,6 +83,12 @@ public class StudyServiceTest {
         assertThat(editDto.getTitle()).isEqualTo("testTitle1");
         assertThat(editDto.getContent()).isEqualTo("testContent1");
         assertThat(editDto.getCreatedBy()).isEqualTo("user1");
+        assertThatThrownBy(() ->
+                studyService.findStudyEditById(study1.getId(), member2.getId())
+        )
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("작성자만 수정할 수 있습니다.");
+
     }
 
     @Test
