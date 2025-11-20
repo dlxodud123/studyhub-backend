@@ -6,6 +6,7 @@ import com.taeyoung.studyhub.studyhub_backend.domain.study.Study;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.SignupRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.request.StudyCreateRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyDetailResponseDto;
+import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyEditResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyListResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.repository.study.StudyRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -74,12 +75,13 @@ public class StudyServiceTest {
 
     @Test
     public void findEditStudy() {
-        // given
-
         // when
+        StudyEditResponseDto editDto = studyService.findStudyEditById(study1.getId(), member1.getId());
 
         // then
-
+        assertThat(editDto.getTitle()).isEqualTo("testTitle1");
+        assertThat(editDto.getContent()).isEqualTo("testContent1");
+        assertThat(editDto.getCreatedBy()).isEqualTo("user1");
     }
 
     @Test
