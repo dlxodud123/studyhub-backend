@@ -5,6 +5,7 @@ import com.taeyoung.studyhub.studyhub_backend.domain.member.ProviderType;
 import com.taeyoung.studyhub.studyhub_backend.domain.study.Study;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.SignupRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.request.StudyCreateRequestDto;
+import com.taeyoung.studyhub.studyhub_backend.dto.study.request.StudyEditRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyDetailResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyEditResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyListResponseDto;
@@ -87,11 +88,14 @@ public class StudyServiceTest {
     @Test
     public void editStudy() {
         // given
+        StudyEditRequestDto editRequestDto = new StudyEditRequestDto("editTitle", "editContent");
 
         // when
+        studyService.editStudyById(editRequestDto, study1.getId());
 
         // then
-
+        assertThat(study1.getTitle()).isEqualTo("editTitle");
+        assertThat(study1.getContent()).isEqualTo("editContent");
     }
 
     @Test
