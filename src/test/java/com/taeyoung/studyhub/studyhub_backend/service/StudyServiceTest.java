@@ -38,7 +38,7 @@ public class StudyServiceTest {
     }
 
     @Test
-    public void getStudyList() {
+    public void getStudyListAndCreateStudy() {
         // given
         StudyCreateRequestDto dto1 = new StudyCreateRequestDto("testTitle1", "testContent1");
         StudyCreateRequestDto dto2 = new StudyCreateRequestDto("testTitle2", "testContent2");
@@ -56,16 +56,6 @@ public class StudyServiceTest {
         assertThat(studyList.get(1).getTitle()).isEqualTo("testTitle2");
         assertThat(studyList.get(1).getContent()).isEqualTo("testContent2");
         assertThat(studyList.get(1).getCreatedBy()).isEqualTo("user2");
-    }
-
-    @Test
-    public void createStudy() {
-        // given
-
-        // when
-
-        // then
-
     }
 
     @Test
