@@ -24,6 +24,8 @@ public class QStudy extends EntityPathBase<Study> {
 
     public final com.taeyoung.studyhub.studyhub_backend.global.entity.QBaseEntity _super = new com.taeyoung.studyhub.studyhub_backend.global.entity.QBaseEntity(this);
 
+    public final QCategory category;
+
     public final StringPath content = createString("content");
 
     //inherited
@@ -32,6 +34,8 @@ public class QStudy extends EntityPathBase<Study> {
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final com.taeyoung.studyhub.studyhub_backend.domain.member.QMember member;
+
+    public final ListPath<StudyTag, QStudyTag> studyTags = this.<StudyTag, QStudyTag>createList("studyTags", StudyTag.class, QStudyTag.class, PathInits.DIRECT2);
 
     public final StringPath title = createString("title");
 
@@ -56,6 +60,7 @@ public class QStudy extends EntityPathBase<Study> {
 
     public QStudy(Class<? extends Study> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.category = inits.isInitialized("category") ? new QCategory(forProperty("category")) : null;
         this.member = inits.isInitialized("member") ? new com.taeyoung.studyhub.studyhub_backend.domain.member.QMember(forProperty("member")) : null;
     }
 

@@ -8,8 +8,8 @@ import java.util.List;
 public class StudyCreateRequestDto {
     private String title;
     private String content;
-//    private Long categoryId;
-//    private List<Long> tagIds;
+    private Long categoryId;
+    private List<String> tagNames;
 
 
     public StudyCreateRequestDto(String title, String content) {

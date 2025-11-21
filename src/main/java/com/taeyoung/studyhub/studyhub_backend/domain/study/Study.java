@@ -5,6 +5,9 @@ import com.taeyoung.studyhub.studyhub_backend.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 public class Study extends BaseEntity {
@@ -19,17 +22,12 @@ public class Study extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "category_id")
-//    private Category category;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
-//    @ManyToMany
-//    @JoinTable(
-//            name = "study_tag",
-//            joinColumns = @JoinColumn(name = "study_id"),
-//            inverseJoinColumns = @JoinColumn(name = "tag_id")
-//    )
-//    private List<Tag> tags = new ArrayList<>();
+    @OneToMany(mappedBy="study", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<StudyTag> studyTags = new ArrayList<>();
 
     public Study() {
     }
@@ -43,5 +41,22 @@ public class Study extends BaseEntity {
     public void editStudy(String title, String content) {
         this.title = title;
         this.content = content;
+    }
+
+    public Study(String title, String content, Member member, Category category) {
+        this.title = title;
+        this.content = content;
+        this.member = member;
+        this.category = category;
+    }
+
+    // StudyTag 편의 메서드
+    public void addStudyTag(StudyTag studyTag) {
+        studyTags.add(studyTag);
+        studyTag.setStudy(this); // StudyTag 안의 study 필드도 세팅
+    }
+    public void removeStudyTag(StudyTag studyTag) {
+        studyTags.remove(studyTag);
+        studyTag.setStudy(null); // 연관관계 끊기
     }
 }
