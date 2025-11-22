@@ -18,8 +18,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -50,7 +52,6 @@ public class StudyService {
                     study.getTitle(),
                     study.getContent(),
                     study.getMember().getUsername(),
-//                    study.getCategory().getName(),
                     study.getCategory() != null ? study.getCategory().getName() : null,
                     study.getStudyTags()
                             .stream()
@@ -72,7 +73,10 @@ public class StudyService {
         Study study = new Study(studyCreateRequestDto.getTitle(), studyCreateRequestDto.getContent(), member, category);
         Study saveStudy = studyRepository.save(study);
 
-        for (String tagName : studyCreateRequestDto.getTagNames()) {
+        // 중복 태그 제거 + 순서 유지
+        Set<String> uniqueTagNames = new LinkedHashSet<>(studyCreateRequestDto.getTagNames());
+
+        for (String tagName : uniqueTagNames) {
             Tag tag = tagRepository.findByName(tagName)
                     .orElseGet(() -> tagRepository.save(new Tag(tagName)));
 
