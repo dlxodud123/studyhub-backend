@@ -35,12 +35,27 @@ public class StudyService {
 
         List<Study> studies = studyRepository.findAll();
 
+        for (Study study : studies) {
+            List<String> tagNames = study.getStudyTags()
+                    .stream()
+                    .map(st -> st.getTag().getName())
+                    .toList();
+
+            System.out.println(tagNames.toString());
+        }
+
         return studies.stream()
             .map(study -> new StudyListResponseDto(
                     study.getId(),
                     study.getTitle(),
                     study.getContent(),
-                    study.getMember().getUsername()
+                    study.getMember().getUsername(),
+//                    study.getCategory().getName(),
+                    study.getCategory() != null ? study.getCategory().getName() : null,
+                    study.getStudyTags()
+                            .stream()
+                            .map(st -> st.getTag().getName())
+                            .toList()
 //                    study.getComments().size(),
 //                    study.getLikes().size()
             ))
@@ -48,43 +63,24 @@ public class StudyService {
     }
 
     public Study createStudy(StudyCreateRequestDto studyCreateRequestDto, Long userId) {
-        System.out.println("id : " + userId);
-
         Member member = memberRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Member not found"));
-
-        System.out.println("member check");
 
         Category category = categoryRepository.findById(studyCreateRequestDto.getCategoryId())
                 .orElseThrow(() -> new IllegalArgumentException("Category not found"));
 
-        System.out.println("category check");
-
         Study study = new Study(studyCreateRequestDto.getTitle(), studyCreateRequestDto.getContent(), member, category);
         Study saveStudy = studyRepository.save(study);
-
-        System.out.println("create study");
 
         for (String tagName : studyCreateRequestDto.getTagNames()) {
             Tag tag = tagRepository.findByName(tagName)
                     .orElseGet(() -> tagRepository.save(new Tag(tagName)));
-//                    .orElseGet(() -> {
-//                        Tag newTag = new Tag(tagName);
-//                        return tagRepository.save(newTag);
-//                    });
-
-            System.out.println("create tag");
 
             StudyTag studyTag = new StudyTag();
 
-            System.out.println("create studyTag");
-
-//            study.addStudyTag(studyTag, tag);
             study.addStudyTag(studyTag);
             tag.addStudyTag(studyTag);
         }
-
-        System.out.println("연관관계");
 
         return saveStudy;
     }

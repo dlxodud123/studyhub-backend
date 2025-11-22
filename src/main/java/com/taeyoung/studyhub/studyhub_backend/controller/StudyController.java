@@ -32,8 +32,6 @@ public class StudyController {
         CustomUser user = (CustomUser) authentication.getPrincipal();
         Long userId = user.getId();
 
-        System.out.println("dto : " + studyCreateRequestDto);
-
         try {
             studyService.createStudy(studyCreateRequestDto, userId);
 
