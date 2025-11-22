@@ -79,11 +79,9 @@ public class StudyService {
 
             System.out.println("create studyTag");
 
-//            study.addStudyTag(studyTag);
-//            tag.addStudyTag(studyTag);
-            studyTag.setStudy(study);   // StudyTag가 Study를 참조하도록
-            studyTag.setTag(tag);        // StudyTag가 Tag를 참조하도록
-            study.getStudyTags().add(studyTag);  // Study의 studyTags 리스트에 추가
+//            study.addStudyTag(studyTag, tag);
+            study.addStudyTag(studyTag);
+            tag.addStudyTag(studyTag);
         }
 
         System.out.println("연관관계");

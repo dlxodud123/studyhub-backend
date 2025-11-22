@@ -51,6 +51,12 @@ public class Study extends BaseEntity {
     }
 
     // StudyTag 편의 메서드
+//    public void addStudyTag(StudyTag studyTag, Tag tag) {
+//        studyTags.add(studyTag);
+//        studyTag.setStudy(this);
+//        studyTag.setTag(tag);
+//        tag.getStudyTags().add(studyTag);
+//    }
     public void addStudyTag(StudyTag studyTag) {
         studyTags.add(studyTag);
         studyTag.setStudy(this); // StudyTag 안의 study 필드도 세팅
