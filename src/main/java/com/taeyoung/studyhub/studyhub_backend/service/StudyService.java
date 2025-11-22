@@ -93,7 +93,13 @@ public class StudyService {
             study.getTitle(),
             study.getMember().getUsername(),
             study.getCreatedAt().toString(),
-            study.getContent()
+            study.getContent(),
+            study.getCategory() != null ? study.getCategory().getName() : null,
+            study.getStudyTags()
+                    .stream()
+                    .map(st -> st.getTag().getName())
+                    .toList()
+
         );
     }
 

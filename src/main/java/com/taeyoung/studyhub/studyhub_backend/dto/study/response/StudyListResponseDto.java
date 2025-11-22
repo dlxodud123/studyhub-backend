@@ -25,11 +25,4 @@ public class StudyListResponseDto {
         this.categoryName = categoryName;
         this.tagNames = tagNames;
     }
-
-    public StudyListResponseDto(Long id, String title, String content, String createdBy) {
-        this.id = id;
-        this.title = title;
-        this.content = content;
-        this.createdBy = createdBy;
-    }
 }
