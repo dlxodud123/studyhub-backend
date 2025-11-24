@@ -42,8 +42,8 @@ public class StudyServiceTest {
         SignupRequestDto signupRequestDto2 = new SignupRequestDto("user2", "password2", "email2", ProviderType.GOOGLE);
         member1 = memberService.registerMember(signupRequestDto1);
         member2 = memberService.registerMember(signupRequestDto2);
-        StudyCreateRequestDto dto1 = new StudyCreateRequestDto("testTitle1", "testContent1");
-        StudyCreateRequestDto dto2 = new StudyCreateRequestDto("testTitle2", "testContent2");
+        StudyCreateRequestDto dto1 = new StudyCreateRequestDto("testTitle1", "testContent1", 1L, List.of("testTag1", "testTag2"));
+        StudyCreateRequestDto dto2 = new StudyCreateRequestDto("testTitle2", "testContent2", 2L, List.of("testTag3", "testTag4"));
         study1 = studyService.createStudy(dto1, member1.getId());
         study2 = studyService.createStudy(dto2, member2.getId());
     }

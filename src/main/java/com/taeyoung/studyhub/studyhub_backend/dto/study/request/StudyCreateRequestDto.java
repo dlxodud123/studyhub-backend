@@ -11,9 +11,10 @@ public class StudyCreateRequestDto {
     private Long categoryId;
     private List<String> tagNames;
 
-
-    public StudyCreateRequestDto(String title, String content) {
+    public StudyCreateRequestDto(String title, String content, Long categoryId, List<String> tagNames) {
         this.title = title;
         this.content = content;
+        this.categoryId = categoryId;
+        this.tagNames = tagNames;
     }
 }
