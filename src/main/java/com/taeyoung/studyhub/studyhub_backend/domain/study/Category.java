@@ -20,4 +20,8 @@ public class Category {
     private List<Study> studies = new ArrayList<>();
 
     public Category() {}
+
+    public Category(String name) {
+        this.name = name;
+    }
 }

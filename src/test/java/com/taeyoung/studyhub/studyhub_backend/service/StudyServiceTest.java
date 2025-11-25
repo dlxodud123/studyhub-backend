@@ -2,6 +2,7 @@ package com.taeyoung.studyhub.studyhub_backend.service;
 
 import com.taeyoung.studyhub.studyhub_backend.domain.member.Member;
 import com.taeyoung.studyhub.studyhub_backend.domain.member.ProviderType;
+import com.taeyoung.studyhub.studyhub_backend.domain.study.Category;
 import com.taeyoung.studyhub.studyhub_backend.domain.study.Study;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.SignupRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.request.StudyCreateRequestDto;
@@ -9,6 +10,7 @@ import com.taeyoung.studyhub.studyhub_backend.dto.study.request.StudyEditRequest
 import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyDetailResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyEditResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyListResponseDto;
+import com.taeyoung.studyhub.studyhub_backend.repository.study.CategoryRepository;
 import com.taeyoung.studyhub.studyhub_backend.repository.study.StudyRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,6 +31,7 @@ public class StudyServiceTest {
     @Autowired private StudyRepository studyRepository;
     @Autowired private StudyService studyService;
     @Autowired private MemberService memberService;
+    @Autowired private CategoryRepository categoryRepository;
 
     private Member member1;
     private Member member2;
@@ -42,8 +45,10 @@ public class StudyServiceTest {
         SignupRequestDto signupRequestDto2 = new SignupRequestDto("user2", "password2", "email2", ProviderType.GOOGLE);
         member1 = memberService.registerMember(signupRequestDto1);
         member2 = memberService.registerMember(signupRequestDto2);
-        StudyCreateRequestDto dto1 = new StudyCreateRequestDto("testTitle1", "testContent1", 1L, List.of("testTag1", "testTag2"));
-        StudyCreateRequestDto dto2 = new StudyCreateRequestDto("testTitle2", "testContent2", 2L, List.of("testTag3", "testTag4"));
+        Category category1 = categoryRepository.save(new Category("testCategory1"));
+        Category category2 = categoryRepository.save(new Category("testCategory2"));
+        StudyCreateRequestDto dto1 = new StudyCreateRequestDto("testTitle1", "testContent1", category1.getId(), List.of("testTag1", "testTag2"));
+        StudyCreateRequestDto dto2 = new StudyCreateRequestDto("testTitle2", "testContent2", category2.getId(), List.of("testTag3", "testTag4"));
         study1 = studyService.createStudy(dto1, member1.getId());
         study2 = studyService.createStudy(dto2, member2.getId());
     }
