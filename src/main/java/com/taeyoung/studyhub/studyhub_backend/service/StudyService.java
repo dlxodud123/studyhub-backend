@@ -137,8 +137,8 @@ public class StudyService {
             throw new IllegalArgumentException("작성자만 삭제할 수 있습니다.");
         }
 
-        Study findStudy = studyRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 스터디입니다."));
-        studyRepository.delete(findStudy);
+//        Study findStudy = studyRepository.findById(id)
+//                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 스터디입니다."));
+        studyRepository.delete(study);
     }
 }

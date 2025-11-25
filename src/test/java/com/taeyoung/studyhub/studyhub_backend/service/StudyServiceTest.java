@@ -113,6 +113,7 @@ public class StudyServiceTest {
     public void deleteStudy() {
         // when
         studyService.deleteStudyById(study1.getId(), member1.getId());
+        
         List<StudyListResponseDto> studyList = studyService.getStudyList();
 
         // then
