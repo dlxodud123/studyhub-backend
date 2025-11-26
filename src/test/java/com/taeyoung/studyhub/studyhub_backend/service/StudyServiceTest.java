@@ -12,6 +12,7 @@ import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyEditRespon
 import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyListResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.repository.study.CategoryRepository;
 import com.taeyoung.studyhub.studyhub_backend.repository.study.StudyRepository;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,8 @@ public class StudyServiceTest {
     @Autowired private StudyService studyService;
     @Autowired private MemberService memberService;
     @Autowired private CategoryRepository categoryRepository;
+
+    @Autowired private EntityManager em;
 
     private Member member1;
     private Member member2;
@@ -120,15 +123,11 @@ public class StudyServiceTest {
 
     @Test
     public void deleteStudy() {
-        System.out.println("===== BEFORE CHECK =====");
-        System.out.println("study1 ID = " + study1.getId() + ", writer = " + study1.getMember().getUsername());
-        System.out.println("study2 ID = " + study2.getId() + ", writer = " + study2.getMember().getUsername());
-        System.out.println("member1 ID = " + member1.getId() + ", username = " + member1.getUsername());
-        System.out.println("member2 ID = " + member2.getId() + ", username = " + member2.getUsername());
-        System.out.println("========================");
+        em.flush();
+        em.clear();
 
         // when
-//        studyService.deleteStudyById(study1.getId(), member1.getId());
+        studyService.deleteStudyById(study1.getId(), member1.getId());
         List<StudyListResponseDto> studyList = studyService.getStudyList();
 
         // then
