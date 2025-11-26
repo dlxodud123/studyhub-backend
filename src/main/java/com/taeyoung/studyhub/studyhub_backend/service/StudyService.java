@@ -81,6 +81,7 @@ public class StudyService {
                     .orElseGet(() -> tagRepository.save(new Tag(tagName)));
 
             StudyTag studyTag = new StudyTag();
+//            StudyTag studyTag = new StudyTag(study, tag);
 
             study.addStudyTag(studyTag);
             tag.addStudyTag(studyTag);

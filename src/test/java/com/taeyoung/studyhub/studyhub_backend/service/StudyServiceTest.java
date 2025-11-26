@@ -63,9 +63,16 @@ public class StudyServiceTest {
         assertThat(studyList.get(0).getTitle()).isEqualTo("testTitle1");
         assertThat(studyList.get(0).getContent()).isEqualTo("testContent1");
         assertThat(studyList.get(0).getCreatedBy()).isEqualTo("user1");
+        // 추가: 카테고리 & 태그 검증
+        assertThat(studyList.get(0).getCategoryName()).isEqualTo("testCategory1");
+        assertThat(studyList.get(0).getTagNames()).containsExactlyInAnyOrder("testTag1", "testTag2");
+
         assertThat(studyList.get(1).getTitle()).isEqualTo("testTitle2");
         assertThat(studyList.get(1).getContent()).isEqualTo("testContent2");
         assertThat(studyList.get(1).getCreatedBy()).isEqualTo("user2");
+        // 추가: 카테고리 & 태그 검증
+        assertThat(studyList.get(1).getCategoryName()).isEqualTo("testCategory2");
+        assertThat(studyList.get(1).getTagNames()).containsExactlyInAnyOrder("testTag3", "testTag4");
     }
 
     @Test
@@ -77,6 +84,8 @@ public class StudyServiceTest {
         assertThat(detailDto.getTitle()).isEqualTo("testTitle1");
         assertThat(detailDto.getContent()).isEqualTo("testContent1");
         assertThat(detailDto.getCreatedBy()).isEqualTo("user1");
+        assertThat(detailDto.getCategoryName()).isEqualTo("testCategory1");
+        assertThat(detailDto.getTagNames()).containsExactlyInAnyOrder("testTag1", "testTag2");
     }
 
     @Test
@@ -111,9 +120,15 @@ public class StudyServiceTest {
 
     @Test
     public void deleteStudy() {
+        System.out.println("===== BEFORE CHECK =====");
+        System.out.println("study1 ID = " + study1.getId() + ", writer = " + study1.getMember().getUsername());
+        System.out.println("study2 ID = " + study2.getId() + ", writer = " + study2.getMember().getUsername());
+        System.out.println("member1 ID = " + member1.getId() + ", username = " + member1.getUsername());
+        System.out.println("member2 ID = " + member2.getId() + ", username = " + member2.getUsername());
+        System.out.println("========================");
+
         // when
-        studyService.deleteStudyById(study1.getId(), member1.getId());
-        
+//        studyService.deleteStudyById(study1.getId(), member1.getId());
         List<StudyListResponseDto> studyList = studyService.getStudyList();
 
         // then

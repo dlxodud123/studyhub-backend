@@ -20,4 +20,12 @@ public class StudyTag {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tag_id")
     private Tag tag;
+
+    public StudyTag() {
+    }
+
+    public StudyTag(Study study, Tag tag) {
+        this.study = study;
+        this.tag = tag;
+    }
 }
