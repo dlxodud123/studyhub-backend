@@ -17,7 +17,7 @@ public class Tag {
     private String name;
 
     @OneToMany(mappedBy="tag", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<StudyTag> studyTags = new ArrayList<>();
+    private List<StudyTag> studyTags = new ArrayList<>();
 
     public Tag() {}
 

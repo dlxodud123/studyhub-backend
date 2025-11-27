@@ -22,6 +22,8 @@ public class QMember extends EntityPathBase<Member> {
 
     public final com.taeyoung.studyhub.studyhub_backend.global.entity.QBaseEntity _super = new com.taeyoung.studyhub.studyhub_backend.global.entity.QBaseEntity(this);
 
+    public final ListPath<com.taeyoung.studyhub.studyhub_backend.domain.study.Comment, com.taeyoung.studyhub.studyhub_backend.domain.study.QComment> comments = this.<com.taeyoung.studyhub.studyhub_backend.domain.study.Comment, com.taeyoung.studyhub.studyhub_backend.domain.study.QComment>createList("comments", com.taeyoung.studyhub.studyhub_backend.domain.study.Comment.class, com.taeyoung.studyhub.studyhub_backend.domain.study.QComment.class, PathInits.DIRECT2);
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 

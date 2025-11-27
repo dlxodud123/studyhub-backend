@@ -27,9 +27,9 @@ public class Study extends BaseEntity {
     private Category category;
 
     @OneToMany(mappedBy="study", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<StudyTag> studyTags = new ArrayList<>();
+    private List<StudyTag> studyTags = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "study", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
     public Study() {

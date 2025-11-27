@@ -1,10 +1,7 @@
 package com.taeyoung.studyhub.studyhub_backend.service;
 
 import com.taeyoung.studyhub.studyhub_backend.domain.member.Member;
-import com.taeyoung.studyhub.studyhub_backend.domain.study.Category;
-import com.taeyoung.studyhub.studyhub_backend.domain.study.Study;
-import com.taeyoung.studyhub.studyhub_backend.domain.study.StudyTag;
-import com.taeyoung.studyhub.studyhub_backend.domain.study.Tag;
+import com.taeyoung.studyhub.studyhub_backend.domain.study.*;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.request.StudyCreateRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.request.StudyEditRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.response.CommentListResponseDto;
@@ -13,6 +10,7 @@ import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyEditRespon
 import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyListResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.repository.member.MemberRepository;
 import com.taeyoung.studyhub.studyhub_backend.repository.study.CategoryRepository;
+import com.taeyoung.studyhub.studyhub_backend.repository.study.CommentRepository;
 import com.taeyoung.studyhub.studyhub_backend.repository.study.StudyRepository;
 import com.taeyoung.studyhub.studyhub_backend.repository.study.TagRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +31,7 @@ public class StudyService {
     private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
     private final TagRepository tagRepository;
+    private final CommentRepository commentRepository;
 
     public List<StudyListResponseDto> getStudyList() {
 
@@ -142,7 +141,16 @@ public class StudyService {
         studyRepository.delete(study);
     }
 
-    public List<CommentListResponseDto> getCommentList() {
+    public List<CommentListResponseDto> getCommentList(Long id) {
+        List<Comment> comments = commentRepository.findByStudyId(id);
 
+        return comments.stream()
+            .map(comment -> new CommentListResponseDto(
+                comment.getId(),
+                comment.getContent(),
+                comment.getMember().getUsername(),
+                comment.getCreatedAt().toString()
+            ))
+            .toList();
     }
 }

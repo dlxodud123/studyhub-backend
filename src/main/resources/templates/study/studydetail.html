@@ -138,7 +138,7 @@
     if (!content) return alert("댓글을 입력해주세요.");
 
     try {
-      const res = await fetch(`/api/comments/${studyId}`, {
+      const res = await fetch(`/api/studies/comments/${studyId}`, {
         method: 'POST',
         credentials: 'include',
         headers: { "Content-Type": "application/json" },
@@ -172,16 +172,28 @@
 
   // 댓글 렌더링
   function renderComments(comments) {
+    console.log("comments:", comments);
     const div = document.getElementById('commentList');
 
     if (!comments.length) {
-      div.innerHTML = `<div style="color:#777; font-size:14px;">댓글이 없습니다.</div>`;
+      div.innerHTML = `
+        <div style="
+          text-align:center;
+          color:#888;
+          font-size:14px;
+          padding:20px;
+          background:#f9f9f9;
+          border-radius:6px;
+        ">
+          <span style="margin-right:6px;">💬</span>댓글이 없습니다.
+        </div>
+      `;
       return;
     }
 
     div.innerHTML = comments.map(c => `
       <div style="background:#fff; padding:12px; border-radius:8px; margin-bottom:10px; box-shadow:0 1px 4px rgba(0,0,0,0.05);">
-        <div style="font-size:14px; font-weight:bold;">${escapeHtml(c.writerName ?? "익명")}</div>
+        <div style="font-size:14px; font-weight:bold;">${escapeHtml(c.createdBy ?? "익명")}</div>
         <div style="font-size:14px; margin:6px 0;">${escapeHtml(c.content)}</div>
         <div style="font-size:12px; color:#888;">${c.createdAt}</div>
 

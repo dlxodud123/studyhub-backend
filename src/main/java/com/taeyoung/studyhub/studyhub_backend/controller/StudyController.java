@@ -78,8 +78,10 @@ public class StudyController {
         return ResponseEntity.ok("삭제 완료");
     }
 
-    @GetMapping("/comment/{id}")
-    public List<CommentListResponseDto> getCommentList(){
-        return studyService.getCommentList();
+    @GetMapping("/comments/{id}")
+    public List<CommentListResponseDto> getCommentList(@PathVariable Long id){
+        return studyService.getCommentList(id);
     }
+
+
 }
