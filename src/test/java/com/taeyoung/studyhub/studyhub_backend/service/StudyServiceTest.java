@@ -3,14 +3,17 @@ package com.taeyoung.studyhub.studyhub_backend.service;
 import com.taeyoung.studyhub.studyhub_backend.domain.member.Member;
 import com.taeyoung.studyhub.studyhub_backend.domain.member.ProviderType;
 import com.taeyoung.studyhub.studyhub_backend.domain.study.Category;
+import com.taeyoung.studyhub.studyhub_backend.domain.study.Comment;
 import com.taeyoung.studyhub.studyhub_backend.domain.study.Study;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.SignupRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.request.StudyCreateRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.request.StudyEditRequestDto;
+import com.taeyoung.studyhub.studyhub_backend.dto.study.response.CommentListResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyDetailResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyEditResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyListResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.repository.study.CategoryRepository;
+import com.taeyoung.studyhub.studyhub_backend.repository.study.CommentRepository;
 import com.taeyoung.studyhub.studyhub_backend.repository.study.StudyRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,9 +33,10 @@ import static org.assertj.core.api.Assertions.*;
 public class StudyServiceTest {
 
     @Autowired private StudyRepository studyRepository;
+    @Autowired private CategoryRepository categoryRepository;
+    @Autowired private CommentRepository commentRepository;
     @Autowired private StudyService studyService;
     @Autowired private MemberService memberService;
-    @Autowired private CategoryRepository categoryRepository;
 
     @Autowired private EntityManager em;
 
@@ -40,6 +44,8 @@ public class StudyServiceTest {
     private Member member2;
     private Study study1;
     private Study study2;
+    private Comment comment1;
+    private Comment comment2;
 
 
     @BeforeEach
@@ -54,6 +60,9 @@ public class StudyServiceTest {
         StudyCreateRequestDto dto2 = new StudyCreateRequestDto("testTitle2", "testContent2", category2.getId(), List.of("testTag3", "testTag4"));
         study1 = studyService.createStudy(dto1, member1.getId());
         study2 = studyService.createStudy(dto2, member2.getId());
+        comment1 = studyService.createComment("testComment1", member1.getId(), study1.getId());
+        comment2 = studyService.createComment("testComment2", member1.getId(), study1.getId());
+
     }
 
     @Test
@@ -140,5 +149,33 @@ public class StudyServiceTest {
         )
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("작성자만 삭제할 수 있습니다.");
+    }
+
+    // comment
+    @Test
+    public void createComment() {
+        // when & then
+        assertThatThrownBy(() ->
+                studyService.createComment("testComment1", 123L, study1.getId())
+        )
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Member not found");
+        assertThatThrownBy(() ->
+                studyService.createComment("testComment1", member1.getId(), 123L)
+        )
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Study not found");
+    }
+
+    @Test
+    public void getCommentList() {
+        // when
+        List<CommentListResponseDto> commentList = studyService.getCommentList(study1.getId());
+
+        // then
+        assertThat(commentList.get(0).getCreatedBy()).isEqualTo("user1");
+        assertThat(commentList.get(0).getContent()).isEqualTo("testComment1");
+        assertThat(commentList.get(1).getCreatedBy()).isEqualTo("user1");
+        assertThat(commentList.get(1).getContent()).isEqualTo("testComment2");
     }
 }

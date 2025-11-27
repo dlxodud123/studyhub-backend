@@ -204,32 +204,6 @@
     `).join('');
   }
 
-  // 댓글 삭제
-  async function deleteComment(commentId) {
-    if (!confirm("댓글 삭제하시겠습니까?")) return;
-
-    try {
-      const res = await fetch(`/api/comments/${commentId}`, {
-        method: 'DELETE',
-        credentials: 'include'
-      });
-
-      if (res.ok) {
-        loadComments();
-      } else {
-        alert("삭제 실패: " + await res.text());
-      }
-    } catch (e) {
-      console.error(e);
-      alert("서버 오류");
-    }
-  }
-
-  // ---------------------------------------
-  // 🚀 댓글 기능 끝
-  // ---------------------------------------
-
-
   fetchDetail();
   loadComments();
 </script>
