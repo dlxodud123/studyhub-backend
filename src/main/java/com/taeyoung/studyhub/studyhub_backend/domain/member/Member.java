@@ -1,5 +1,6 @@
 package com.taeyoung.studyhub.studyhub_backend.domain.member;
 
+import com.taeyoung.studyhub.studyhub_backend.domain.study.Comment;
 import com.taeyoung.studyhub.studyhub_backend.domain.study.Study;
 import com.taeyoung.studyhub.studyhub_backend.global.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -29,12 +30,8 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member")
     private List<Study> studies = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Comment> comments = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Like> likes = new ArrayList<>();
-
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 
     public Member() {
     }

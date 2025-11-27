@@ -14,7 +14,6 @@ public class StudyListResponseDto {
     private String categoryName;
     private List<String> tagNames;
 //    private int commentCount;
-//    private int likeCount;
 
 
     public StudyListResponseDto(Long id, String title, String content, String createdBy, String categoryName, List<String> tagNames) {

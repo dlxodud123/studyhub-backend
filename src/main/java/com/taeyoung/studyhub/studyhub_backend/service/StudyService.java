@@ -7,6 +7,7 @@ import com.taeyoung.studyhub.studyhub_backend.domain.study.StudyTag;
 import com.taeyoung.studyhub.studyhub_backend.domain.study.Tag;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.request.StudyCreateRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.request.StudyEditRequestDto;
+import com.taeyoung.studyhub.studyhub_backend.dto.study.response.CommentListResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyDetailResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyEditResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyListResponseDto;
@@ -138,8 +139,10 @@ public class StudyService {
             throw new IllegalArgumentException("작성자만 삭제할 수 있습니다.");
         }
 
-//        Study findStudy = studyRepository.findById(id)
-//                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 스터디입니다."));
         studyRepository.delete(study);
+    }
+
+    public List<CommentListResponseDto> getCommentList() {
+
     }
 }

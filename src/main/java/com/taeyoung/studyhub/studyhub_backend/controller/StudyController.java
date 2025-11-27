@@ -4,6 +4,7 @@ import com.taeyoung.studyhub.studyhub_backend.domain.member.CustomUser;
 import com.taeyoung.studyhub.studyhub_backend.domain.study.Study;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.request.StudyCreateRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.request.StudyEditRequestDto;
+import com.taeyoung.studyhub.studyhub_backend.dto.study.response.CommentListResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyDetailResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyEditResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyListResponseDto;
@@ -18,16 +19,17 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/studies")
 public class StudyController {
 
     private final StudyService studyService;
 
-    @GetMapping("/api/studies")
+    @GetMapping
     public List<StudyListResponseDto> getStudyList() {
         return studyService.getStudyList();
     }
 
-    @PostMapping("/api/studies/create")
+    @PostMapping("/create")
     public ResponseEntity<String> createStudy(@RequestBody StudyCreateRequestDto studyCreateRequestDto, Authentication authentication) {
         CustomUser user = (CustomUser) authentication.getPrincipal();
         Long userId = user.getId();
@@ -43,12 +45,12 @@ public class StudyController {
         }
     }
 
-    @GetMapping("/api/studies/detail/{id}")
+    @GetMapping("/detail/{id}")
     public StudyDetailResponseDto getStudyDetail(@PathVariable Long id) {
         return studyService.findStudyDetailById(id);
     }
 
-    @GetMapping("/api/studies/edit/{id}")
+    @GetMapping("/edit/{id}")
     public ResponseEntity<?> getStudyEdit(@PathVariable Long id, Authentication authentication) {
         CustomUser user = (CustomUser) authentication.getPrincipal();
 
@@ -60,19 +62,24 @@ public class StudyController {
         }
     }
 
-    @PutMapping("/api/studies/edit/{id}")
+    @PutMapping("/edit/{id}")
     public ResponseEntity<String> editStudy(@PathVariable Long id, @RequestBody StudyEditRequestDto studyEditRequestDto) {
         studyService.editStudyById(studyEditRequestDto, id);
 
         return ResponseEntity.ok("수정 완료");
     }
 
-    @DeleteMapping("/api/studies/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteStudy(@PathVariable Long id, Authentication authentication){
         CustomUser user = (CustomUser) authentication.getPrincipal();
 
         studyService.deleteStudyById(id, user.getId());
 
         return ResponseEntity.ok("삭제 완료");
+    }
+
+    @GetMapping("/comment/{id}")
+    public List<CommentListResponseDto> getCommentList(){
+        return studyService.getCommentList();
     }
 }
