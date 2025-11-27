@@ -13,15 +13,15 @@ public class StudyListResponseDto {
     private String createdBy;
     private String categoryName;
     private List<String> tagNames;
-//    private int commentCount;
+    private int commentCount;
 
-
-    public StudyListResponseDto(Long id, String title, String content, String createdBy, String categoryName, List<String> tagNames) {
+    public StudyListResponseDto(Long id, String title, String content, String createdBy, String categoryName, List<String> tagNames, int commentCount) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.createdBy = createdBy;
         this.categoryName = categoryName;
         this.tagNames = tagNames;
+        this.commentCount = commentCount;
     }
 }

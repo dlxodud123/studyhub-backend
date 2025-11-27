@@ -56,9 +56,8 @@ public class StudyService {
                     study.getStudyTags()
                             .stream()
                             .map(st -> st.getTag().getName())
-                            .toList()
-//                    study.getComments().size(),
-//                    study.getLikes().size()
+                            .toList(),
+                    study.getComments().size()
             ))
             .toList();
     }
