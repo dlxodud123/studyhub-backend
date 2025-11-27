@@ -25,4 +25,10 @@ public class Comment extends BaseEntity {
     private Study study;
 
     public Comment() {}
+
+    public Comment(String content, Member member, Study study) {
+        this.content = content;
+        this.member = member;
+        this.study = study;
+    }
 }

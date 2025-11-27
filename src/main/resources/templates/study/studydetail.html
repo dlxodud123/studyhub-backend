@@ -138,7 +138,7 @@
     if (!content) return alert("댓글을 입력해주세요.");
 
     try {
-      const res = await fetch(`/api/studies/comments/${studyId}`, {
+      const res = await fetch(`/api/studies/create/comments/${studyId}`, {
         method: 'POST',
         credentials: 'include',
         headers: { "Content-Type": "application/json" },

@@ -153,4 +153,15 @@ public class StudyService {
             ))
             .toList();
     }
+
+    public void createComment(String content, Long userId, Long studId) {
+        Member member = memberRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Member not found"));
+
+        Study study = studyRepository.findById(studId)
+                .orElseThrow(() -> new IllegalArgumentException("Study not found"));
+
+        Comment comment = new Comment(content, member, study);
+        commentRepository.save(comment);
+    }
 }
