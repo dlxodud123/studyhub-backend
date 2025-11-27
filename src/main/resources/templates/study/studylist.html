@@ -39,18 +39,16 @@
 
 <script>
     // 페이징을 위한 변수
-<!--    let page = 0;-->
-<!--    const size = 9;-->
+    let page = 0;
+    const size = 9;
 
     document.getElementById('createBtn').addEventListener('click', () => {
       window.location.href = '/study/create'; // 작성 페이지로 이동
     });
 
-<!--    async function fetchStudies(p = 0) {-->
-    async function fetchStudies() {
+    async function fetchStudies(p = 0) {
       try {
-<!--        const res = await fetch(`/api/studies?page=${p}&size=${size}`);-->
-        const res = await fetch(`/api/studies`);
+        const res = await fetch(`/api/studies?page=${p}&size=${size}`);
         if (!res.ok) throw new Error('목록을 불러오지 못했습니다.');
         const data = await res.json();
         renderList(data);

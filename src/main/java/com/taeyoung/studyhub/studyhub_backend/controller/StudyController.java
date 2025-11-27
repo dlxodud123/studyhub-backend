@@ -26,8 +26,8 @@ public class StudyController {
     private final StudyService studyService;
 
     @GetMapping
-    public List<StudyListResponseDto> getStudyList() {
-        return studyService.getStudyList();
+    public List<StudyListResponseDto> getStudyList(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        return studyService.getStudyList(page, size);
     }
 
     @PostMapping("/create")

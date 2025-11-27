@@ -14,6 +14,9 @@ import com.taeyoung.studyhub.studyhub_backend.repository.study.CommentRepository
 import com.taeyoung.studyhub.studyhub_backend.repository.study.StudyRepository;
 import com.taeyoung.studyhub.studyhub_backend.repository.study.TagRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,18 +36,11 @@ public class StudyService {
     private final TagRepository tagRepository;
     private final CommentRepository commentRepository;
 
-    public List<StudyListResponseDto> getStudyList() {
+    public List<StudyListResponseDto> getStudyList(int page, int size) {
 
-        List<Study> studies = studyRepository.findAll();
-
-        for (Study study : studies) {
-            List<String> tagNames = study.getStudyTags()
-                    .stream()
-                    .map(st -> st.getTag().getName())
-                    .toList();
-
-            System.out.println(tagNames.toString());
-        }
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "updatedAt"));
+        Page<Study> studyPage = studyRepository.findAll(pageRequest);
+        List<Study> studies = studyPage.getContent();
 
         return studies.stream()
             .map(study -> new StudyListResponseDto(
@@ -60,6 +56,30 @@ public class StudyService {
                     study.getComments().size()
             ))
             .toList();
+
+//        for (Study study : studies) {
+//            List<String> tagNames = study.getStudyTags()
+//                    .stream()
+//                    .map(st -> st.getTag().getName())
+//                    .toList();
+//
+//            System.out.println(tagNames.toString());
+//        }
+//
+//        return studies.stream()
+//            .map(study -> new StudyListResponseDto(
+//                    study.getId(),
+//                    study.getTitle(),
+//                    study.getContent(),
+//                    study.getMember().getUsername(),
+//                    study.getCategory() != null ? study.getCategory().getName() : null,
+//                    study.getStudyTags()
+//                            .stream()
+//                            .map(st -> st.getTag().getName())
+//                            .toList(),
+//                    study.getComments().size()
+//            ))
+//            .toList();
     }
 
     public Study createStudy(StudyCreateRequestDto studyCreateRequestDto, Long userId) {
