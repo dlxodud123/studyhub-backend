@@ -30,6 +30,26 @@
         </div>
     </header>
 
+    <div id="searchBox" style="margin-bottom: 20px; display:flex; gap:10px; align-items:center;">
+        <select id="searchType" class="page-btn" style="padding:6px 8px;">
+            <option value="title">제목</option>
+            <option value="content">내용</option>
+            <option value="createdBy">작성자</option>
+            <option value="tag">태그</option>
+        </select>
+
+        <input type="text" id="searchKeyword" placeholder="검색어 입력" style="padding:6px 8px; width:200px;">
+
+        <select id="categoryFilter" class="page-btn" style="padding:6px 8px;">
+            <option value="">전체 카테고리</option>
+            <option value="1">프로그래밍</option>
+            <option value="2">영어스터디</option>
+            <option value="3">면접스터디</option>
+        </select>
+
+        <button class="btn" id="searchBtn">검색</button>
+    </div>
+
     <section id="listSection">
         <div id="grid" class="grid"></div>
         <div id="empty" class="empty" style="display:none;">게시글이 없습니다.</div>
@@ -47,8 +67,21 @@
     });
 
     async function fetchStudies(p = 0) {
+
+      const searchType = document.getElementById("searchType").value;
+      const keyword = document.getElementById("searchKeyword").value;
+      const categoryId = document.getElementById("categoryFilter").value;
+
+      const query = new URLSearchParams({
+        page: p,
+        size: size,
+        searchType: searchType,
+        keyword: keyword,
+        categoryId: categoryId
+      });
+
       try {
-        const res = await fetch(`/api/studies?page=${p}&size=${size}`);
+        const res = await fetch(`/api/studies?` + query.toString());
         if (!res.ok) throw new Error('목록을 불러오지 못했습니다.');
         const data = await res.json();
         renderList(data);
@@ -147,9 +180,14 @@
       return str.length > n ? escapeHtml(str.slice(0,n)) + '...' : escapeHtml(str);
     }
 
+    // 검색 버튼 클릭 이벤트 추가
+    document.getElementById("searchBtn").addEventListener("click", () => {
+      page = 0; // 검색 시 항상 첫 페이지부터
+      fetchStudies(page);
+    });
+
     // 화면이 켜지는 순간 → 자동으로 /api/studies?page=0&size=9 요청 날리도록 하는 코드.
     fetchStudies(page);
-<!--    fetchStudies();-->
 </script>
 </body>
 </html>

@@ -27,8 +27,15 @@ public class StudyController {
     private final StudyService studyService;
 
     @GetMapping
-    public Page<StudyListResponseDto> getStudyList(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        Page<StudyListResponseDto> studyList = studyService.getStudyList(page, size);
+    public Page<StudyListResponseDto> getStudyList(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String searchType,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) Long categoryId
+    ) {
+
+        Page<StudyListResponseDto> studyList = studyService.getStudyList(page, size, searchType, keyword, categoryId);
 
         return studyList;
     }

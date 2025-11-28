@@ -36,10 +36,14 @@ public class StudyService {
     private final TagRepository tagRepository;
     private final CommentRepository commentRepository;
 
-    public Page<StudyListResponseDto> getStudyList(int page, int size) {
+    public Page<StudyListResponseDto> getStudyList(int page, int size, String searchType, String keyword, Long categoryId) {
+        System.out.println(searchType);
+        System.out.println(keyword);
+        System.out.println(categoryId);
 
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "updatedAt"));
-        Page<Study> studyPage = studyRepository.findAll(pageRequest);
+//        Page<Study> studyPage = studyRepository.findAll(pageRequest);
+        Page<Study> studyPage = studyRepository.searchStudies(searchType, keyword, categoryId, pageRequest);
 
         return studyPage
             .map(study -> new StudyListResponseDto(
