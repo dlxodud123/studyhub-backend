@@ -95,19 +95,35 @@
         grid.appendChild(card);
       });
 
-      // 페이징 UI (서버가 totalPages를 준다면 사용)
+      // 페이징 UI
       const pager = document.getElementById('pager');
       pager.innerHTML = '';
       if (!Array.isArray(data) && typeof data.totalPages === 'number') {
         const totalPages = data.totalPages;
         const current = data.number ?? page;
+        // 이전 버튼
         const prev = document.createElement('button');
         prev.className = 'page-btn';
         prev.textContent = '‹ 이전';
         prev.disabled = current <= 0;
         prev.addEventListener('click', () => { page = current - 1; fetchStudies(page); });
         pager.appendChild(prev);
-
+        // 페이지 숫자 버튼
+        for (let i = 0; i < totalPages; i++) {
+            const pageBtn = document.createElement('button');
+            pageBtn.className = 'page-btn';
+            pageBtn.textContent = i + 1; // 화면에는 1부터 보이게
+            if (i === current) {
+                pageBtn.style.background = '#4CAF50';
+                pageBtn.style.color = '#fff';
+            }
+            pageBtn.addEventListener('click', () => {
+                page = i;
+                fetchStudies(page);
+            });
+            pager.appendChild(pageBtn);
+        }
+        // 다음 버튼
         const next = document.createElement('button');
         next.className = 'page-btn';
         next.textContent = '다음 ›';

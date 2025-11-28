@@ -29,23 +29,7 @@ public class StudyController {
     @GetMapping
     public Page<StudyListResponseDto> getStudyList(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         Page<StudyListResponseDto> studyList = studyService.getStudyList(page, size);
-        // 페이지 정보 출력
-        System.out.println("현재 페이지: " + studyList.getNumber());
-        System.out.println("페이지 크기(size): " + studyList.getSize());
-        System.out.println("전체 페이지 수: " + studyList.getTotalPages());
-        System.out.println("전체 데이터 수: " + studyList.getTotalElements());
-        System.out.println("현재 페이지 데이터 수: " + studyList.getNumberOfElements());
-        System.out.println("--------------------------------------");
-        // 실제 content 출력
-        studyList.getContent().forEach(item -> {
-            System.out.println("ID: " + item.getId());
-            System.out.println("제목: " + item.getTitle());
-            System.out.println("작성자: " + item.getCreatedBy());
-            System.out.println("카테고리: " + item.getCategoryName());
-            System.out.println("댓글수: " + item.getCommentCount());
-            System.out.println("태그: " + item.getTagNames());
-            System.out.println("--------------------------------------");
-        });
+
         return studyList;
     }
 
