@@ -36,13 +36,12 @@ public class StudyService {
     private final TagRepository tagRepository;
     private final CommentRepository commentRepository;
 
-    public List<StudyListResponseDto> getStudyList(int page, int size) {
+    public Page<StudyListResponseDto> getStudyList(int page, int size) {
 
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "updatedAt"));
         Page<Study> studyPage = studyRepository.findAll(pageRequest);
-        List<Study> studies = studyPage.getContent();
 
-        return studies.stream()
+        return studyPage
             .map(study -> new StudyListResponseDto(
                     study.getId(),
                     study.getTitle(),
@@ -54,32 +53,7 @@ public class StudyService {
                             .map(st -> st.getTag().getName())
                             .toList(),
                     study.getComments().size()
-            ))
-            .toList();
-
-//        for (Study study : studies) {
-//            List<String> tagNames = study.getStudyTags()
-//                    .stream()
-//                    .map(st -> st.getTag().getName())
-//                    .toList();
-//
-//            System.out.println(tagNames.toString());
-//        }
-//
-//        return studies.stream()
-//            .map(study -> new StudyListResponseDto(
-//                    study.getId(),
-//                    study.getTitle(),
-//                    study.getContent(),
-//                    study.getMember().getUsername(),
-//                    study.getCategory() != null ? study.getCategory().getName() : null,
-//                    study.getStudyTags()
-//                            .stream()
-//                            .map(st -> st.getTag().getName())
-//                            .toList(),
-//                    study.getComments().size()
-//            ))
-//            .toList();
+            ));
     }
 
     public Study createStudy(StudyCreateRequestDto studyCreateRequestDto, Long userId) {
@@ -100,7 +74,6 @@ public class StudyService {
                     .orElseGet(() -> tagRepository.save(new Tag(tagName)));
 
             StudyTag studyTag = new StudyTag();
-//            StudyTag studyTag = new StudyTag(study, tag);
 
             study.addStudyTag(studyTag);
             tag.addStudyTag(studyTag);
