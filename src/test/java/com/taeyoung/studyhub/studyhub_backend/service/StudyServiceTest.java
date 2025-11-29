@@ -330,7 +330,7 @@ public class StudyServiceTest {
         assertThat(studyList3.getTotalElements()).isEqualTo(2);
         assertThat(studyList4.getTotalElements()).isEqualTo(1);
     }
-    // search(tag)
+    // search(tag + countQuery)
     @Test
     public void searchTypeTag() {
         // given

@@ -1,6 +1,7 @@
 package com.taeyoung.studyhub.studyhub_backend.repository.study;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.taeyoung.studyhub.studyhub_backend.domain.member.QMember;
@@ -68,38 +69,55 @@ public class StudyRepositoryCustomImpl implements StudyRepositoryCustom{
     @Override
     public Page<Study> searchStudiesByTags(List<String> tags, Long categoryId, Pageable pageable) {
 
+        // 태그 조건 없이 전체 스터디 조회
+        if (tags == null || tags.isEmpty()) {
+            return searchStudies(null, null, categoryId, pageable);
+        }
+
         QStudy study = QStudy.study;
         QMember member = QMember.member;
-        QStudyTag studyTag = QStudyTag.studyTag;
-        QTag tag = QTag.tag;
-
+        QStudyTag stSub = new QStudyTag("stSub");
+        QTag tSub = new QTag("tSub");
+        
         // 실제 content 조회
-        List<Study> content = queryFactory
-            .select(study).distinct()
-            .from(study)
-            .leftJoin(study.member, member).fetchJoin()
-            .leftJoin(study.studyTags, studyTag)
-            .leftJoin(studyTag.tag, tag)
-            .where(
-                tagContains(tags),
-                categoryEq(categoryId)
-            )
-            .orderBy(study.updatedAt.desc())
-            .offset(pageable.getOffset())
-            .limit(pageable.getPageSize())
-            .fetch();
+        JPAQuery<Study> query = queryFactory
+                .select(study).distinct()
+                .from(study)
+                .leftJoin(study.member, member).fetchJoin()
+                .where(categoryEq(categoryId))
+                .where(
+                    JPAExpressions
+                        .select(stSub.study.id)
+                        .from(stSub)
+                        .leftJoin(stSub.tag, tSub)
+                        .where(stSub.study.eq(study)
+                                .and(tSub.name.in(tags)))
+                        .groupBy(stSub.study.id)
+                        .having(stSub.id.countDistinct().eq((long) tags.size()))
+                        .exists()
+                )
+                .orderBy(study.updatedAt.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize());
+
+        List<Study> content = query.fetch();
 
         // countQuery
         JPAQuery<Long> countQuery = queryFactory
-            .select(study.countDistinct())
-            .from(study)
-            .leftJoin(study.member, member)
-            .leftJoin(study.studyTags, studyTag)
-            .leftJoin(studyTag.tag, tag)
-            .where(
-                tagContains(tags),
-                categoryEq(categoryId)
-            );
+                .select(study.countDistinct())
+                .from(study)
+                .where(categoryEq(categoryId))
+                .where(
+                    JPAExpressions
+                        .select(stSub.study.id)
+                        .from(stSub)
+                        .leftJoin(stSub.tag, tSub)
+                        .where(stSub.study.eq(study)
+                                .and(tSub.name.in(tags)))
+                        .groupBy(stSub.study.id)
+                        .having(stSub.id.countDistinct().eq((long) tags.size()))
+                        .exists()
+                );
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
@@ -127,12 +145,12 @@ public class StudyRepositoryCustomImpl implements StudyRepositoryCustom{
         return QStudy.study.member.username.containsIgnoreCase(keyword);
     }
     // tag 포함
-    private BooleanExpression tagContains(List<String> keyword) {
-        if (keyword == null || keyword.isEmpty()) {
-            return null;
-        }
-        return QTag.tag.name.in(keyword);
-    }
+//    private BooleanExpression tagContains(List<String> keyword) {
+//        if (keyword == null || keyword.isEmpty()) {
+//            return null;
+//        }
+//        return QTag.tag.name.in(keyword);
+//    }
     // category 포함
     private BooleanExpression categoryEq(Long categoryId) {
         if (categoryId == null || categoryId == 0) {
