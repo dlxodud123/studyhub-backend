@@ -311,7 +311,24 @@ public class StudyServiceTest {
     // search(createdBy)
     @Test
     public void searchTypeCreatedBy() {
+        // given
+        SignupRequestDto signupRequestDto = new SignupRequestDto("user22", "password3", "email3", ProviderType.LOCAL);
+        Category category = categoryRepository.save(new Category("testCategory1"));
+        StudyCreateRequestDto dto = new StudyCreateRequestDto("testTitle1", "testContent1", category.getId(), List.of("testTag1", "testTag2"));
 
+        // when
+        member2 = memberService.registerMember(signupRequestDto);
+        studyService.createStudy(dto, member2.getId());
+        Page<StudyListResponseDto> studyList1 = studyService.getStudyList(0, 9, "createdBy", "user", null);
+        Page<StudyListResponseDto> studyList2 = studyService.getStudyList(0, 9, "createdBy", "user1", null);
+        Page<StudyListResponseDto> studyList3 = studyService.getStudyList(0, 9, "createdBy", "user2", null);
+        Page<StudyListResponseDto> studyList4 = studyService.getStudyList(0, 9, "createdBy", "user22", null);
+
+        // when
+        assertThat(studyList1.getTotalElements()).isEqualTo(3);
+        assertThat(studyList2.getTotalElements()).isEqualTo(1);
+        assertThat(studyList3.getTotalElements()).isEqualTo(2);
+        assertThat(studyList4.getTotalElements()).isEqualTo(1);
     }
     // search(tag)
     @Test
