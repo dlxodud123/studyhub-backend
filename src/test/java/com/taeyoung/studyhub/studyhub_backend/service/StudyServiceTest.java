@@ -219,5 +219,34 @@ public class StudyServiceTest {
     }
 
     // search(order)
-    
+
+    // search(category)
+    @Test
+    public void searchCategory() {
+        // given
+        Category category1 = categoryRepository.save(new Category("testCategory1"));
+        Category category2 = categoryRepository.save(new Category("testCategory2"));
+        Category category3 = categoryRepository.save(new Category("testCategory3"));
+        StudyCreateRequestDto dto1 = new StudyCreateRequestDto("testTitle1", "testContent3", category1.getId(), List.of("testTag1", "testTag2"));
+        StudyCreateRequestDto dto2 = new StudyCreateRequestDto("testTitle2", "testContent3", category2.getId(), List.of("testTag1", "testTag2"));
+        StudyCreateRequestDto dto3 = new StudyCreateRequestDto("testTitle3", "testContent3", category3.getId(), List.of("testTag1", "testTag2"));
+        studyService.createStudy(dto1, member1.getId());
+        studyService.createStudy(dto1, member1.getId());
+        studyService.createStudy(dto2, member1.getId());
+        studyService.createStudy(dto3, member1.getId());
+
+        // when
+        Page<StudyListResponseDto> studyList1 = studyService.getStudyList(0, 9, "title", "", category1.getId());
+        Page<StudyListResponseDto> studyList2 = studyService.getStudyList(0, 9, "title", "", category2.getId());
+        Page<StudyListResponseDto> studyList3 = studyService.getStudyList(0, 9, "title", "", category3.getId());
+
+        // then
+        assertThat(studyList1.getContent().size()).isEqualTo(2);
+        assertThat(studyList1.getContent().get(0).getTitle()).isEqualTo("testTitle1");
+        assertThat(studyList1.getContent().get(1).getTitle()).isEqualTo("testTitle1");
+        assertThat(studyList2.getContent().size()).isEqualTo(1);
+        assertThat(studyList2.getContent().get(0).getTitle()).isEqualTo("testTitle2");
+        assertThat(studyList3.getContent().size()).isEqualTo(1);
+        assertThat(studyList3.getContent().get(0).getTitle()).isEqualTo("testTitle3");
+    }
 }
