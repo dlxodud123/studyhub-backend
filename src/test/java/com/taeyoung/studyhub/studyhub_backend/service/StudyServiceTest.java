@@ -289,7 +289,24 @@ public class StudyServiceTest {
     // search(content)
     @Test
     public void searchTypeContent() {
+        // given
+        Category category1 = categoryRepository.save(new Category("testCategory1"));
+        StudyCreateRequestDto dto1 = new StudyCreateRequestDto("testTitle1", "testContent1", category1.getId(), List.of("testTag1", "testTag2"));
+        StudyCreateRequestDto dto2 = new StudyCreateRequestDto("testTitle1", "testContent12", category1.getId(), List.of("testTag1", "testTag2"));
+        StudyCreateRequestDto dto3 = new StudyCreateRequestDto("testTitle1", "testContent123", category1.getId(), List.of("testTag1", "testTag2"));
 
+        // when
+        studyService.createStudy(dto1, member1.getId());
+        studyService.createStudy(dto2, member1.getId());
+        studyService.createStudy(dto3, member1.getId());
+        Page<StudyListResponseDto> studyList1 = studyService.getStudyList(0, 9, "content", "testContent1", category1.getId());
+        Page<StudyListResponseDto> studyList2 = studyService.getStudyList(0, 9, "content", "testContent12", category1.getId());
+        Page<StudyListResponseDto> studyList3 = studyService.getStudyList(0, 9, "content", "testContent123", category1.getId());
+
+        // then
+        assertThat(studyList1.getTotalElements()).isEqualTo(3);
+        assertThat(studyList2.getTotalElements()).isEqualTo(2);
+        assertThat(studyList3.getTotalElements()).isEqualTo(1);
     }
     // search(createdBy)
     @Test
