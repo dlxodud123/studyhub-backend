@@ -41,8 +41,7 @@ public class StudyService {
         System.out.println(keyword);
         System.out.println(categoryId);
 
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "updatedAt"));
-//        Page<Study> studyPage = studyRepository.findAll(pageRequest);
+        PageRequest pageRequest = PageRequest.of(page, size);
         Page<Study> studyPage = studyRepository.searchStudies(searchType, keyword, categoryId, pageRequest);
 
         return studyPage
