@@ -20,6 +20,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,29 +63,39 @@ public class StudyServiceTest {
         study2 = studyService.createStudy(dto2, member2.getId());
         comment1 = studyService.createComment("testComment1", member1.getId(), study1.getId());
         comment2 = studyService.createComment("testComment2", member1.getId(), study1.getId());
-
     }
 
     @Test
     public void getStudyList() {
         // when
-        List<StudyListResponseDto> studyList = studyService.getStudyList();
+        Page<StudyListResponseDto> studyList = studyService.getStudyList(0, 9, "title", "", null);
 
         // then
-        assertThat(studyList.size()).isEqualTo(2);
-        assertThat(studyList.get(0).getTitle()).isEqualTo("testTitle1");
-        assertThat(studyList.get(0).getContent()).isEqualTo("testContent1");
-        assertThat(studyList.get(0).getCreatedBy()).isEqualTo("user1");
-        // 추가: 카테고리 & 태그 검증
-        assertThat(studyList.get(0).getCategoryName()).isEqualTo("testCategory1");
-        assertThat(studyList.get(0).getTagNames()).containsExactlyInAnyOrder("testTag1", "testTag2");
+        assertThat(studyList).isNotNull();
+        assertThat(studyList.getContent()).hasSize(2);
 
-        assertThat(studyList.get(1).getTitle()).isEqualTo("testTitle2");
-        assertThat(studyList.get(1).getContent()).isEqualTo("testContent2");
-        assertThat(studyList.get(1).getCreatedBy()).isEqualTo("user2");
-        // 추가: 카테고리 & 태그 검증
-        assertThat(studyList.get(1).getCategoryName()).isEqualTo("testCategory2");
-        assertThat(studyList.get(1).getTagNames()).containsExactlyInAnyOrder("testTag3", "testTag4");
+        StudyListResponseDto s2 = studyList.getContent().get(0);
+        StudyListResponseDto s1 = studyList.getContent().get(1);
+
+        // 📌 첫 번째 게시글 검증
+        assertThat(s1.getId()).isNotNull();
+        assertThat(s1.getTitle()).isEqualTo("testTitle1");
+        assertThat(s1.getContent()).isEqualTo("testContent1");
+        assertThat(s1.getCreatedBy()).isEqualTo("user1");
+        // 카테고리 & 태그 검증
+        assertThat(s1.getCategoryName()).isEqualTo("testCategory1");
+        assertThat(s1.getTagNames())
+                .containsExactlyInAnyOrder("testTag1", "testTag2");
+
+        // 📌 두 번째 게시글 검증
+        assertThat(s2.getId()).isNotNull();
+        assertThat(s2.getTitle()).isEqualTo("testTitle2");
+        assertThat(s2.getContent()).isEqualTo("testContent2");
+        assertThat(s2.getCreatedBy()).isEqualTo("user2");
+        // 카테고리 & 태그 검증
+        assertThat(s2.getCategoryName()).isEqualTo("testCategory2");
+        assertThat(s2.getTagNames())
+                .containsExactlyInAnyOrder("testTag3", "testTag4");
     }
 
     @Test
@@ -137,18 +148,28 @@ public class StudyServiceTest {
 
         // when
         studyService.deleteStudyById(study1.getId(), member1.getId());
-        List<StudyListResponseDto> studyList = studyService.getStudyList();
+        Page<StudyListResponseDto> studyList = studyService.getStudyList(0, 9, "title", "", null);
 
         // then
-        assertThat(studyList.size()).isEqualTo(1);
-        assertThat(studyList.get(0).getTitle()).isEqualTo("testTitle2");
-        assertThat(studyList.get(0).getContent()).isEqualTo("testContent2");
-        assertThat(studyList.get(0).getCreatedBy()).isEqualTo("user2");
+        // 📌 1) 전체 개수 검증
+        assertThat(studyList).isNotNull();
+        assertThat(studyList.getTotalElements()).isEqualTo(1);
+        StudyListResponseDto remaining = studyList.getContent().get(0);
+
+        // 📌 2) 남아 있는 게시글이 study2인지 검증
+        assertThat(remaining.getId()).isEqualTo(study2.getId());
+        assertThat(remaining.getTitle()).isEqualTo("testTitle2");
+        assertThat(remaining.getContent()).isEqualTo("testContent2");
+        assertThat(remaining.getCreatedBy()).isEqualTo("user2");
+        assertThat(remaining.getCategoryName()).isEqualTo("testCategory2");
+        assertThat(remaining.getTagNames()).containsExactlyInAnyOrder("testTag3", "testTag4");
+
+        // 📌 3) 작성자가 아닌 member1이 study2 삭제 시도 시 예외
         assertThatThrownBy(() ->
-                studyService.deleteStudyById(study2.getId(), member1.getId())
+            studyService.deleteStudyById(study2.getId(), member1.getId())
         )
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("작성자만 삭제할 수 있습니다.");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("작성자만 삭제할 수 있습니다.");
     }
 
     // comment
@@ -177,5 +198,12 @@ public class StudyServiceTest {
         assertThat(commentList.get(0).getContent()).isEqualTo("testComment1");
         assertThat(commentList.get(1).getCreatedBy()).isEqualTo("user1");
         assertThat(commentList.get(1).getContent()).isEqualTo("testComment2");
+    }
+
+    // page & search
+    @Test
+    public void searchPage() {
+        // when
+        studyService.getStudyList();
     }
 }
