@@ -234,7 +234,6 @@ public class StudyServiceTest {
         assertThat(studyList.getContent().get(1).getCategoryName()).isEqualTo("testCategory2");
         assertThat(studyList.getContent().get(2).getCategoryName()).isEqualTo("testCategory1");
     }
-
     // search(category)
     @Test
     public void searchCategory() {
@@ -263,5 +262,43 @@ public class StudyServiceTest {
         assertThat(studyList2.getContent().get(0).getTitle()).isEqualTo("testTitle2");
         assertThat(studyList3.getContent().size()).isEqualTo(1);
         assertThat(studyList3.getContent().get(0).getTitle()).isEqualTo("testTitle3");
+    }
+
+    // search(title)
+    @Test
+    public void searchTypeTitle() {
+        // given
+        Category category1 = categoryRepository.save(new Category("testCategory1"));
+        StudyCreateRequestDto dto1 = new StudyCreateRequestDto("testTitle1", "testContent1", category1.getId(), List.of("testTag1", "testTag2"));
+        StudyCreateRequestDto dto2 = new StudyCreateRequestDto("testTitle12", "testContent1", category1.getId(), List.of("testTag1", "testTag2"));
+        StudyCreateRequestDto dto3 = new StudyCreateRequestDto("testTitle123", "testContent1", category1.getId(), List.of("testTag1", "testTag2"));
+
+        // when
+        studyService.createStudy(dto1, member1.getId());
+        studyService.createStudy(dto2, member1.getId());
+        studyService.createStudy(dto3, member1.getId());
+        Page<StudyListResponseDto> studyList1 = studyService.getStudyList(0, 9, "title", "testTitle1", category1.getId());
+        Page<StudyListResponseDto> studyList2 = studyService.getStudyList(0, 9, "title", "testTitle12", category1.getId());
+        Page<StudyListResponseDto> studyList3 = studyService.getStudyList(0, 9, "title", "testTitle123", category1.getId());
+
+        // then
+        assertThat(studyList1.getTotalElements()).isEqualTo(3);
+        assertThat(studyList2.getTotalElements()).isEqualTo(2);
+        assertThat(studyList3.getTotalElements()).isEqualTo(1);
+    }
+    // search(content)
+    @Test
+    public void searchTypeContent() {
+
+    }
+    // search(createdBy)
+    @Test
+    public void searchTypeCreatedBy() {
+
+    }
+    // search(tag)
+    @Test
+    public void searchTypeTag() {
+
     }
 }
