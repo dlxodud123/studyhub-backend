@@ -219,6 +219,21 @@ public class StudyServiceTest {
     }
 
     // search(order)
+    @Test
+    public void searchOrder() {
+        // given
+        Category category = categoryRepository.save(new Category("testCategory3"));
+        StudyCreateRequestDto dto1 = new StudyCreateRequestDto("testTitle1", "testContent1", category.getId(), List.of("testTag1", "testTag2"));
+        studyService.createStudy(dto1, member1.getId());
+
+        // when
+        Page<StudyListResponseDto> studyList = studyService.getStudyList(0, 9, "title", "", null);
+
+        // then
+        assertThat(studyList.getContent().get(0).getCategoryName()).isEqualTo("testCategory3");
+        assertThat(studyList.getContent().get(1).getCategoryName()).isEqualTo("testCategory2");
+        assertThat(studyList.getContent().get(2).getCategoryName()).isEqualTo("testCategory1");
+    }
 
     // search(category)
     @Test
