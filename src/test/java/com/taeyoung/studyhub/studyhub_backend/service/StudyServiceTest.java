@@ -333,6 +333,15 @@ public class StudyServiceTest {
     // search(tag)
     @Test
     public void searchTypeTag() {
+        // given
+        Category category = categoryRepository.save(new Category("testCategory1"));
+        StudyCreateRequestDto dto = new StudyCreateRequestDto("testTitle1", "testContent1", category.getId(), List.of("testTag2", "testTag3"));
 
+        // when
+        studyService.createStudy(dto, member1.getId());
+//        Page<StudyListResponseDto> studyList1 = studyService.getStudyList(0, 9, "tag", "testTag1", null);
+//        Page<StudyListResponseDto> studyList1 = studyService.getStudyList(0, 9, "tag", "testTag2", null);
+//        Page<StudyListResponseDto> studyList1 = studyService.getStudyList(0, 9, "tag", "testTag3", null);
+//        Page<StudyListResponseDto> studyList1 = studyService.getStudyList(0, 9, "tag", "testTag4", null);
     }
 }

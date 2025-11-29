@@ -34,14 +34,13 @@ public class StudyRepositoryCustomImpl implements StudyRepositoryCustom{
         List<Study> content = queryFactory
             .select(study).distinct()
             .from(study)
-            .leftJoin(study.member, member)
+            .leftJoin(study.member, member).fetchJoin()
             .leftJoin(study.studyTags, studyTag)
             .leftJoin(studyTag.tag, tag)
             .where(
                 titleContains(searchType, keyword),
                 contentContains(searchType, keyword),
                 writerContains(searchType, keyword),
-                tagContains(searchType, keyword),
                 categoryEq(categoryId)
             )
             .orderBy(study.updatedAt.desc())
@@ -60,7 +59,45 @@ public class StudyRepositoryCustomImpl implements StudyRepositoryCustom{
                 titleContains(searchType, keyword),
                 contentContains(searchType, keyword),
                 writerContains(searchType, keyword),
-                tagContains(searchType, keyword),
+                categoryEq(categoryId)
+            );
+
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
+    }
+
+    @Override
+    public Page<Study> searchStudiesByTags(List<String> tags, Long categoryId, Pageable pageable) {
+
+        QStudy study = QStudy.study;
+        QMember member = QMember.member;
+        QStudyTag studyTag = QStudyTag.studyTag;
+        QTag tag = QTag.tag;
+
+        // 실제 content 조회
+        List<Study> content = queryFactory
+            .select(study).distinct()
+            .from(study)
+            .leftJoin(study.member, member).fetchJoin()
+            .leftJoin(study.studyTags, studyTag)
+            .leftJoin(studyTag.tag, tag)
+            .where(
+                tagContains(tags),
+                categoryEq(categoryId)
+            )
+            .orderBy(study.updatedAt.desc())
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .fetch();
+
+        // countQuery
+        JPAQuery<Long> countQuery = queryFactory
+            .select(study.countDistinct())
+            .from(study)
+            .leftJoin(study.member, member)
+            .leftJoin(study.studyTags, studyTag)
+            .leftJoin(studyTag.tag, tag)
+            .where(
+                tagContains(tags),
                 categoryEq(categoryId)
             );
 
@@ -90,11 +127,11 @@ public class StudyRepositoryCustomImpl implements StudyRepositoryCustom{
         return QStudy.study.member.username.containsIgnoreCase(keyword);
     }
     // tag 포함
-    private BooleanExpression tagContains(String type, String keyword) {
-        if (!"tag".equals(type) || keyword == null || keyword.isEmpty()) {
+    private BooleanExpression tagContains(List<String> keyword) {
+        if (keyword == null || keyword.isEmpty()) {
             return null;
         }
-        return QTag.tag.name.containsIgnoreCase(keyword);
+        return QTag.tag.name.in(keyword);
     }
     // category 포함
     private BooleanExpression categoryEq(Long categoryId) {

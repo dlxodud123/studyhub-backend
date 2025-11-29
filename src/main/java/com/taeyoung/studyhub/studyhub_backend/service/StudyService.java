@@ -20,10 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +36,20 @@ public class StudyService {
     public Page<StudyListResponseDto> getStudyList(int page, int size, String searchType, String keyword, Long categoryId) {
 
         PageRequest pageRequest = PageRequest.of(page, size);
-        Page<Study> studyPage = studyRepository.searchStudies(searchType, keyword, categoryId, pageRequest);
+        Page<Study> studyPage;
+
+        if ("tag".equals(searchType)) {
+            List<String> tags = Optional.ofNullable(keyword)
+                    .filter(s -> !s.isBlank())
+                    .map(s -> Arrays.stream(s.split(","))
+                            .map(String::trim)
+                            .filter(t -> !t.isEmpty())
+                            .toList())
+                    .orElse(Collections.emptyList());
+            studyPage = studyRepository.searchStudiesByTags(tags, categoryId, pageRequest);
+        } else {
+            studyPage = studyRepository.searchStudies(searchType, keyword, categoryId, pageRequest);
+        }
 
         return studyPage
             .map(study -> new StudyListResponseDto(
