@@ -37,9 +37,6 @@ public class StudyService {
     private final CommentRepository commentRepository;
 
     public Page<StudyListResponseDto> getStudyList(int page, int size, String searchType, String keyword, Long categoryId) {
-        System.out.println(searchType);
-        System.out.println(keyword);
-        System.out.println(categoryId);
 
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<Study> studyPage = studyRepository.searchStudies(searchType, keyword, categoryId, pageRequest);

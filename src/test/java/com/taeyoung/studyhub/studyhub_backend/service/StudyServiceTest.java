@@ -65,6 +65,7 @@ public class StudyServiceTest {
         comment2 = studyService.createComment("testComment2", member1.getId(), study1.getId());
     }
 
+    // study
     @Test
     public void getStudyList() {
         // when
@@ -97,7 +98,6 @@ public class StudyServiceTest {
         assertThat(s2.getTagNames())
                 .containsExactlyInAnyOrder("testTag3", "testTag4");
     }
-
     @Test
     public void findDetailStudy() {
         // when
@@ -110,7 +110,6 @@ public class StudyServiceTest {
         assertThat(detailDto.getCategoryName()).isEqualTo("testCategory1");
         assertThat(detailDto.getTagNames()).containsExactlyInAnyOrder("testTag1", "testTag2");
     }
-
     @Test
     public void findEditStudy() {
         // when
@@ -127,7 +126,6 @@ public class StudyServiceTest {
         .hasMessage("작성자만 수정할 수 있습니다.");
 
     }
-
     @Test
     public void editStudy() {
         // given
@@ -140,7 +138,6 @@ public class StudyServiceTest {
         assertThat(study1.getTitle()).isEqualTo("editTitle");
         assertThat(study1.getContent()).isEqualTo("editContent");
     }
-
     @Test
     public void deleteStudy() {
         em.flush();
@@ -187,7 +184,6 @@ public class StudyServiceTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Study not found");
     }
-
     @Test
     public void getCommentList() {
         // when
@@ -200,10 +196,28 @@ public class StudyServiceTest {
         assertThat(commentList.get(1).getContent()).isEqualTo("testComment2");
     }
 
-    // page & search
+    // page
     @Test
-    public void searchPage() {
+    public void listPage() {
+        // given
+        Category category1 = categoryRepository.save(new Category("testCategory1"));
+        Category category2 = categoryRepository.save(new Category("testCategory2"));
+        StudyCreateRequestDto dto1 = new StudyCreateRequestDto("testTitle1", "testContent1", category1.getId(), List.of("testTag1", "testTag2"));
+        StudyCreateRequestDto dto2 = new StudyCreateRequestDto("testTitle2", "testContent2", category2.getId(), List.of("testTag3", "testTag4"));
+        for (int i = 0; i < 4; i++) {
+            studyService.createStudy(dto1, member1.getId());
+            studyService.createStudy(dto2, member2.getId());
+        }
+
         // when
-        studyService.getStudyList();
+        Page<StudyListResponseDto> studyList = studyService.getStudyList(0, 9, "title", "", null);
+
+        // then
+        assertThat(studyList.getSize()).isEqualTo(9);
+        assertThat(studyList.getTotalPages()).isEqualTo(2);
+        assertThat(studyList.getTotalElements()).isEqualTo(10);
     }
+
+    // search(order)
+    
 }

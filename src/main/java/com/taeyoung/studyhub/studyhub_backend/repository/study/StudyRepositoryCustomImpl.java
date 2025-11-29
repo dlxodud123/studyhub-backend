@@ -51,7 +51,7 @@ public class StudyRepositoryCustomImpl implements StudyRepositoryCustom{
 
         // countQuery
         JPAQuery<Long> countQuery = queryFactory
-            .select(study.count())
+            .select(study.countDistinct())
             .from(study)
             .leftJoin(study.member, member)
             .leftJoin(study.studyTags, studyTag)
