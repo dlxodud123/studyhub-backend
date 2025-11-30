@@ -81,43 +81,41 @@ public class StudyRepositoryCustomImpl implements StudyRepositoryCustom{
         
         // 실제 content 조회
         JPAQuery<Study> query = queryFactory
-                .select(study).distinct()
-                .from(study)
-                .leftJoin(study.member, member).fetchJoin()
-                .where(categoryEq(categoryId))
-                .where(
-                    JPAExpressions
-                        .select(stSub.study.id)
-                        .from(stSub)
-                        .leftJoin(stSub.tag, tSub)
-                        .where(stSub.study.eq(study)
-                                .and(tSub.name.in(tags)))
-                        .groupBy(stSub.study.id)
-                        .having(stSub.id.countDistinct().eq((long) tags.size()))
-                        .exists()
-                )
-                .orderBy(study.updatedAt.desc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize());
+            .select(study).distinct()
+            .from(study)
+            .leftJoin(study.member, member).fetchJoin()
+            .where(categoryEq(categoryId))
+            .where(
+                JPAExpressions
+                    .select(stSub.study.id)
+                    .from(stSub)
+                    .leftJoin(stSub.tag, tSub)
+                    .where(stSub.study.eq(study).and(tSub.name.in(tags)))
+                    .groupBy(stSub.study.id)
+                    .having(stSub.id.countDistinct().eq((long) tags.size()))
+                    .exists()
+            )
+            .orderBy(study.updatedAt.desc())
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize());
 
         List<Study> content = query.fetch();
 
         // countQuery
         JPAQuery<Long> countQuery = queryFactory
-                .select(study.countDistinct())
-                .from(study)
-                .where(categoryEq(categoryId))
-                .where(
-                    JPAExpressions
-                        .select(stSub.study.id)
-                        .from(stSub)
-                        .leftJoin(stSub.tag, tSub)
-                        .where(stSub.study.eq(study)
-                                .and(tSub.name.in(tags)))
-                        .groupBy(stSub.study.id)
-                        .having(stSub.id.countDistinct().eq((long) tags.size()))
-                        .exists()
-                );
+            .select(study.countDistinct())
+            .from(study)
+            .where(categoryEq(categoryId))
+            .where(
+                JPAExpressions
+                    .select(stSub.study.id)
+                    .from(stSub)
+                    .leftJoin(stSub.tag, tSub)
+                    .where(stSub.study.eq(study).and(tSub.name.in(tags)))
+                    .groupBy(stSub.study.id)
+                    .having(stSub.id.countDistinct().eq((long) tags.size()))
+                    .exists()
+            );
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
@@ -144,13 +142,6 @@ public class StudyRepositoryCustomImpl implements StudyRepositoryCustom{
         }
         return QStudy.study.member.username.containsIgnoreCase(keyword);
     }
-    // tag 포함
-//    private BooleanExpression tagContains(List<String> keyword) {
-//        if (keyword == null || keyword.isEmpty()) {
-//            return null;
-//        }
-//        return QTag.tag.name.in(keyword);
-//    }
     // category 포함
     private BooleanExpression categoryEq(Long categoryId) {
         if (categoryId == null || categoryId == 0) {
