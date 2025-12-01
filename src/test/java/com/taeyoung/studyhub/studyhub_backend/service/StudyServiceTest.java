@@ -335,13 +335,21 @@ public class StudyServiceTest {
     public void searchTypeTag() {
         // given
         Category category = categoryRepository.save(new Category("testCategory1"));
-        StudyCreateRequestDto dto = new StudyCreateRequestDto("testTitle1", "testContent1", category.getId(), List.of("testTag2", "testTag3"));
+        StudyCreateRequestDto dto = new StudyCreateRequestDto("testTitle1", "testContent1", category.getId(), List.of("testTag1", "testTag2", "testTag5"));
 
         // when
         studyService.createStudy(dto, member1.getId());
-//        Page<StudyListResponseDto> studyList1 = studyService.getStudyList(0, 9, "tag", "testTag1", null);
-//        Page<StudyListResponseDto> studyList1 = studyService.getStudyList(0, 9, "tag", "testTag2", null);
-//        Page<StudyListResponseDto> studyList1 = studyService.getStudyList(0, 9, "tag", "testTag3", null);
-//        Page<StudyListResponseDto> studyList1 = studyService.getStudyList(0, 9, "tag", "testTag4", null);
+        Page<StudyListResponseDto> studyList1 = studyService.getStudyList(0, 9, "tag", "", null);
+        Page<StudyListResponseDto> studyList2 = studyService.getStudyList(0, 9, "tag", "testTag1", null);
+        Page<StudyListResponseDto> studyList3 = studyService.getStudyList(0, 9, "tag", "testTag1, testTag2", null);
+        Page<StudyListResponseDto> studyList4 = studyService.getStudyList(0, 9, "tag", "testTag1, testTag2, testTag5", null);
+        Page<StudyListResponseDto> studyList5 = studyService.getStudyList(0, 9, "tag", "testTag3", null);
+
+        // then
+        assertThat(studyList1.getTotalElements()).isEqualTo(3);
+        assertThat(studyList2.getTotalElements()).isEqualTo(2);
+        assertThat(studyList3.getTotalElements()).isEqualTo(2);
+        assertThat(studyList4.getTotalElements()).isEqualTo(1);
+        assertThat(studyList5.getTotalElements()).isEqualTo(1);
     }
 }
