@@ -28,7 +28,7 @@ public class MyUserDetailService implements UserDetailsService {
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
 
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("일반유저"));
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + member.getRole()));
         var a = new CustomUser(member.getId(), member.getUsername(), member.getPassword(), member.getEmail(), member.getProvider(), authorities);
 
         return a;
