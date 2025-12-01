@@ -1,6 +1,7 @@
 package com.taeyoung.studyhub.studyhub_backend.controller;
 
-import com.taeyoung.studyhub.studyhub_backend.service.StudyService;
+import com.taeyoung.studyhub.studyhub_backend.dto.admin.response.AdminDashboardResponseDto;
+import com.taeyoung.studyhub.studyhub_backend.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,9 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
 
-    private final StudyService studyService;
+    private final AdminService adminService;
 
-    @GetMapping("")
-    public void asdf() {
+    @GetMapping
+    public AdminDashboardResponseDto asdf() {
+        adminService.asdf();
+
+        return null;
     }
 }

@@ -101,10 +101,6 @@
             <h2 id="study-count">0</h2>
             <p>총 스터디 수</p>
         </div>
-        <div class="card">
-            <h2 id="active-study-count">0</h2>
-            <p>활성 스터디</p>
-        </div>
     </div>
 
     <h2>최근 회원 목록</h2>
@@ -115,6 +111,21 @@
             <th>이름</th>
             <th>이메일</th>
             <th>가입일</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- JS로 데이터 채워짐 -->
+        </tbody>
+    </table>
+
+    <h2>최근 스터디 목록</h2>
+    <table id="study-table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>스터디 이름</th>
+            <th>카테고리</th>
+            <th>생성일</th>
         </tr>
         </thead>
         <tbody>
@@ -142,7 +153,7 @@
             // 통계 수치 업데이트
             document.getElementById('user-count').textContent = dashboardData.userCount;
             document.getElementById('study-count').textContent = dashboardData.studyCount;
-            document.getElementById('active-study-count').textContent = dashboardData.activeStudyCount;
+<!--            document.getElementById('active-study-count').textContent = dashboardData.activeStudyCount;-->
 
             // 최근 가입 유저 테이블 업데이트
             const tbody = document.getElementById('user-table').querySelector('tbody');
@@ -156,6 +167,20 @@
                     <td>${user.joined}</td>
                 `;
                 tbody.appendChild(tr);
+            });
+
+            // 최근 스터디 테이블 업데이트
+            const studyTbody = document.getElementById('study-table').querySelector('tbody');
+            studyTbody.innerHTML = '';
+            dashboardData.recentStudies.forEach(study => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${study.id}</td>
+                    <td>${study.name}</td>
+                    <td>${study.category}</td>
+                    <td>${study.created}</td>
+                `;
+                studyTbody.appendChild(tr);
             });
 
         } catch (error) {
