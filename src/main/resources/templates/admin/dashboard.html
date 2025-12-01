@@ -124,37 +124,57 @@
 </div>
 
 <script>
-    // 예시 데이터 (나중에 API fetch로 교체)
-    const dashboardData = {
-        userCount: 120,
-        studyCount: 45,
-        activeStudyCount: 30,
-        recentUsers: [
-            {id:1, name:"홍길동", email:"hong@test.com", joined:"2025-12-01"},
-            {id:2, name:"김철수", email:"kim@test.com", joined:"2025-11-28"},
-            {id:3, name:"이영희", email:"lee@test.com", joined:"2025-11-27"}
-        ]
-    };
+    async function loadDashboard() {
+        try {
+            const response = await fetch('/api/admin', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
 
-    document.getElementById('user-count').textContent = dashboardData.userCount;
-    document.getElementById('study-count').textContent = dashboardData.studyCount;
-    document.getElementById('active-study-count').textContent = dashboardData.activeStudyCount;
+            if (!response.ok) {
+                throw new Error('데이터를 가져오지 못했습니다.');
+            }
 
-    const tbody = document.getElementById('user-table').querySelector('tbody');
-    dashboardData.recentUsers.forEach(user => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>${user.id}</td>
-            <td>${user.name}</td>
-            <td>${user.email}</td>
-            <td>${user.joined}</td>
-        `;
-        tbody.appendChild(tr);
-    });
+            const dashboardData = await response.json();
 
+            // 통계 수치 업데이트
+            document.getElementById('user-count').textContent = dashboardData.userCount;
+            document.getElementById('study-count').textContent = dashboardData.studyCount;
+            document.getElementById('active-study-count').textContent = dashboardData.activeStudyCount;
+
+            // 최근 가입 유저 테이블 업데이트
+            const tbody = document.getElementById('user-table').querySelector('tbody');
+            tbody.innerHTML = ''; // 기존 내용 초기화
+            dashboardData.recentUsers.forEach(user => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${user.id}</td>
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td>${user.joined}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+        } catch (error) {
+            console.error(error);
+            alert('대시보드 데이터를 불러오는데 실패했습니다.');
+        }
+    }
+
+    // 페이지가 로드되면 호출
+    window.addEventListener('DOMContentLoaded', loadDashboard);
+
+    // 로그아웃 함수
     function logout() {
-        alert("로그아웃 처리");
-        location.href = "/";
+        // 예: JWT 쿠키 삭제 후 홈으로 이동
+        fetch('/logout', { method: 'POST' })
+            .then(() => {
+                alert("로그아웃 처리");
+                location.href = "/";
+            });
     }
 </script>
 </body>

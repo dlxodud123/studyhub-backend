@@ -15,7 +15,7 @@ public class AdminController {
 
     private final StudyService studyService;
 
-    @GetMapping
+    @GetMapping("")
     public void asdf() {
     }
 }
