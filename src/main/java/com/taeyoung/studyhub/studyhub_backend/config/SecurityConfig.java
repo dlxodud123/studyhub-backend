@@ -29,13 +29,26 @@ public class SecurityConfig {
                 .requestMatchers("/my-page/**", "/modify/**"
 //                        , "/study/create", "/study/edit/**", "/study/delete/**", "/api/studies/delete/**"
                 ).authenticated()
+                // admin
+                .requestMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().permitAll()
         );
         // auth 없이 지정된 경로 접속 시 /login으로 이동
-        http.exceptionHandling(exception ->
-                exception.authenticationEntryPoint((request, response, authException) -> {
+        http.exceptionHandling(exception -> exception
+                .authenticationEntryPoint((request, response, authException) -> {
                     response.sendRedirect("/login");
                 })
+                .accessDeniedHandler((request, response, accessDeniedException) -> {
+                    response.setContentType("text/html; charset=UTF-8");
+
+                    response.getWriter().write(
+                        "<script>" +
+                                "alert('관리자만 접근 가능합니다.');" +
+                                "location.href = '/';" +
+                                "</script>"
+                    );
+                })
+
         );
 
         http.addFilterBefore(new JwtFilter(), ExceptionTranslationFilter.class);
@@ -53,6 +66,7 @@ public class SecurityConfig {
                     response.sendRedirect("/login");
                 })
         );
+
         return http.build();
     }
 }

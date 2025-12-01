@@ -60,4 +60,8 @@ public class ViewController {
 
     @GetMapping("/study/edit/{id}")
     public String studyEdit(){return "study/studyedit.html";}
+
+    // admin
+    @GetMapping("/admin/dashboard")
+    public String adminDashboard(){return "admin/dashboard.html";}
 }
