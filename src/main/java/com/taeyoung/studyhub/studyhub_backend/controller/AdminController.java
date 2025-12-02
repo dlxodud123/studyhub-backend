@@ -1,5 +1,6 @@
 package com.taeyoung.studyhub.studyhub_backend.controller;
 
+import com.taeyoung.studyhub.studyhub_backend.dto.admin.request.AdminRoleChangeRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.admin.response.AdminDashboardResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.admin.response.AdminMembersResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.service.AdminService;
@@ -41,6 +42,23 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("회원이 존재하지 않습니다.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("삭제 중 오류 발생");
+        }
+    }
+
+    @PatchMapping("/members/{memberId}/role")
+    public ResponseEntity<String> changeMemberRole(
+            @PathVariable Long memberId,
+            @RequestBody AdminRoleChangeRequestDto requestDto) {
+
+        try {
+            adminService.changeRole(memberId, requestDto.getRole());
+            return ResponseEntity.ok("권한 변경 완료");
+        } catch (IllegalArgumentException e) {
+            // 회원이 존재하지 않는 경우
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            // 그 외 예상치 못한 오류
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("권한 변경 중 오류 발생");
         }
     }
 }

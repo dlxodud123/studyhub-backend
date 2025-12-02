@@ -52,5 +52,9 @@ public class Member extends BaseEntity {
     public void setRandomPassword(String password) {
         this.password = password;
     }
+
+    public void setRole(Role role){
+        this.role = role;
+    }
 }
 

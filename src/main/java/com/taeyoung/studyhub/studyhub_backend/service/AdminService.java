@@ -1,6 +1,7 @@
 package com.taeyoung.studyhub.studyhub_backend.service;
 
 import com.taeyoung.studyhub.studyhub_backend.domain.member.Member;
+import com.taeyoung.studyhub.studyhub_backend.domain.member.Role;
 import com.taeyoung.studyhub.studyhub_backend.dto.admin.response.AdminDashboardResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.admin.response.AdminMembersResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.repository.admin.AdminRepository;
@@ -49,5 +50,12 @@ public class AdminService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new EntityNotFoundException("회원이 존재하지 않습니다."));
         memberRepository.delete(member);
+    }
+
+    public void changeRole(Long memberId, String role) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+
+        member.setRole(Role.valueOf(role));
     }
 }
