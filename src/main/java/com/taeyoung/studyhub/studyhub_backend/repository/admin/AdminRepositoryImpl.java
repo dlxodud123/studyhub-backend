@@ -1,6 +1,7 @@
 package com.taeyoung.studyhub.studyhub_backend.repository.admin;
 
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.taeyoung.studyhub.studyhub_backend.dto.admin.response.AdminDashboardResponseDto;
 import jakarta.persistence.EntityManager;
@@ -31,7 +32,10 @@ public class AdminRepositoryImpl implements AdminRepository{
                 member.id,
                 member.username,
                 member.email,
-                member.createdAt.stringValue()
+                Expressions.stringTemplate(
+                    "DATE_FORMAT({0}, '%Y-%m-%d %H:%i:%s')",
+                    member.createdAt
+                )
             ))
             .from(member)
             .orderBy(member.createdAt.desc())
@@ -47,7 +51,10 @@ public class AdminRepositoryImpl implements AdminRepository{
                     study.id,
                     study.title,
                     study.category.name,
-                    study.createdAt.stringValue()
+                    Expressions.stringTemplate(
+                        "DATE_FORMAT({0}, '%Y-%m-%d %H:%i:%s')",
+                        study.createdAt
+                    )
             ))
             .from(study)
             .leftJoin(study.category, category)
