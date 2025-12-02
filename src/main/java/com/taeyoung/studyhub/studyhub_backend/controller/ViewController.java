@@ -64,4 +64,10 @@ public class ViewController {
     // admin
     @GetMapping("/admin/dashboard")
     public String adminDashboard(){return "admin/dashboard.html";}
+
+    @GetMapping("/admin/members")
+    public String adminMembers(){return "admin/members.html";}
+
+    @GetMapping("/admin/studies")
+    public String adminStudies(){return "admin/studies.html";}
 }

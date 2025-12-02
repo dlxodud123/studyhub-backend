@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>전체 회원 목록</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f4f6f8; }
+    table { width: 100%; border-collapse: collapse; background: white; }
+    th, td { padding: 12px; border-bottom: 1px solid #ddd; }
+    th { background: #1976d2; color: white; }
+    tr:hover { background: #f1f1f1; }
+
+    /* 페이징 버튼 */
+    .pagination {
+      display: flex;
+      gap: 6px;
+      margin-top: 20px;
+    }
+
+    .pagination button {
+      padding: 6px 12px;
+      border: 1px solid #1976d2;
+      background: white;
+      color: #1976d2;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .pagination button.active {
+      background: #1976d2;
+      color: white;
+    }
+
+    .pagination button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      color: #666;
+    }
+    td, th { text-align: center; }
+  </style>
+</head>
+<body>
+
+<h1>전체 회원 목록</h1>
+
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>이름</th>
+    <th>이메일</th>
+    <th>가입일</th>
+  </tr>
+  </thead>
+  <tbody id="member-table"></tbody>
+</table>
+
+<!-- 페이지네이션 UI -->
+<div class="pagination" id="pagination"></div>
+
+<script>
+  let currentPage = 0;
+  const size = 9;
+
+  async function loadMembers(page = 0) {
+
+    const url = `/api/admin/members?page=${page}&size=${size}`;
+
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('목록을 불러오지 못했습니다.');
+
+      const data = await res.json();
+
+      // content = 실제 회원 목록
+      const members = data.content;
+
+      const tbody = document.getElementById('member-table');
+      tbody.innerHTML = '';
+
+      members.forEach(m => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${m.id}</td>
+          <td>${m.name}</td>
+          <td>${m.email}</td>
+          <td>${m.joined}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // 페이지네이션 만들기
+      createPagination(data.totalPages, data.number);
+
+    } catch (err) {
+      console.error(err);
+      alert("회원 목록을 불러오지 못했습니다.");
+    }
+  }
+
+  function createPagination(totalPages, page) {
+    const container = document.getElementById('pagination');
+    container.innerHTML = '';
+
+    currentPage = page;
+
+    // 이전 버튼
+    const prevBtn = document.createElement('button');
+    prevBtn.textContent = '이전';
+    prevBtn.disabled = (page === 0);
+    prevBtn.onclick = () => loadMembers(page - 1);
+    container.appendChild(prevBtn);
+
+    // 번호 버튼
+    for (let i = 0; i < totalPages; i++) {
+      const btn = document.createElement('button');
+      btn.textContent = (i + 1);
+      if (i === page) btn.classList.add('active');
+      btn.onclick = () => loadMembers(i);
+      container.appendChild(btn);
+    }
+
+    // 다음 버튼
+    const nextBtn = document.createElement('button');
+    nextBtn.textContent = '다음';
+    nextBtn.disabled = (page === totalPages - 1);
+    nextBtn.onclick = () => loadMembers(page + 1);
+    container.appendChild(nextBtn);
+  }
+
+  window.addEventListener('DOMContentLoaded', () => loadMembers(0));
+</script>
+
+</body>
+</html>

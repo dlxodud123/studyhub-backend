@@ -1,10 +1,13 @@
 package com.taeyoung.studyhub.studyhub_backend.service;
 
 import com.taeyoung.studyhub.studyhub_backend.dto.admin.response.AdminDashboardResponseDto;
+import com.taeyoung.studyhub.studyhub_backend.dto.admin.response.AdminMembersResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.repository.admin.AdminRepository;
 import com.taeyoung.studyhub.studyhub_backend.repository.member.MemberRepository;
 import com.taeyoung.studyhub.studyhub_backend.repository.study.StudyRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,5 +36,10 @@ public class AdminService {
             recentMembers,
             recentStudies
         );
+    }
+
+    public Page<AdminMembersResponseDto> getMembers(int page, int size) {
+        PageRequest pageable = PageRequest.of(page, size);
+        return adminRepository.findMembers(pageable);
     }
 }
