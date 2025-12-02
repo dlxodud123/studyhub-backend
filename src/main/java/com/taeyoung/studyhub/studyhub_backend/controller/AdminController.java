@@ -3,14 +3,13 @@ package com.taeyoung.studyhub.studyhub_backend.controller;
 import com.taeyoung.studyhub.studyhub_backend.dto.admin.response.AdminDashboardResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.admin.response.AdminMembersResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.service.AdminService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,5 +30,17 @@ public class AdminController {
             @RequestParam(defaultValue = "10") int size
     ) {
         return adminService.getMembers(page, size);
+    }
+
+    @DeleteMapping("/members/{memberId}")
+    public ResponseEntity<String> deleteMember(@PathVariable Long memberId){
+        try {
+            adminService.deleteMember(memberId);
+            return ResponseEntity.ok("삭제 완료!");
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("회원이 존재하지 않습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("삭제 중 오류 발생");
+        }
     }
 }

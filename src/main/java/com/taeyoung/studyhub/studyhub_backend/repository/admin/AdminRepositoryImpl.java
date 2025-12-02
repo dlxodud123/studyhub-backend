@@ -79,7 +79,8 @@ public class AdminRepositoryImpl implements AdminRepository{
                 Expressions.stringTemplate(
                     "DATE_FORMAT({0}, '%Y-%m-%d %H:%i:%s')",
                     member.createdAt
-                )
+                ),
+                member.role
             ))
             .from(member)
             .orderBy(member.id.asc())

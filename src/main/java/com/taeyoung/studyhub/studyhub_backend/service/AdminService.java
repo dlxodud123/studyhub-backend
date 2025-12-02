@@ -1,10 +1,12 @@
 package com.taeyoung.studyhub.studyhub_backend.service;
 
+import com.taeyoung.studyhub.studyhub_backend.domain.member.Member;
 import com.taeyoung.studyhub.studyhub_backend.dto.admin.response.AdminDashboardResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.admin.response.AdminMembersResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.repository.admin.AdminRepository;
 import com.taeyoung.studyhub.studyhub_backend.repository.member.MemberRepository;
 import com.taeyoung.studyhub.studyhub_backend.repository.study.StudyRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,5 +43,11 @@ public class AdminService {
     public Page<AdminMembersResponseDto> getMembers(int page, int size) {
         PageRequest pageable = PageRequest.of(page, size);
         return adminRepository.findMembers(pageable);
+    }
+
+    public void deleteMember(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new EntityNotFoundException("회원이 존재하지 않습니다."));
+        memberRepository.delete(member);
     }
 }

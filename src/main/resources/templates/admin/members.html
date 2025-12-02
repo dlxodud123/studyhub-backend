@@ -85,6 +85,10 @@
           <td>${m.name}</td>
           <td>${m.email}</td>
           <td>${m.joined}</td>
+          <td style="text-align:center;">
+            <button class="delete-btn" data-id="${m.id}">삭제</button>
+            <button class="role-btn" data-id="${m.id}" data-role="${m.role}">권한변경</button>
+          </td>
         `;
         tbody.appendChild(tr);
       });
@@ -127,6 +131,48 @@
     nextBtn.onclick = () => loadMembers(page + 1);
     container.appendChild(nextBtn);
   }
+
+  // === 여기서 tbody 이벤트 위임 등록 ===
+  const tbody = document.getElementById('member-table');
+  tbody.addEventListener('click', async (e) => {
+    const memberId = e.target.dataset.id;
+
+    // 삭제 버튼 클릭
+    if (e.target.classList.contains('delete-btn')) {
+      if (confirm("정말 삭제하시겠습니까?")) {
+        try {
+          const res = await fetch(`/api/admin/members/${memberId}`, { method: 'DELETE' });
+          if (!res.ok) throw new Error('삭제 실패');
+          alert('삭제 완료');
+          loadMembers(currentPage);
+        } catch (err) {
+          console.error(err);
+          alert('삭제 중 오류 발생');
+        }
+      }
+    }
+
+    // 권한 변경 버튼 클릭
+    if (e.target.classList.contains('role-btn')) {
+      const currentRole = e.target.dataset.role;
+      const newRole = currentRole === 'USER' ? 'ADMIN' : 'USER';
+      if (confirm(`${memberId} 사용자의 권한을 ${newRole}로 변경하시겠습니까?`)) {
+        try {
+          const res = await fetch(`/api/admin/members/${memberId}/role`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ role: newRole })
+          });
+          if (!res.ok) throw new Error('권한 변경 실패');
+          alert('권한 변경 완료');
+          loadMembers(currentPage);
+        } catch (err) {
+          console.error(err);
+          alert('권한 변경 중 오류 발생');
+        }
+      }
+    }
+  });
 
   window.addEventListener('DOMContentLoaded', () => loadMembers(0));
 </script>
