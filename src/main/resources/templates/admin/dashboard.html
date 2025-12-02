@@ -94,7 +94,7 @@
 <div class="container">
     <div class="cards">
         <div class="card">
-            <h2 id="user-count">0</h2>
+            <h2 id="member-count">0</h2>
             <p>총 회원 수</p>
         </div>
         <div class="card">
@@ -151,14 +151,14 @@
             const dashboardData = await response.json();
 
             // 통계 수치 업데이트
-            document.getElementById('user-count').textContent = dashboardData.userCount;
+            document.getElementById('member-count').textContent = dashboardData.memberCount;
             document.getElementById('study-count').textContent = dashboardData.studyCount;
 <!--            document.getElementById('active-study-count').textContent = dashboardData.activeStudyCount;-->
 
             // 최근 가입 유저 테이블 업데이트
             const tbody = document.getElementById('user-table').querySelector('tbody');
             tbody.innerHTML = ''; // 기존 내용 초기화
-            dashboardData.recentUsers.forEach(user => {
+            dashboardData.recentMembers.forEach(user => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${user.id}</td>

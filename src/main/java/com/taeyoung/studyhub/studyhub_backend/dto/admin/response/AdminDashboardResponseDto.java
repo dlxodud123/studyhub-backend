@@ -6,27 +6,27 @@ import java.util.List;
 
 @Getter
 public class AdminDashboardResponseDto {
-    private final Long userCount;
+    private final Long memberCount;
     private final Long studyCount;
-    private final List<RecentUser> recentUsers;
+    private final List<RecentMember> recentMembers;
     private final List<RecentStudy> recentStudies;
 
-    public AdminDashboardResponseDto(Long userCount, Long studyCount, List<RecentUser> recentUsers, List<RecentStudy> recentStudies) {
-        this.userCount = userCount;
+    public AdminDashboardResponseDto(Long memberCount, Long studyCount, List<RecentMember> recentMembers, List<RecentStudy> recentStudies) {
+        this.memberCount = memberCount;
         this.studyCount = studyCount;
-        this.recentUsers = recentUsers;
+        this.recentMembers = recentMembers;
         this.recentStudies = recentStudies;
     }
 
     // 최근 회원 DTO
     @Getter
-    public static class RecentUser {
+    public static class RecentMember {
         private final Long id;
         private final String name;
         private final String email;
         private final String joined;
 
-        public RecentUser(Long id, String name, String email, String joined) {
+        public RecentMember(Long id, String name, String email, String joined) {
             this.id = id;
             this.name = name;
             this.email = email;
