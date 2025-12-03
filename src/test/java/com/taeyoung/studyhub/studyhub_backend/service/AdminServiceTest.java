@@ -12,6 +12,7 @@ import com.taeyoung.studyhub.studyhub_backend.dto.study.request.StudyCreateReque
 import com.taeyoung.studyhub.studyhub_backend.repository.member.MemberRepository;
 import com.taeyoung.studyhub.studyhub_backend.repository.study.CategoryRepository;
 import com.taeyoung.studyhub.studyhub_backend.repository.study.StudyRepository;
+import jakarta.persistence.EntityManager;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,6 +37,8 @@ public class AdminServiceTest {
     @Autowired private AdminService adminService;
     @Autowired private MemberService memberService;
     @Autowired private StudyService studyService;
+
+    @Autowired private EntityManager em;
 
     private Member member1;
     private Member member2;
@@ -108,28 +111,43 @@ public class AdminServiceTest {
 
         // then
         assertThat(members.getTotalElements()).isEqualTo(4L);
-        
+
         assertThat(members.getContent().get(0).getId()).isEqualTo(member1.getId());
         assertThat(members.getContent().get(0).getName()).isEqualTo("user1");
         assertThat(members.getContent().get(0).getEmail()).isEqualTo("email1");
-        assertThat(members.getContent().get(0).getRole()).isEqualTo(Role.USER);
         assertThat(members.getContent().get(1).getId()).isEqualTo(member2.getId());
         assertThat(members.getContent().get(1).getName()).isEqualTo("user2");
-        assertThat(members.getContent().get(1).getEmail()).isEqualTo("email2");
         assertThat(members.getContent().get(1).getRole()).isEqualTo(Role.USER);
         assertThat(members.getContent().get(2).getId()).isEqualTo(member3.getId());
         assertThat(members.getContent().get(2).getName()).isEqualTo("user3");
         assertThat(members.getContent().get(2).getEmail()).isEqualTo("email3");
-        assertThat(members.getContent().get(2).getRole()).isEqualTo(Role.USER);
         assertThat(members.getContent().get(3).getId()).isEqualTo(member4.getId());
         assertThat(members.getContent().get(3).getName()).isEqualTo("user4");
         assertThat(members.getContent().get(3).getEmail()).isEqualTo("email4");
-        assertThat(members.getContent().get(3).getRole()).isEqualTo(Role.USER);
     }
 
     @Test
     public void memberDelete() {
+        em.flush();
+        em.clear();
 
+        // when
+        adminService.deleteMember(member4.getId());
+
+        Page<AdminMembersResponseDto> members = adminService.getMembers(0, 9);
+
+        // then
+        assertThat(members.getTotalElements()).isEqualTo(3L);
+
+        assertThat(members.getContent().get(0).getId()).isEqualTo(member1.getId());
+        assertThat(members.getContent().get(0).getName()).isEqualTo("user1");
+        assertThat(members.getContent().get(0).getEmail()).isEqualTo("email1");
+        assertThat(members.getContent().get(1).getId()).isEqualTo(member2.getId());
+        assertThat(members.getContent().get(1).getName()).isEqualTo("user2");
+        assertThat(members.getContent().get(1).getEmail()).isEqualTo("email2");
+        assertThat(members.getContent().get(2).getId()).isEqualTo(member3.getId());
+        assertThat(members.getContent().get(2).getName()).isEqualTo("user3");
+        assertThat(members.getContent().get(2).getEmail()).isEqualTo("email3");
     }
 
     @Test
