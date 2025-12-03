@@ -27,7 +27,7 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ProviderType provider;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Study> studies = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
