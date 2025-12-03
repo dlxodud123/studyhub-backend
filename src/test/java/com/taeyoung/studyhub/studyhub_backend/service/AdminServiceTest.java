@@ -2,9 +2,11 @@ package com.taeyoung.studyhub.studyhub_backend.service;
 
 import com.taeyoung.studyhub.studyhub_backend.domain.member.Member;
 import com.taeyoung.studyhub.studyhub_backend.domain.member.ProviderType;
+import com.taeyoung.studyhub.studyhub_backend.domain.member.Role;
 import com.taeyoung.studyhub.studyhub_backend.domain.study.Category;
 import com.taeyoung.studyhub.studyhub_backend.domain.study.Study;
 import com.taeyoung.studyhub.studyhub_backend.dto.admin.response.AdminDashboardResponseDto;
+import com.taeyoung.studyhub.studyhub_backend.dto.admin.response.AdminMembersResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.SignupRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.request.StudyCreateRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.repository.member.MemberRepository;
@@ -15,6 +17,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,37 +80,61 @@ public class AdminServiceTest {
         assertThat(dashboardData.getMemberCount()).isEqualTo(4L);
         assertThat(dashboardData.getStudyCount()).isEqualTo(4L);
 
-        assertThat(dashboardData.getRecentMembers().get(2).getId()).isEqualTo(2L);
+        assertThat(dashboardData.getRecentMembers().get(2).getId()).isEqualTo(member2.getId());
         assertThat(dashboardData.getRecentMembers().get(2).getName()).isEqualTo("user2");
         assertThat(dashboardData.getRecentMembers().get(2).getEmail()).isEqualTo("email2");
-        assertThat(dashboardData.getRecentMembers().get(1).getId()).isEqualTo(3L);
+        assertThat(dashboardData.getRecentMembers().get(1).getId()).isEqualTo(member3.getId());
         assertThat(dashboardData.getRecentMembers().get(1).getName()).isEqualTo("user3");
         assertThat(dashboardData.getRecentMembers().get(1).getEmail()).isEqualTo("email3");
-        assertThat(dashboardData.getRecentMembers().get(0).getId()).isEqualTo(4L);
+        assertThat(dashboardData.getRecentMembers().get(0).getId()).isEqualTo(member4.getId());
         assertThat(dashboardData.getRecentMembers().get(0).getName()).isEqualTo("user4");
         assertThat(dashboardData.getRecentMembers().get(0).getEmail()).isEqualTo("email4");
 
-        assertThat(dashboardData.getRecentStudies().get(2).getId()).isEqualTo(2L);
+        assertThat(dashboardData.getRecentStudies().get(2).getId()).isEqualTo(study2.getId());
         assertThat(dashboardData.getRecentStudies().get(2).getName()).isEqualTo("testTitle2");
         assertThat(dashboardData.getRecentStudies().get(2).getCategory()).isEqualTo("testCategory2");
-        assertThat(dashboardData.getRecentStudies().get(1).getId()).isEqualTo(3L);
+        assertThat(dashboardData.getRecentStudies().get(1).getId()).isEqualTo(study3.getId());
         assertThat(dashboardData.getRecentStudies().get(1).getName()).isEqualTo("testTitle3");
         assertThat(dashboardData.getRecentStudies().get(1).getCategory()).isEqualTo("testCategory3");
-        assertThat(dashboardData.getRecentStudies().get(0).getId()).isEqualTo(4L);
+        assertThat(dashboardData.getRecentStudies().get(0).getId()).isEqualTo(study4.getId());
         assertThat(dashboardData.getRecentStudies().get(0).getName()).isEqualTo("testTitle4");
         assertThat(dashboardData.getRecentStudies().get(0).getCategory()).isEqualTo("testCategory4");
     }
 
     @Test
     public void getMembers() {
+        // when
+        Page<AdminMembersResponseDto> members = adminService.getMembers(0, 9);
+
+        // then
+        assertThat(members.getTotalElements()).isEqualTo(4L);
+        
+        assertThat(members.getContent().get(0).getId()).isEqualTo(member1.getId());
+        assertThat(members.getContent().get(0).getName()).isEqualTo("user1");
+        assertThat(members.getContent().get(0).getEmail()).isEqualTo("email1");
+        assertThat(members.getContent().get(0).getRole()).isEqualTo(Role.USER);
+        assertThat(members.getContent().get(1).getId()).isEqualTo(member2.getId());
+        assertThat(members.getContent().get(1).getName()).isEqualTo("user2");
+        assertThat(members.getContent().get(1).getEmail()).isEqualTo("email2");
+        assertThat(members.getContent().get(1).getRole()).isEqualTo(Role.USER);
+        assertThat(members.getContent().get(2).getId()).isEqualTo(member3.getId());
+        assertThat(members.getContent().get(2).getName()).isEqualTo("user3");
+        assertThat(members.getContent().get(2).getEmail()).isEqualTo("email3");
+        assertThat(members.getContent().get(2).getRole()).isEqualTo(Role.USER);
+        assertThat(members.getContent().get(3).getId()).isEqualTo(member4.getId());
+        assertThat(members.getContent().get(3).getName()).isEqualTo("user4");
+        assertThat(members.getContent().get(3).getEmail()).isEqualTo("email4");
+        assertThat(members.getContent().get(3).getRole()).isEqualTo(Role.USER);
     }
 
     @Test
     public void memberDelete() {
+
     }
 
     @Test
     public void memberChangeRole() {
+
     }
 
     @Test
