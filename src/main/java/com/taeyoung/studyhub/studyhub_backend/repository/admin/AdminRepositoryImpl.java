@@ -5,6 +5,7 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.taeyoung.studyhub.studyhub_backend.dto.admin.response.AdminDashboardResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.admin.response.AdminMembersResponseDto;
+import com.taeyoung.studyhub.studyhub_backend.dto.admin.response.AdminStudiesResponseDto;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -93,6 +94,35 @@ public class AdminRepositoryImpl implements AdminRepository{
             .select(member.count())
             .from(member)
             .fetchOne();
+
+        return new PageImpl<>(content, pageable, total);
+    }
+
+    @Override
+    public Page<AdminStudiesResponseDto> findStudies(Pageable pageable) {
+        // content 조회
+        List<AdminStudiesResponseDto> content = queryFactory
+                .select(Projections.constructor(
+                        AdminStudiesResponseDto.class,
+                        study.id,
+                        study.title,
+                        study.category.name,
+                        Expressions.stringTemplate(
+                                "DATE_FORMAT({0}, '%Y-%m-%d %H:%i:%s')",
+                                study.createdAt
+                        )
+                ))
+                .from(study)
+                .orderBy(study.id.asc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        // total count 조회
+        Long total = queryFactory
+                .select(study.count())
+                .from(study)
+                .fetchOne();
 
         return new PageImpl<>(content, pageable, total);
     }

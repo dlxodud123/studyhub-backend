@@ -4,6 +4,7 @@ import com.taeyoung.studyhub.studyhub_backend.domain.member.Member;
 import com.taeyoung.studyhub.studyhub_backend.domain.member.Role;
 import com.taeyoung.studyhub.studyhub_backend.dto.admin.response.AdminDashboardResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.admin.response.AdminMembersResponseDto;
+import com.taeyoung.studyhub.studyhub_backend.dto.admin.response.AdminStudiesResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.repository.admin.AdminRepository;
 import com.taeyoung.studyhub.studyhub_backend.repository.member.MemberRepository;
 import com.taeyoung.studyhub.studyhub_backend.repository.study.StudyRepository;
@@ -41,6 +42,7 @@ public class AdminService {
         );
     }
 
+    // members
     public Page<AdminMembersResponseDto> getMembers(int page, int size) {
         PageRequest pageable = PageRequest.of(page, size);
         return adminRepository.findMembers(pageable);
@@ -57,5 +59,12 @@ public class AdminService {
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
 
         member.setRole(Role.valueOf(role));
+    }
+
+
+    // studies
+    public Page<AdminStudiesResponseDto> getStudies(int page, int size) {
+        PageRequest pageable = PageRequest.of(page, size);
+        return adminRepository.findStudies(pageable);
     }
 }

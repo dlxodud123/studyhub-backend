@@ -3,6 +3,7 @@ package com.taeyoung.studyhub.studyhub_backend.controller;
 import com.taeyoung.studyhub.studyhub_backend.dto.admin.request.AdminRoleChangeRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.admin.response.AdminDashboardResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.admin.response.AdminMembersResponseDto;
+import com.taeyoung.studyhub.studyhub_backend.dto.admin.response.AdminStudiesResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.service.AdminService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class AdminController {
         return ResponseEntity.ok(adminService.getDashboardData());
     }
 
+    // members
     @GetMapping("/members")
     public Page<AdminMembersResponseDto> getMembers(
             @RequestParam(defaultValue = "0") int page,
@@ -60,5 +62,15 @@ public class AdminController {
             // 그 외 예상치 못한 오류
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("권한 변경 중 오류 발생");
         }
+    }
+
+
+    // studies
+    @GetMapping("/studies")
+    public Page<AdminStudiesResponseDto> getStudies(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return adminService.getStudies(page, size);
     }
 }
