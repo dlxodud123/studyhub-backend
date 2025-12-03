@@ -7,6 +7,7 @@ import com.taeyoung.studyhub.studyhub_backend.domain.study.Category;
 import com.taeyoung.studyhub.studyhub_backend.domain.study.Study;
 import com.taeyoung.studyhub.studyhub_backend.dto.admin.response.AdminDashboardResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.admin.response.AdminMembersResponseDto;
+import com.taeyoung.studyhub.studyhub_backend.dto.admin.response.AdminStudiesResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.SignupRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.request.StudyCreateRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.repository.member.MemberRepository;
@@ -117,7 +118,7 @@ public class AdminServiceTest {
         assertThat(members.getContent().get(0).getEmail()).isEqualTo("email1");
         assertThat(members.getContent().get(1).getId()).isEqualTo(member2.getId());
         assertThat(members.getContent().get(1).getName()).isEqualTo("user2");
-        assertThat(members.getContent().get(1).getRole()).isEqualTo(Role.USER);
+        assertThat(members.getContent().get(1).getEmail()).isEqualTo("email2");
         assertThat(members.getContent().get(2).getId()).isEqualTo(member3.getId());
         assertThat(members.getContent().get(2).getName()).isEqualTo("user3");
         assertThat(members.getContent().get(2).getEmail()).isEqualTo("email3");
@@ -149,7 +150,7 @@ public class AdminServiceTest {
         assertThat(members.getContent().get(2).getName()).isEqualTo("user3");
         assertThat(members.getContent().get(2).getEmail()).isEqualTo("email3");
     }
-
+                                                                                           
     @Test
     public void memberChangeRole() {
         // when
@@ -166,6 +167,24 @@ public class AdminServiceTest {
 
     @Test
     public void getStudies() {
+        // when
+        Page<AdminStudiesResponseDto> studies = adminService.getStudies(0, 9);
+
+        // then
+        assertThat(studies.getTotalElements()).isEqualTo(4L);
+                                                                        
+        assertThat(studies.getContent().get(0).getId()).isEqualTo(study1.getId());
+        assertThat(studies.getContent().get(0).getName()).isEqualTo("testTitle1");
+        assertThat(studies.getContent().get(0).getCategory()).isEqualTo("testCategory1");
+        assertThat(studies.getContent().get(1).getId()).isEqualTo(study2.getId());
+        assertThat(studies.getContent().get(1).getName()).isEqualTo("testTitle2");
+        assertThat(studies.getContent().get(1).getCategory()).isEqualTo("testCategory2");
+        assertThat(studies.getContent().get(2).getId()).isEqualTo(study3.getId());
+        assertThat(studies.getContent().get(2).getName()).isEqualTo("testTitle3");
+        assertThat(studies.getContent().get(2).getCategory()).isEqualTo("testCategory3");
+        assertThat(studies.getContent().get(3).getId()).isEqualTo(study4.getId());
+        assertThat(studies.getContent().get(3).getName()).isEqualTo("testTitle4");
+        assertThat(studies.getContent().get(3).getCategory()).isEqualTo("testCategory4");
     }
 
     @Test
