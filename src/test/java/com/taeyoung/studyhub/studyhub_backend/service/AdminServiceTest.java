@@ -152,7 +152,16 @@ public class AdminServiceTest {
 
     @Test
     public void memberChangeRole() {
+        // when
+        Member member = memberRepository.findById(member1.getId()).orElseThrow();
+        em.flush();
+        em.clear();
+        adminService.changeRole(member1.getId(), "ADMIN");
+        Member updatedMember = memberRepository.findById(member1.getId()).orElseThrow();
 
+        // then
+        assertThat(member.getRole()).isEqualTo(Role.USER);
+        assertThat(updatedMember.getRole()).isEqualTo(Role.ADMIN);
     }
 
     @Test
