@@ -73,4 +73,16 @@ public class AdminController {
     ) {
         return adminService.getStudies(page, size);
     }
+
+    @DeleteMapping("/studies/{studyId}")
+    public ResponseEntity<String> deleteStudy(@PathVariable Long studyId){
+        try {
+            adminService.deleteStudy(studyId);
+            return ResponseEntity.ok("삭제 완료!");
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("스터디가 존재하지 않습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("삭제 중 오류 발생");
+        }
+    }
 }

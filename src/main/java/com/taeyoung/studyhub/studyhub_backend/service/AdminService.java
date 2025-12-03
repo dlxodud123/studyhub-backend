@@ -2,6 +2,7 @@ package com.taeyoung.studyhub.studyhub_backend.service;
 
 import com.taeyoung.studyhub.studyhub_backend.domain.member.Member;
 import com.taeyoung.studyhub.studyhub_backend.domain.member.Role;
+import com.taeyoung.studyhub.studyhub_backend.domain.study.Study;
 import com.taeyoung.studyhub.studyhub_backend.dto.admin.response.AdminDashboardResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.admin.response.AdminMembersResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.admin.response.AdminStudiesResponseDto;
@@ -66,5 +67,11 @@ public class AdminService {
     public Page<AdminStudiesResponseDto> getStudies(int page, int size) {
         PageRequest pageable = PageRequest.of(page, size);
         return adminRepository.findStudies(pageable);
+    }
+
+    public void deleteStudy(Long studyId) {
+        Study study = studyRepository.findById(studyId)
+                .orElseThrow(() -> new EntityNotFoundException("스터디가 존재하지 않습니다."));
+        studyRepository.delete(study);
     }
 }
