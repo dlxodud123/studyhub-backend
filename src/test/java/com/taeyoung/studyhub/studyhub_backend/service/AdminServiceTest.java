@@ -88,13 +88,13 @@ public class AdminServiceTest {
         assertThat(dashboardData.getRecentMembers().get(0).getEmail()).isEqualTo("email4");
 
         assertThat(dashboardData.getRecentStudies().get(2).getId()).isEqualTo(2L);
-        assertThat(dashboardData.getRecentStudies().get(2).getName()).isEqualTo("testContent2");
+        assertThat(dashboardData.getRecentStudies().get(2).getName()).isEqualTo("testTitle2");
         assertThat(dashboardData.getRecentStudies().get(2).getCategory()).isEqualTo("testCategory2");
         assertThat(dashboardData.getRecentStudies().get(1).getId()).isEqualTo(3L);
-        assertThat(dashboardData.getRecentStudies().get(1).getName()).isEqualTo("testContent3");
+        assertThat(dashboardData.getRecentStudies().get(1).getName()).isEqualTo("testTitle3");
         assertThat(dashboardData.getRecentStudies().get(1).getCategory()).isEqualTo("testCategory3");
         assertThat(dashboardData.getRecentStudies().get(0).getId()).isEqualTo(4L);
-        assertThat(dashboardData.getRecentStudies().get(0).getName()).isEqualTo("testContent4");
+        assertThat(dashboardData.getRecentStudies().get(0).getName()).isEqualTo("testTitle4");
         assertThat(dashboardData.getRecentStudies().get(0).getCategory()).isEqualTo("testCategory4");
     }
 
