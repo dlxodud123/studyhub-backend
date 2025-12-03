@@ -1,10 +1,160 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>전체 스터디 목록</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f4f6f8; }
+        table { width: 100%; border-collapse: collapse; background: white; }
+        th, td { padding: 12px; border-bottom: 1px solid #ddd; text-align: center; }
+        th { background: #1976d2; color: white; }
+        tr:hover { background: #f1f1f1; }
+
+        /* 페이징 버튼 */
+        .pagination {
+          display: flex;
+          gap: 6px;
+          margin-top: 20px;
+        }
+
+        .pagination button {
+          padding: 6px 12px;
+          border: 1px solid #1976d2;
+          background: white;
+          color: #1976d2;
+          border-radius: 4px;
+          cursor: pointer;
+        }
+
+        .pagination button.active {
+          background: #1976d2;
+          color: white;
+        }
+
+        .pagination button:disabled {
+          background: #ccc;
+          cursor: not-allowed;
+          color: #666;
+        }
+
+        button.delete-btn {
+          background-color: #e53935;
+          color: white;
+          border: none;
+          padding: 6px 12px;
+          border-radius: 4px;
+          cursor: pointer;
+        }
+    </style>
 </head>
 <body>
+
+<h1>전체 스터디 목록</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>스터디 이름</th>
+        <th>카테고리</th>
+        <th>생성일</th>
+        <th>삭제</th>
+    </tr>
+    </thead>
+    <tbody id="study-table"></tbody>
+</table>
+
+<!-- 페이지네이션 UI -->
+<div class="pagination" id="pagination"></div>
+
+<script>
+    let currentPage = 0;
+    const size = 9;
+
+    async function loadStudies(page = 0) {
+      try {
+        const res = await fetch(`/api/admin/studies?page=${page}&size=${size}`);
+        if (!res.ok) throw new Error('스터디 목록을 불러오지 못했습니다.');
+
+        const data = await res.json();
+        const studies = data.content;
+
+        const tbody = document.getElementById('study-table');
+        tbody.innerHTML = '';
+
+        studies.forEach(s => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${s.id}</td>
+            <td>${s.name}</td>
+            <td>${s.category}</td>
+            <td>${s.created}</td>
+            <td>
+              <button class="delete-btn" data-id="${s.id}">삭제</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        createPagination(data.totalPages, data.number);
+
+      } catch (err) {
+        console.error(err);
+        alert('스터디 목록을 불러오지 못했습니다.');
+      }
+    }
+
+    function createPagination(totalPages, page) {
+      const container = document.getElementById('pagination');
+      container.innerHTML = '';
+
+      currentPage = page;
+
+      // 이전 버튼
+      const prevBtn = document.createElement('button');
+      prevBtn.textContent = '이전';
+      prevBtn.disabled = (page === 0);
+      prevBtn.onclick = () => loadStudies(page - 1);
+      container.appendChild(prevBtn);
+
+      // 번호 버튼
+      for (let i = 0; i < totalPages; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = i + 1;
+        if (i === page) btn.classList.add('active');
+        btn.onclick = () => loadStudies(i);
+        container.appendChild(btn);
+      }
+
+      // 다음 버튼
+      const nextBtn = document.createElement('button');
+      nextBtn.textContent = '다음';
+      nextBtn.disabled = (page === totalPages - 1);
+      nextBtn.onclick = () => loadStudies(page + 1);
+      container.appendChild(nextBtn);
+    }
+
+    // 삭제 이벤트 위임
+    const tbody = document.getElementById('study-table');
+    tbody.addEventListener('click', async (e) => {
+      if (e.target.classList.contains('delete-btn')) {
+        const studyId = e.target.dataset.id;
+        if (confirm(`${studyId}번 스터디를 삭제하시겠습니까?`)) {
+          try {
+            const res = await fetch(`/api/admin/studies/${studyId}`, { method: 'DELETE' });
+            if (!res.ok) throw new Error('삭제 실패');
+            alert('삭제 완료');
+            loadStudies(currentPage);
+          } catch (err) {
+            console.error(err);
+            alert('삭제 중 오류 발생');
+          }
+        }
+      }
+    });
+
+    window.addEventListener('DOMContentLoaded', () => loadStudies(0));
+</script>
 
 </body>
 </html>
