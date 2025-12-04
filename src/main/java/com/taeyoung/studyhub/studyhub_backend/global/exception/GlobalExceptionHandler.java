@@ -18,7 +18,7 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponseDto("ENTITY_NOT_FOUND", e.getMessage()));
     }
 
-    // 400 BAD REQUEST: 잘못된 파라미터 / Role, page, size
+    // 400 BAD REQUEST: 잘못된 파라미터
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponseDto> handleIllegalArgument(IllegalArgumentException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)

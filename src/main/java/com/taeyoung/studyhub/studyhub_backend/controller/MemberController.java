@@ -2,6 +2,7 @@ package com.taeyoung.studyhub.studyhub_backend.controller;
 
 import com.taeyoung.studyhub.studyhub_backend.domain.member.CustomUser;
 import com.taeyoung.studyhub.studyhub_backend.domain.member.Member;
+import com.taeyoung.studyhub.studyhub_backend.dto.exception.ErrorResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.find.EmailRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.LoginRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.SignupRequestDto;
@@ -25,22 +26,21 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/members")
 public class MemberController {
 
     private final MemberService memberService;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     // 로그인
-    @PostMapping("/api/members/login")
-    public ResponseEntity<String> loginMember(@Valid @RequestBody LoginRequestDto loginRequestDto, BindingResult bindingResult, HttpServletResponse response){
+    @PostMapping("/login")
+    public ResponseEntity<?> loginMember(@Valid @RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response){
         // username, password, email 입력 검증
-        if (bindingResult.hasErrors()) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(bindingResult.getAllErrors().get(0).getDefaultMessage());
-        }
+        validateLoginAndSignupValue(loginRequestDto.getUsername(), loginRequestDto.getPassword(), loginRequestDto.getEmail());
 
         // 1) username 및 email 검증
         memberService.validateUsernameAndEmail(loginRequestDto.getUsername(), loginRequestDto.getEmail());
@@ -52,7 +52,8 @@ public class MemberController {
             var auth = authenticationManagerBuilder.getObject().authenticate(authToken);
             SecurityContextHolder.getContext().setAuthentication(auth);
         } catch (Exception e) {
-            return ResponseEntity.status(401).body("password가 올바르지 않습니다.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ErrorResponseDto("INVALID_CREDENTIALS", "password가 올바르지 않습니다."));
         }
 
         // Authentication는 스레드 로컬을 사용하므로 각 요청마다 독립적이다.
@@ -73,14 +74,10 @@ public class MemberController {
     }
 
     // 회원가입
-    @PostMapping("/api/members/signup")
-    public ResponseEntity<String> registerMember(@Valid @RequestBody SignupRequestDto signupRequestDto, BindingResult bindingResult){
-        // username, password, email 필수 검증
-        if (bindingResult.hasErrors()) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(bindingResult.getAllErrors().get(0).getDefaultMessage());
-        }
+    @PostMapping("/signup")
+    public ResponseEntity<?> registerMember(@Valid @RequestBody SignupRequestDto signupRequestDto){
+        // username, password, email 입력 검증
+        validateLoginAndSignupValue(signupRequestDto.getUsername(), signupRequestDto.getPassword(), signupRequestDto.getEmail());
 
         try {
             memberService.registerMember(signupRequestDto);
@@ -97,7 +94,7 @@ public class MemberController {
     }
 
     // 회원 정보 조회
-    @GetMapping("/api/members/me")
+    @GetMapping("/me")
     public ResponseEntity<?> getMyInfo(Authentication authentication){
         CustomUser user = (CustomUser) authentication.getPrincipal();
 
@@ -115,7 +112,7 @@ public class MemberController {
     }
 
     // 회원 정보 수정
-    @PutMapping("/api/members/update")
+    @PutMapping("/update")
     public ResponseEntity<String> updateMyInfo(@Valid @RequestBody UpdateRequestDto updateRequestDto, BindingResult bindingResult, Authentication authentication){
         // password, email 필수 검증
         if (bindingResult.hasErrors()) {
@@ -146,7 +143,7 @@ public class MemberController {
     }
 
     // 회원 탈퇴
-    @DeleteMapping("/api/members/delete")
+    @DeleteMapping("/delete")
     public ResponseEntity<String> deleteMyAccount(Authentication authentication){
         CustomUser user = (CustomUser) authentication.getPrincipal();
         Long userId = user.getId();
@@ -170,7 +167,7 @@ public class MemberController {
     }
 
     // username 찾기
-    @PostMapping("/api/members/find-username")
+    @PostMapping("/find-username")
     public ResponseEntity<String> findUsername(@RequestBody EmailRequestDto emailRequestDto) {
         String findUsername = memberService.findByUsernameByEmail(emailRequestDto.getEmail());
 
@@ -178,7 +175,7 @@ public class MemberController {
     }
 
     // password 찾기
-    @PostMapping("/api/members/find-password")
+    @PostMapping("/find-password")
     public ResponseEntity<String> findPassword(@RequestBody UsernameRequestDto usernameRequestDto) {
         String findPassword = memberService.findByPasswordByUsername(usernameRequestDto.getUsername());
 
@@ -186,7 +183,7 @@ public class MemberController {
     }
 
     // email 찾기
-    @PostMapping("/api/members/find-email")
+    @PostMapping("/find-email")
     public ResponseEntity<String> findEmail(@RequestBody UsernameAndPasswordRequestDto usernameAndPasswordRequestDto) {
         String findEmail = memberService.findByEmailByUsernameAndPassword(
                 usernameAndPasswordRequestDto.getUsername(),
@@ -194,5 +191,19 @@ public class MemberController {
         );
 
         return ResponseEntity.ok(findEmail);
+    }
+
+
+    // 컨트롤러 내부 username, password, email 입력 검증 메서드
+    private void validateLoginAndSignupValue(String username, String password, String email) {
+        if (username == null || username.isBlank()) {
+            throw new IllegalArgumentException("Username은 필수입니다.");
+        }
+        if (password == null || password.isBlank()) {
+            throw new IllegalArgumentException("Password는 필수입니다.");
+        }
+        if (email == null || email.isBlank()) {
+            throw new IllegalArgumentException("Email은 필수입니다.");
+        }
     }
 }
