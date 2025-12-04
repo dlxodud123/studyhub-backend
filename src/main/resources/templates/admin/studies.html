@@ -74,7 +74,11 @@
     async function loadStudies(page = 0) {
       try {
         const res = await fetch(`/api/admin/studies?page=${page}&size=${size}`);
-        if (!res.ok) throw new Error('스터디 목록을 불러오지 못했습니다.');
+        if (!res.ok) {
+            const error = await res.json();
+            alert(error.message);
+            return;
+        }
 
         const data = await res.json();
         const studies = data.content;
@@ -142,7 +146,11 @@
         if (confirm(`${studyId}번 스터디를 삭제하시겠습니까?`)) {
           try {
             const res = await fetch(`/api/admin/studies/${studyId}`, { method: 'DELETE' });
-            if (!res.ok) throw new Error('삭제 실패');
+            if (!res.ok) {
+                const error = await res.json();
+                alert(error.message);
+                return;
+            }
             alert('삭제 완료');
             loadStudies(currentPage);
           } catch (err) {

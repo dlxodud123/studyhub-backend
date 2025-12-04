@@ -69,7 +69,12 @@
 
     try {
       const res = await fetch(url);
-      if (!res.ok) throw new Error('목록을 불러오지 못했습니다.');
+
+      if (!res.ok) {
+          const error = await res.json();
+          alert(error.message);
+          return;
+      }
 
       const data = await res.json();
 
@@ -143,7 +148,11 @@
       if (confirm("정말 삭제하시겠습니까?")) {
         try {
           const res = await fetch(`/api/admin/members/${memberId}`, { method: 'DELETE' });
-          if (!res.ok) throw new Error('삭제 실패');
+          if (!res.ok) {
+            const error = await res.json();
+            alert(error.message);
+            return;
+          }
           alert('삭제 완료');
           loadMembers(currentPage);
         } catch (err) {
@@ -164,7 +173,11 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ role: newRole })
           });
-          if (!res.ok) throw new Error('권한 변경 실패');
+          if (!res.ok) {
+            const error = await res.json();
+            alert(error.message);
+            return;
+          }
           alert('권한 변경 완료');
           loadMembers(currentPage);
         } catch (err) {
