@@ -75,22 +75,12 @@ public class MemberController {
 
     // 회원가입
     @PostMapping("/signup")
-    public ResponseEntity<?> registerMember(@Valid @RequestBody SignupRequestDto signupRequestDto){
+    public ResponseEntity<String> registerMember(@Valid @RequestBody SignupRequestDto signupRequestDto){
         // username, password, email 입력 검증
         validateLoginAndSignupValue(signupRequestDto.getUsername(), signupRequestDto.getPassword(), signupRequestDto.getEmail());
 
-        try {
-            memberService.registerMember(signupRequestDto);
-            return ResponseEntity.ok("회원가입 성공!");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(e.getMessage());
-        } catch (RuntimeException e) {
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("서버 오류가 발생했습니다.");
-        }
+        memberService.registerMember(signupRequestDto);
+        return ResponseEntity.ok("회원가입 성공!");
     }
 
     // 회원 정보 조회

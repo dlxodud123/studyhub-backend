@@ -9,9 +9,11 @@ import com.taeyoung.studyhub.studyhub_backend.dto.member.response.MemberResponse
 import com.taeyoung.studyhub.studyhub_backend.repository.member.MemberRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -29,10 +31,10 @@ public class MemberService {
         String encodedPassword = passwordEncoder.encode(signupRequestDto.getPassword());
 
         if (memberRepository.existsByUsername(signupRequestDto.getUsername())) {
-            throw new IllegalArgumentException("이미 사용중인 아이디입니다.");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "이미 사용중인 아이디입니다.");
         }
         if (memberRepository.existsByEmail(signupRequestDto.getEmail())) {
-            throw new IllegalArgumentException("이미 사용중인 이메일입니다.");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "이미 사용중인 이메일입니다.");
         }
 
         return memberRepository.save(new Member(
