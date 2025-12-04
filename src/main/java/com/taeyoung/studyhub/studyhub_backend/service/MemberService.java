@@ -7,6 +7,7 @@ import com.taeyoung.studyhub.studyhub_backend.dto.member.request.SignupRequestDt
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.UpdateRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.response.MemberResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.repository.member.MemberRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -65,20 +66,19 @@ public class MemberService {
         memberRepository.deleteById(id);
     }
 
-    // email 검증
-//    public void validateEmailForLogin(String username, String email){
-//        Member member = memberRepository.findByUsername(username)
-//                .orElseThrow(() -> new IllegalArgumentException("아이디가 존재하지 않습니다."));
-//
-//        if (!member.getEmail().equals(email)) {
-//            throw new IllegalArgumentException("email이 일치하지 않습니다.");
-//        }
-//    }
+    // username, email 검증
+    public void validateUsernameAndEmail(String username, String email){
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("username이 올바르지 않습니다."));
 
-    // username을 통해 member 찾기
+        if (!member.getEmail().equals(email)) {
+            throw new EntityNotFoundException("email이 올바르지 않습니다.");
+        }
+    }
+
     public Member findByUsername(String username){
         return memberRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+                .orElseThrow(() -> new EntityNotFoundException("회원이 존재하지 않습니다."));
     }
 
     // username 찾기

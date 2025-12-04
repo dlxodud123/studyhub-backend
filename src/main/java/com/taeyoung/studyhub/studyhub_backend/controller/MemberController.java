@@ -42,28 +42,17 @@ public class MemberController {
                     .body(bindingResult.getAllErrors().get(0).getDefaultMessage());
         }
 
+        // 1) username 및 email 검증
+        memberService.validateUsernameAndEmail(loginRequestDto.getUsername(), loginRequestDto.getEmail());
+
         // Authentication 객체를 생성하고 SecurityContext에 적용
-        // username, password 검증
+        // 2) password 검증(Spring Security)
         try {
-            // 1) username이 존재하는지 먼저 확인
-            Member member = memberService.findByUsername(loginRequestDto.getUsername());
-
-            // 2) email 검증
-            if (!member.getEmail().equals(loginRequestDto.getEmail())) {
-                return ResponseEntity.status(401).body("email이 올바르지 않습니다.");
-            }
-
-            // 3) password 검증 (마지막)
-            try {
-                var authToken = new UsernamePasswordAuthenticationToken(loginRequestDto.getUsername(), loginRequestDto.getPassword());
-                var auth = authenticationManagerBuilder.getObject().authenticate(authToken);
-                SecurityContextHolder.getContext().setAuthentication(auth);
-            } catch (Exception e) {
-                return ResponseEntity.status(401).body("password가 올바르지 않습니다.");
-            }
-
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(401).body("username이 올바르지 않습니다.");
+            var authToken = new UsernamePasswordAuthenticationToken(loginRequestDto.getUsername(), loginRequestDto.getPassword());
+            var auth = authenticationManagerBuilder.getObject().authenticate(authToken);
+            SecurityContextHolder.getContext().setAuthentication(auth);
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body("password가 올바르지 않습니다.");
         }
 
         // Authentication는 스레드 로컬을 사용하므로 각 요청마다 독립적이다.
