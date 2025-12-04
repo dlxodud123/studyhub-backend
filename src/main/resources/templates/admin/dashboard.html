@@ -145,7 +145,9 @@
             });
 
             if (!response.ok) {
-                throw new Error('데이터를 가져오지 못했습니다.');
+                const error = await res.json();
+                alert(error.message); // "회원이 존재하지 않습니다." 등
+                return;
             }
 
             const dashboardData = await response.json();
@@ -153,7 +155,6 @@
             // 통계 수치 업데이트
             document.getElementById('member-count').textContent = dashboardData.memberCount;
             document.getElementById('study-count').textContent = dashboardData.studyCount;
-<!--            document.getElementById('active-study-count').textContent = dashboardData.activeStudyCount;-->
 
             // 최근 가입 유저 테이블 업데이트
             const tbody = document.getElementById('user-table').querySelector('tbody');
@@ -184,7 +185,6 @@
             });
 
         } catch (error) {
-            console.error(error);
             alert('대시보드 데이터를 불러오는데 실패했습니다.');
         }
     }

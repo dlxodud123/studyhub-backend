@@ -57,7 +57,7 @@ public class AdminService {
 
     public void changeRole(Long memberId, String role) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+                .orElseThrow(() -> new EntityNotFoundException("회원이 존재하지 않습니다."));
 
         member.setRole(Role.valueOf(role));
     }

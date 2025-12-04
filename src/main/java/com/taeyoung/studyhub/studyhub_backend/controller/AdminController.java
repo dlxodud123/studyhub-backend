@@ -37,31 +37,17 @@ public class AdminController {
 
     @DeleteMapping("/members/{memberId}")
     public ResponseEntity<String> deleteMember(@PathVariable Long memberId){
-        try {
-            adminService.deleteMember(memberId);
-            return ResponseEntity.ok("삭제 완료!");
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("회원이 존재하지 않습니다.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("삭제 중 오류 발생");
-        }
+        adminService.deleteMember(memberId);
+        return ResponseEntity.ok("삭제 완료!");
     }
 
     @PatchMapping("/members/{memberId}/role")
     public ResponseEntity<String> changeMemberRole(
             @PathVariable Long memberId,
-            @RequestBody AdminRoleChangeRequestDto requestDto) {
-
-        try {
-            adminService.changeRole(memberId, requestDto.getRole());
-            return ResponseEntity.ok("권한 변경 완료");
-        } catch (IllegalArgumentException e) {
-            // 회원이 존재하지 않는 경우
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        } catch (Exception e) {
-            // 그 외 예상치 못한 오류
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("권한 변경 중 오류 발생");
-        }
+            @RequestBody AdminRoleChangeRequestDto requestDto
+    ) {
+        adminService.changeRole(memberId, requestDto.getRole());
+        return ResponseEntity.ok("권한 변경 완료");
     }
 
 
@@ -76,13 +62,7 @@ public class AdminController {
 
     @DeleteMapping("/studies/{studyId}")
     public ResponseEntity<String> deleteStudy(@PathVariable Long studyId){
-        try {
-            adminService.deleteStudy(studyId);
-            return ResponseEntity.ok("삭제 완료!");
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("스터디가 존재하지 않습니다.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("삭제 중 오류 발생");
-        }
+        adminService.deleteStudy(studyId);
+        return ResponseEntity.ok("삭제 완료!");
     }
 }
