@@ -79,12 +79,10 @@ public class MemberController {
             return ResponseEntity.ok("회원수정 성공!");
 
         } catch (IllegalArgumentException e) {
-            // 회원이 존재하지 않거나 검증 실패
             return ResponseEntity
                     .badRequest()
                     .body(e.getMessage());
         } catch (RuntimeException e) {
-            // 기타 서버 오류
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("서버 오류가 발생했습니다.");

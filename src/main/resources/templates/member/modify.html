@@ -63,12 +63,30 @@
   <button id="updateBtn" type="button">정보 수정</button>
 
   <script>
-    fetch('/api/members/me', { method: 'GET', credentials: 'include' })
-        .then(res => res.json())
-        .then(data => {
+    async function loadMyInfo() {
+        try {
+            const res = await fetch('/api/members/me', {
+                method: 'GET',
+                credentials: 'include'
+            });
+
+            if (!res.ok) {
+                const error = await res.json();
+                alert(error.message);
+                return;
+            }
+
+            const data = await res.json();
             document.getElementById('username').value = data.username;
             document.getElementById('email').value = data.email;
-        });
+
+        } catch (err) {
+            console.error(err);
+            alert("내 정보를 불러오는데 오류가 발생했습니다.");
+        }
+    }
+
+    loadMyInfo();
 
     document.getElementById('updateBtn').addEventListener('click', async (e) => {
         e.preventDefault();
@@ -76,20 +94,26 @@
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
 
-        const res = await fetch('/api/members/update', {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify({ email, password })
-        });
+        try {
+            const res = await fetch('/api/members/update', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ email, password })
+            });
 
-        const text = await res.text();
+            if (!res.ok) {
+                const error = await res.json();
+                alert(error.message);
+                return;
+            }
 
-        if (res.ok) {
             alert("회원 정보가 수정되었습니다.");
             window.location.href = "/my-page";
-        } else {
-            alert(text);
+
+        } catch (err) {
+            console.error(err);
+            alert("정보 수정 중 오류가 발생했습니다.");
         }
     });
   </script>
