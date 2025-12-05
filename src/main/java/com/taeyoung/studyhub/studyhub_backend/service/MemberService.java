@@ -49,11 +49,19 @@ public class MemberService {
     }
 
     // 회원 정보 조회
-    @Transactional(readOnly = true)
-    public MemberResponseDto getMyInfo(Long id){
-        Member findMember = memberRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
-        return new MemberResponseDto(findMember.getUsername(), findMember.getEmail());
+//    @Transactional(readOnly = true)
+//    public MemberResponseDto getMyInfo(Long id){
+//        Member findMember = memberRepository.findById(id)
+//                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+//        return new MemberResponseDto(findMember.getUsername(), findMember.getEmail());
+//    }
+
+    // 회원 탈퇴
+    public void deleteMember(Long id){
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
+
+        memberRepository.delete(member);
     }
 
     // 회원 정보 수정
@@ -65,25 +73,20 @@ public class MemberService {
         findMember.updateMember(encodedPassword, updateRequestDto.getEmail());
     }
 
-    // 회원 탈퇴
-    public void deleteMember(Long id){
-        memberRepository.deleteById(id);
-    }
-
     // username, email 검증
-    public void validateUsernameAndEmail(String username, String email){
-        Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new EntityNotFoundException("username이 올바르지 않습니다."));
+//    public void validateUsernameAndEmail(String username, String email){
+//        Member member = memberRepository.findByUsername(username)
+//                .orElseThrow(() -> new EntityNotFoundException("username이 올바르지 않습니다."));
+//
+//        if (!member.getEmail().equals(email)) {
+//            throw new EntityNotFoundException("email이 올바르지 않습니다.");
+//        }
+//    }
 
-        if (!member.getEmail().equals(email)) {
-            throw new EntityNotFoundException("email이 올바르지 않습니다.");
-        }
-    }
-
-    public Member findByUsername(String username){
-        return memberRepository.findByUsername(username)
-                .orElseThrow(() -> new EntityNotFoundException("회원이 존재하지 않습니다."));
-    }
+//    public Member findByUsername(String username){
+//        return memberRepository.findByUsername(username)
+//                .orElseThrow(() -> new EntityNotFoundException("회원이 존재하지 않습니다."));
+//    }
 
     // username 찾기
     public String findByUsernameByEmail(String email) {

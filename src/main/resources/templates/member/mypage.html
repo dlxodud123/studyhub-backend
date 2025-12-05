@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>회원 탈퇴</title>
+    <title>마이 페이지</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -49,40 +49,51 @@
     </div>
 </div>
 
-
-
 <script>
-    fetch('/api/members/me', {
-        method: 'GET',
-        credentials: 'include' // 쿠키(JWT) 포함
-    })
-    .then(response => {
-        if (!response.ok) throw new Error("회원 정보를 불러올 수 없습니다.");
-        return response.json();
-    })
-    .then(data => {
-        document.getElementById("username").innerText = data.username;
-        document.getElementById("email").innerText = data.email;
-    })
-    .catch(err => {
-        console.error(err);
-        alert(err.message);
-    });
+    async function loadMyInfo() {
+        try {
+            const res = await fetch('/api/members/me', {
+                method: 'GET',
+                credentials: 'include'
+            });
+
+            if (!res.ok) {
+                const error = await res.json();
+                alert(error.message);
+                return;
+            }
+
+            const data = await res.json();
+            document.getElementById("username").innerText = data.username;
+            document.getElementById("email").innerText = data.email;
+
+        } catch (err) {
+            console.error(err);
+            alert("마이페이지 로딩중 오류가 발생했습니다.");
+        }
+    }
+
+    loadMyInfo();
 
     document.getElementById("deleteBtn").addEventListener("click", async () => {
+        try {
+            const res = await fetch("/api/members/delete", {
+                method: "DELETE",
+                credentials: "include" // JWT 쿠키 포함
+            });
 
-        const res = await fetch("/api/members/delete", {
-            method: "DELETE",
-            credentials: "include" // 쿠키(JWT) 전송
-        });
+            if (!res.ok) {
+                const error = await res.json();
+                alert(error.message);
+                return;
+            }
 
-        const text = await res.text();
-
-        if (res.ok) {
-            alert(text);
+            alert("회원 탈퇴가 완료되었습니다.");
             window.location.href = "/logout";
-        } else {
-            alert("오류 발생: " + text);
+
+        } catch (err) {
+            console.error(err);
+            alert("삭제 중 오류가 발생했습니다.");
         }
     });
 </script>

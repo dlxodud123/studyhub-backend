@@ -45,20 +45,19 @@ public class MemberController {
 
     // 회원 정보 조회
     @GetMapping("/me")
-    public ResponseEntity<?> getMyInfo(Authentication authentication){
+    public ResponseEntity<CustomUser> getMyInfo(Authentication authentication){
         CustomUser user = (CustomUser) authentication.getPrincipal();
 
-        try {
-            return ResponseEntity.ok(user);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(e.getMessage());
-        } catch (RuntimeException e) {
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("서버 오류가 발생했습니다.");
-        }
+        return ResponseEntity.ok(user);
+    }
+
+    // 회원 탈퇴
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteMyAccount(Authentication authentication){
+        CustomUser user = (CustomUser) authentication.getPrincipal();
+
+        memberService.deleteMember(user.getId());
+        return ResponseEntity.ok("회원탈퇴 성공!");
     }
 
     // 회원 정보 수정
@@ -86,30 +85,6 @@ public class MemberController {
                     .body(e.getMessage());
         } catch (RuntimeException e) {
             // 기타 서버 오류
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("서버 오류가 발생했습니다.");
-        }
-    }
-
-    // 회원 탈퇴
-    @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteMyAccount(Authentication authentication){
-        CustomUser user = (CustomUser) authentication.getPrincipal();
-        Long userId = user.getId();
-
-        try {
-            memberService.deleteMember(userId);
-            return ResponseEntity.ok("회원탈퇴 성공!");
-        } catch (EmptyResultDataAccessException e) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body("이미 삭제되었거나 존재하지 않는 사용자입니다.");
-        } catch (DataIntegrityViolationException e) {
-            return ResponseEntity
-                    .status(HttpStatus.CONFLICT)
-                    .body("연관된 데이터가 있어 회원을 삭제할 수 없습니다.");
-        } catch (RuntimeException e) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("서버 오류가 발생했습니다.");
