@@ -78,40 +78,39 @@
 </div>
 
 <script>
-  document.getElementById("findUsernameBtn").addEventListener("click", async () => {
-      const email = document.getElementById("email").value;
+    document.getElementById("findUsernameBtn").addEventListener("click", async () => {
+        const email = document.getElementById("email").value;
 
-      if (!email) {
-          alert("이메일을 입력해주세요.");
-          return;
-      }
+        if (!email) {
+            alert("이메일을 입력해주세요.");
+            return;
+        }
 
-      try {
-          // POST 요청으로 이메일 보내기
-          const res = await fetch("/api/members/find-username", {
-              method: "POST",
-              headers: {
-                  "Content-Type": "application/json"
-              },
-              body: JSON.stringify({ email })
-          });
+        try {
+            const res = await fetch("/api/members/find-username", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ email })
+            });
 
-          if (!res.ok) {
-              const error = await res.json();
-              alert(error.message);
-              return;
-          }
+            if (!res.ok) {
+                const error = await res.json();
+                alert(error.message);
+                return;
+            }
 
-          const text = await res.text();
+            const text = await res.text();
 
-          alert("회원님의 유저네임 : " + text);
-          window.location.href = "/login";
+            alert("회원님의 유저네임 : " + text);
+            window.location.href = "/login";
 
-      } catch (err) {
-          console.error(err);
-          alert("username 찾는 중 오류가 발생했습니다.");
-      }
-  });
+        } catch (err) {
+            console.error(err);
+            alert("username 찾는 중 오류가 발생했습니다.");
+        }
+    });
 </script>
 </body>
 </html>
