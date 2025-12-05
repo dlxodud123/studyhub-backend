@@ -1,32 +1,17 @@
 package com.taeyoung.studyhub.studyhub_backend.controller;
 
 import com.taeyoung.studyhub.studyhub_backend.domain.member.CustomUser;
-import com.taeyoung.studyhub.studyhub_backend.domain.member.Member;
-import com.taeyoung.studyhub.studyhub_backend.dto.exception.ErrorResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.find.EmailRequestDto;
-import com.taeyoung.studyhub.studyhub_backend.dto.member.request.LoginRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.SignupRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.UpdateRequestDto;
-import com.taeyoung.studyhub.studyhub_backend.auth.jwt.JwtUtil;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.find.UsernameAndPasswordRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.find.UsernameRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.service.MemberService;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,7 +19,6 @@ import java.util.Map;
 public class MemberController {
 
     private final MemberService memberService;
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     // 회원가입
     @PostMapping("/signup")
