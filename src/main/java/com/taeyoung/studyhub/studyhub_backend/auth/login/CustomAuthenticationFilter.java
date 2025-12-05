@@ -37,11 +37,11 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         try {
             LoginRequestDto loginRequest = new ObjectMapper().readValue(request.getInputStream(), LoginRequestDto.class);
 
-            // 2. username으로 회원 조회
+            // 1. username으로 회원 조회
             Member member = memberRepository.findByUsername(loginRequest.getUsername())
                     .orElseThrow(() -> new UsernameNotFoundException("username이 일치하지 않습니다."));
 
-            // 3. 이메일 검증
+            // 2. 이메일 검증
             if (!member.getEmail().equals(loginRequest.getEmail())) {
                 throw new EmailNotMatchException("email이 일치하지 않습니다.");
             }

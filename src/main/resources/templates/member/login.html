@@ -89,6 +89,25 @@
             const password = document.getElementById("password").value;
             const email = document.getElementById("email").value;
 
+            // 필수 입력값 체크
+            if (!username) {
+                alert("아이디를 입력해주세요.");
+                return;
+            }
+            if (!password) {
+                alert("비밀번호를 입력해주세요.");
+                return;
+            }
+            if (!email) {
+                alert("이메일을 입력해주세요.");
+                return;
+            }
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert("올바른 이메일 형식이 아닙니다.");
+                return;
+            }
+
             try {
                 const res = await fetch("/api/members/login", {
                     method: "POST",
