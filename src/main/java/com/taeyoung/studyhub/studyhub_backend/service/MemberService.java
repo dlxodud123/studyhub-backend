@@ -33,10 +33,10 @@ public class MemberService {
         String encodedPassword = passwordEncoder.encode(signupRequestDto.getPassword());
 
         if (memberRepository.existsByUsername(signupRequestDto.getUsername())) {
-            throw new DuplicateUsernameException("이미 사용중인 아이디입니다.");
+            throw new DuplicateUsernameException("이미 사용중인 username입니다.");
         }
         if (memberRepository.existsByEmail(signupRequestDto.getEmail())) {
-            throw new DuplicateEmailException("이미 사용중인 이메일입니다.");
+            throw new DuplicateEmailException("이미 사용중인 email입니다.");
         }
 
         return memberRepository.save(new Member(
