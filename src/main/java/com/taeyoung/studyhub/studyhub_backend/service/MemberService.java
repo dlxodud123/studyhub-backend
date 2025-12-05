@@ -66,11 +66,11 @@ public class MemberService {
 
     // 회원 정보 수정
     public void updateMember(UpdateRequestDto updateRequestDto, Long id) {
-        Member findMember = memberRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
 
         String encodedPassword = passwordEncoder.encode(updateRequestDto.getPassword());
-        findMember.updateMember(encodedPassword, updateRequestDto.getEmail());
+        member.updateMember(encodedPassword, updateRequestDto.getEmail());
     }
 
     // username, email 검증

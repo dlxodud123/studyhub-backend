@@ -62,31 +62,11 @@ public class MemberController {
 
     // 회원 정보 수정
     @PutMapping("/update")
-    public ResponseEntity<String> updateMyInfo(@Valid @RequestBody UpdateRequestDto updateRequestDto, BindingResult bindingResult, Authentication authentication){
-        // password, email 필수 검증
-        if (bindingResult.hasErrors()) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(bindingResult.getAllErrors().get(0).getDefaultMessage());
-        }
-
+    public ResponseEntity<String> updateMyInfo(@Valid @RequestBody UpdateRequestDto updateRequestDto, Authentication authentication){
         CustomUser user = (CustomUser) authentication.getPrincipal();
-        Long userId = user.getId();
 
-        try {
-            memberService.updateMember(updateRequestDto, userId);
-
-            return ResponseEntity.ok("회원수정 성공!");
-
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(e.getMessage());
-        } catch (RuntimeException e) {
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("서버 오류가 발생했습니다.");
-        }
+        memberService.updateMember(updateRequestDto, user.getId());
+        return ResponseEntity.ok("회원수정 성공!");
     }
 
     // username 찾기
