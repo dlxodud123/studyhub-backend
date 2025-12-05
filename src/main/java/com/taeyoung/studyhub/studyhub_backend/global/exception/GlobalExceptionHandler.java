@@ -54,4 +54,18 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(new ErrorResponseDto("EMAIL_NOT_MATCH", e.getMessage()));
     }
+
+    // 409 CONFLICT: 이미 사용 중인 아이디(username)일 때 발생
+    @ExceptionHandler(DuplicateUsernameException.class)
+    public ResponseEntity<ErrorResponseDto> handleDuplicateUsername(DuplicateUsernameException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ErrorResponseDto("DUPLICATE_USERNAME", e.getMessage()));
+    }
+
+    // 409 CONFLICT: 이미 사용 중인 이메일(email)일 때 발생
+    @ExceptionHandler(DuplicateEmailException.class)
+    public ResponseEntity<ErrorResponseDto> handleDuplicateEmail(DuplicateEmailException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ErrorResponseDto("DUPLICATE_EMAIL", e.getMessage()));
+    }
 }

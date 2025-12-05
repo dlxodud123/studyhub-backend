@@ -41,7 +41,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
             Member member = memberRepository.findByUsername(loginRequest.getUsername())
                     .orElseThrow(() -> new UsernameNotFoundException("username이 일치하지 않습니다."));
 
-            // 2. 이메일 검증
+            // 2. email 검증
             if (!member.getEmail().equals(loginRequest.getEmail())) {
                 throw new EmailNotMatchException("email이 일치하지 않습니다.");
             }

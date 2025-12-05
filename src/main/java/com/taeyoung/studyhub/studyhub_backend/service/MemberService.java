@@ -6,6 +6,8 @@ import com.taeyoung.studyhub.studyhub_backend.domain.member.Role;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.SignupRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.UpdateRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.response.MemberResponseDto;
+import com.taeyoung.studyhub.studyhub_backend.global.exception.DuplicateEmailException;
+import com.taeyoung.studyhub.studyhub_backend.global.exception.DuplicateUsernameException;
 import com.taeyoung.studyhub.studyhub_backend.repository.member.MemberRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -31,10 +33,10 @@ public class MemberService {
         String encodedPassword = passwordEncoder.encode(signupRequestDto.getPassword());
 
         if (memberRepository.existsByUsername(signupRequestDto.getUsername())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "이미 사용중인 아이디입니다.");
+            throw new DuplicateUsernameException("이미 사용중인 아이디입니다.");
         }
         if (memberRepository.existsByEmail(signupRequestDto.getEmail())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "이미 사용중인 이메일입니다.");
+            throw new DuplicateEmailException("이미 사용중인 이메일입니다.");
         }
 
         return memberRepository.save(new Member(

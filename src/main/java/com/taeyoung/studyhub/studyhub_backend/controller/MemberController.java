@@ -39,9 +39,6 @@ public class MemberController {
     // 회원가입
     @PostMapping("/signup")
     public ResponseEntity<String> registerMember(@Valid @RequestBody SignupRequestDto signupRequestDto){
-        // username, password, email 입력 검증
-        validateLoginAndSignupValue(signupRequestDto.getUsername(), signupRequestDto.getPassword(), signupRequestDto.getEmail());
-
         memberService.registerMember(signupRequestDto);
         return ResponseEntity.ok("회원가입 성공!");
     }
@@ -144,19 +141,5 @@ public class MemberController {
         );
 
         return ResponseEntity.ok(findEmail);
-    }
-
-
-    // 컨트롤러 내부 username, password, email 입력 검증 메서드
-    private void validateLoginAndSignupValue(String username, String password, String email) {
-        if (username == null || username.isBlank()) {
-            throw new IllegalArgumentException("Username은 필수입니다.");
-        }
-        if (password == null || password.isBlank()) {
-            throw new IllegalArgumentException("Password는 필수입니다.");
-        }
-        if (email == null || email.isBlank()) {
-            throw new IllegalArgumentException("Email은 필수입니다.");
-        }
     }
 }
