@@ -1,19 +1,29 @@
 package com.taeyoung.studyhub.studyhub_backend.config;
 
 import com.taeyoung.studyhub.studyhub_backend.auth.jwt.JwtFilter;
+import com.taeyoung.studyhub.studyhub_backend.auth.login.CustomAuthenticationFilter;
+import com.taeyoung.studyhub.studyhub_backend.repository.member.MemberRepository;
 import jakarta.servlet.http.Cookie;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.ExceptionTranslationFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -21,7 +31,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager, MemberRepository memberRepository) throws Exception {
         http.csrf((csrf) -> csrf.disable());
 
         http.authorizeHttpRequests((authorize) -> authorize
@@ -50,6 +60,10 @@ public class SecurityConfig {
                 })
 
         );
+
+        // CustomAuthenticationFilter 등록
+        CustomAuthenticationFilter customFilter = new CustomAuthenticationFilter(authenticationManager, memberRepository);
+        http.addFilterAt(customFilter, UsernamePasswordAuthenticationFilter.class);
 
         http.addFilterBefore(new JwtFilter(), ExceptionTranslationFilter.class);
 

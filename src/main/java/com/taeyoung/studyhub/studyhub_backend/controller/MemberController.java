@@ -36,43 +36,6 @@ public class MemberController {
     private final MemberService memberService;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
-    // 로그인
-    @PostMapping("/login")
-    public ResponseEntity<?> loginMember(@Valid @RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response){
-        // username, password, email 입력 검증
-        validateLoginAndSignupValue(loginRequestDto.getUsername(), loginRequestDto.getPassword(), loginRequestDto.getEmail());
-
-        // 1) username 및 email 검증
-        memberService.validateUsernameAndEmail(loginRequestDto.getUsername(), loginRequestDto.getEmail());
-
-        // Authentication 객체를 생성하고 SecurityContext에 적용
-        // 2) password 검증(Spring Security)
-        try {
-            var authToken = new UsernamePasswordAuthenticationToken(loginRequestDto.getUsername(), loginRequestDto.getPassword());
-            var auth = authenticationManagerBuilder.getObject().authenticate(authToken);
-            SecurityContextHolder.getContext().setAuthentication(auth);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(new ErrorResponseDto("INVALID_CREDENTIALS", "password가 올바르지 않습니다."));
-        }
-
-        // Authentication는 스레드 로컬을 사용하므로 각 요청마다 독립적이다.
-        // Authentication에 auth를 createToken메서드에 보냄
-        var jwt = JwtUtil.createToken(SecurityContextHolder.getContext().getAuthentication());
-
-        var cookie = new Cookie("jwt", jwt);
-        //  JWT만들었을때의 기간이랑 같게
-        cookie.setMaxAge(1000);
-        //  쿠키를 자바스크립트로 조작 못하게
-        cookie.setHttpOnly(true);
-        //  쿠키가 전송될 URL
-        cookie.setPath("/");
-        //  브라우저에 저장
-        response.addCookie(cookie);
-
-        return ResponseEntity.ok(jwt);
-    }
-
     // 회원가입
     @PostMapping("/signup")
     public ResponseEntity<String> registerMember(@Valid @RequestBody SignupRequestDto signupRequestDto){

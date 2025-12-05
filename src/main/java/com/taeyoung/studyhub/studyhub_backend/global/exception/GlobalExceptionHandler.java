@@ -5,6 +5,8 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -37,5 +39,19 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDto> handleRuntime(RuntimeException e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ErrorResponseDto("INTERNAL_SERVER_ERROR", e.getMessage()));
+    }
+
+    // 401 UNAUTHORIZED: username이 존재하지 않을때 / 비밀번호가 일치하지 않을 때
+    @ExceptionHandler({UsernameNotFoundException.class, BadCredentialsException.class})
+    public ResponseEntity<ErrorResponseDto> handleAuthenticationException(RuntimeException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ErrorResponseDto("INVALID_CREDENTIALS", e.getMessage()));
+    }
+
+    // 401 UNAUTHORIZED: username이 존재하지 않거나 이메일이 일치하지 않을 때 발생
+    @ExceptionHandler(EmailNotMatchException.class)
+    public ResponseEntity<ErrorResponseDto> handleEmailNotMatch(EmailNotMatchException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ErrorResponseDto("EMAIL_NOT_MATCH", e.getMessage()));
     }
 }
