@@ -158,10 +158,10 @@ public class StudyService {
 
     public Comment createComment(String content, Long userId, Long studId) {
         Member member = memberRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+                .orElseThrow(() -> new EntityNotFoundException("회원이 존재하지 않습니다."));
 
         Study study = studyRepository.findById(studId)
-                .orElseThrow(() -> new IllegalArgumentException("스터디가 존재하지 않습니다."));
+                .orElseThrow(() -> new EntityNotFoundException("스터디가 존재하지 않습니다."));
 
         Comment comment = new Comment(content, member, study);
         return commentRepository.save(comment);

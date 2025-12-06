@@ -87,15 +87,7 @@ public class StudyController {
     public ResponseEntity<String> createComment(@RequestBody CommentCreateRequestDto commentCreateRequestDto, @PathVariable Long id, Authentication authentication){
         CustomUser user = (CustomUser) authentication.getPrincipal();
 
-        try {
-            studyService.createComment(commentCreateRequestDto.getContent(), user.getId(), id);
-            return ResponseEntity.ok("댓글이 등록되었습니다.");
-        } catch (IllegalArgumentException e) {
-            // Member나 Study가 없는 경우
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        } catch (Exception e) {
-            // 기타 서버 오류
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류 발생");
-        }
+        studyService.createComment(commentCreateRequestDto.getContent(), user.getId(), id);
+        return ResponseEntity.ok("댓글이 등록되었습니다.");
     }
 }
