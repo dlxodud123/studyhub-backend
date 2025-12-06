@@ -41,14 +41,14 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponseDto("INTERNAL_SERVER_ERROR", e.getMessage()));
     }
 
-    // 401 UNAUTHORIZED: username 또는 password가 일치하지 않을 때(로그인 전용(Authentication))
+    // 401 UNAUTHORIZED: username 또는 password가 일치하지 않을 때(로그인 전용(Authentication), 암호화된 password)
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorResponseDto> handleAuthenticationException(RuntimeException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(new ErrorResponseDto("INVALID_CREDENTIALS", e.getMessage()));
     }
 
-    // 401 UNAUTHORIZED: 이메일이 일치하지 않을 때 발생
+    // 401 UNAUTHORIZED: 이메일 검증(.equals())
     @ExceptionHandler(EmailNotMatchException.class)
     public ResponseEntity<ErrorResponseDto> handleEmailNotMatch(EmailNotMatchException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
