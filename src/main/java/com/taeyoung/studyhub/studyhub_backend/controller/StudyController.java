@@ -34,10 +34,7 @@ public class StudyController {
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) Long categoryId
     ) {
-
-        Page<StudyListResponseDto> studyList = studyService.getStudyList(page, size, searchType, keyword, categoryId);
-
-        return studyList;
+        return studyService.getStudyList(page, size, searchType, keyword, categoryId);
     }
 
     @PostMapping("/create")
