@@ -82,12 +82,20 @@
 
       try {
         const res = await fetch(`/api/studies?` + query.toString());
-        if (!res.ok) throw new Error('목록을 불러오지 못했습니다.');
+
+        if (!res.ok) {
+            const error = await res.json();
+            alert(error.message);
+            return;
+        }
+
         const data = await res.json();
+
         renderList(data);
+
       } catch (err) {
         console.error(err);
-        document.getElementById('grid').innerHTML = '<div class="empty">목록 불러오기 실패</div>';
+        alert('스터디 리스트를 불러오는데 실패했습니다.');
       }
     }
 
@@ -182,11 +190,10 @@
 
     // 검색 버튼 클릭 이벤트 추가
     document.getElementById("searchBtn").addEventListener("click", () => {
-      page = 0; // 검색 시 항상 첫 페이지부터
+      page = 0;
       fetchStudies(page);
     });
 
-    // 화면이 켜지는 순간 → 자동으로 /api/studies?page=0&size=9 요청 날리도록 하는 코드.
     fetchStudies(page);
 </script>
 </body>

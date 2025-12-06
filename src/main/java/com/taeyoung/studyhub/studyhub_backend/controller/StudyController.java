@@ -40,11 +40,9 @@ public class StudyController {
     @PostMapping("/create")
     public ResponseEntity<String> createStudy(@RequestBody StudyCreateRequestDto studyCreateRequestDto, Authentication authentication) {
         CustomUser user = (CustomUser) authentication.getPrincipal();
-        Long userId = user.getId();
 
         try {
-            studyService.createStudy(studyCreateRequestDto, userId);
-
+            studyService.createStudy(studyCreateRequestDto, user.getId());
             return ResponseEntity.ok("스터디 작성 완료");
         } catch (Exception e) {
             e.printStackTrace();

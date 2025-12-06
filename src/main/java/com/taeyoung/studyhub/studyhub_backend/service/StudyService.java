@@ -13,6 +13,7 @@ import com.taeyoung.studyhub.studyhub_backend.repository.study.CategoryRepositor
 import com.taeyoung.studyhub.studyhub_backend.repository.study.CommentRepository;
 import com.taeyoung.studyhub.studyhub_backend.repository.study.StudyRepository;
 import com.taeyoung.studyhub.studyhub_backend.repository.study.TagRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -68,21 +69,19 @@ public class StudyService {
 
     public Study createStudy(StudyCreateRequestDto studyCreateRequestDto, Long userId) {
         Member member = memberRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Member not found"));
+                .orElseThrow(() -> new EntityNotFoundException("회원이 존재하지 않습니다."));
 
         Category category = categoryRepository.findById(studyCreateRequestDto.getCategoryId())
-                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Category not found"));
 
         Study study = new Study(studyCreateRequestDto.getTitle(), studyCreateRequestDto.getContent(), member, category);
         Study saveStudy = studyRepository.save(study);
 
         // 중복 태그 제거 + 순서 유지
         Set<String> uniqueTagNames = new LinkedHashSet<>(studyCreateRequestDto.getTagNames());
-
         for (String tagName : uniqueTagNames) {
             Tag tag = tagRepository.findByName(tagName)
                     .orElseGet(() -> tagRepository.save(new Tag(tagName)));
-
             StudyTag studyTag = new StudyTag();
 
             study.addStudyTag(studyTag);
