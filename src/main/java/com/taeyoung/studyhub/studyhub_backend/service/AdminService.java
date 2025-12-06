@@ -32,8 +32,15 @@ public class AdminService {
         long memberCount = memberRepository.count();
         long studyCount = studyRepository.count();
 
-        List<AdminDashboardResponseDto.RecentMember> recentMembers = adminRepository.findRecentMembers();
-        List<AdminDashboardResponseDto.RecentStudy> recentStudies = adminRepository.findRecentStudies();
+        List<AdminDashboardResponseDto.RecentMember> recentMembers = List.of();
+        List<AdminDashboardResponseDto.RecentStudy> recentStudies = List.of();
+
+        if (memberCount > 0) {
+            recentMembers = adminRepository.findRecentMembers();
+        }
+        if (studyCount > 0) {
+            recentStudies = adminRepository.findRecentStudies();
+        }
 
         return new AdminDashboardResponseDto(
             memberCount,
