@@ -72,16 +72,15 @@ public class MemberService {
     // password 찾기
     public String findByPasswordByUsername(String username) {
         Member findMember = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+                .orElseThrow(() -> new EntityNotFoundException("회원이 존재하지 않습니다."));
 
         // 임시 비밀번호 생성 (UUID 앞 8자리)
         String tempPassword = UUID.randomUUID().toString().substring(0, 8);
-        // 암호화 후 member 객체에 set
+
         findMember.setRandomPassword(passwordEncoder.encode(tempPassword));
-        // DB 업데이트
         memberRepository.save(findMember);
 
-        return tempPassword; // 사용자에게 보여줄 임시 비밀번호
+        return tempPassword;
     }
 
     // email 찾기
