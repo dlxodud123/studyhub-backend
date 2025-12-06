@@ -21,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -93,12 +94,12 @@ public class StudyService {
 
     public StudyDetailResponseDto findStudyDetailById(Long id) {
         Study study = studyRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 스터디가 존재하지 않습니다."));
+                .orElseThrow(() -> new EntityNotFoundException("해당 스터디가 존재하지 않습니다."));
 
         return new StudyDetailResponseDto(
             study.getTitle(),
             study.getMember().getUsername(),
-            study.getCreatedAt().toString(),
+            study.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
             study.getContent(),
             study.getCategory() != null ? study.getCategory().getName() : null,
             study.getStudyTags()

@@ -64,7 +64,7 @@
 </div>
 
 <script>
-  const studyId = window.location.pathname.split('/').pop(); // /studies/5 → 5
+  const studyId = window.location.pathname.split('/').pop();
 
   document.getElementById('backBtn').addEventListener('click', () => {
     window.history.back();
@@ -98,13 +98,20 @@
   async function fetchDetail() {
     try {
       const res = await fetch(`/api/studies/detail/${studyId}`);
-      if (!res.ok) throw new Error("데이터 조회 실패");
+
+      if (!res.ok) {
+          const error = await res.json();
+          alert(error.message);
+          return;
+      }
 
       const data = await res.json();
+
       renderDetail(data);
+
     } catch (err) {
       console.error(err);
-      document.getElementById('title').innerText = "불러오기 실패";
+      alert('스터디 내용 불러오는 중 오류가 발생했습니다.');
     }
   }
 
