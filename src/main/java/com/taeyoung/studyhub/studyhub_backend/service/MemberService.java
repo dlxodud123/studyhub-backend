@@ -47,7 +47,7 @@ public class MemberService {
     // 회원 탈퇴
     public void deleteMember(Long id){
         Member member = memberRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
+                .orElseThrow(() -> new EntityNotFoundException("회원이 존재하지 않습니다."));
 
         memberRepository.delete(member);
     }
@@ -55,7 +55,7 @@ public class MemberService {
     // 회원 정보 수정
     public void updateMember(UpdateRequestDto updateRequestDto, Long id) {
         Member member = memberRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
+                .orElseThrow(() -> new EntityNotFoundException("회원이 존재하지 않습니다."));
 
         String encodedPassword = passwordEncoder.encode(updateRequestDto.getPassword());
         member.updateMember(encodedPassword, updateRequestDto.getEmail());
@@ -64,7 +64,7 @@ public class MemberService {
     // username 찾기
     public String findByUsernameByEmail(String email) {
         Member findMember = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+                .orElseThrow(() -> new EntityNotFoundException("회원이 존재하지 않습니다."));
 
         return findMember.getUsername();
     }
@@ -76,14 +76,10 @@ public class MemberService {
 
         // 임시 비밀번호 생성 (UUID 앞 8자리)
         String tempPassword = UUID.randomUUID().toString().substring(0, 8);
-
         // 암호화 후 member 객체에 set
         findMember.setRandomPassword(passwordEncoder.encode(tempPassword));
-
         // DB 업데이트
         memberRepository.save(findMember);
-
-        System.out.println("password : " + tempPassword);
 
         return tempPassword; // 사용자에게 보여줄 임시 비밀번호
     }
