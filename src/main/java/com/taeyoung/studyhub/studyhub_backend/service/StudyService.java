@@ -151,7 +151,7 @@ public class StudyService {
                 comment.getId(),
                 comment.getContent(),
                 comment.getMember().getUsername(),
-                comment.getCreatedAt().toString()
+                comment.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
             ))
             .toList();
     }
