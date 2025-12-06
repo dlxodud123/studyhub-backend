@@ -142,6 +142,7 @@
   // 댓글 등록
   document.getElementById('commentSubmitBtn').addEventListener('click', async () => {
     const content = document.getElementById('commentInput').value.trim();
+
     if (!content) return alert("댓글을 입력해주세요.");
 
     try {
@@ -152,15 +153,20 @@
         body: JSON.stringify({ content })
       });
 
-      if (res.ok) {
-        document.getElementById('commentInput').value = "";
-        loadComments(); // 등록 후 목록 새로고침
-      } else {
-        alert("댓글 등록 실패: " + await res.text());
+      if (!res.ok) {
+          const error = await res.json();
+          alert(error.message);
+          return;
       }
+
+      alert("댓글 등록 성공!");
+
+      document.getElementById('commentInput').value = "";
+      loadComments();
+
     } catch (e) {
       console.error(e);
-      alert("서버 오류");
+      alert('댓글 등록을 실패했습니다.');
     }
   });
 

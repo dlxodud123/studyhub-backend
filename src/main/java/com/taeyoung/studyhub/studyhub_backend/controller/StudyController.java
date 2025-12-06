@@ -86,10 +86,9 @@ public class StudyController {
     @PostMapping("/create/comments/{id}")
     public ResponseEntity<String> createComment(@RequestBody CommentCreateRequestDto commentCreateRequestDto, @PathVariable Long id, Authentication authentication){
         CustomUser user = (CustomUser) authentication.getPrincipal();
-        Long userId = user.getId();
 
         try {
-            studyService.createComment(commentCreateRequestDto.getContent(), userId, id);
+            studyService.createComment(commentCreateRequestDto.getContent(), user.getId(), id);
             return ResponseEntity.ok("댓글이 등록되었습니다.");
         } catch (IllegalArgumentException e) {
             // Member나 Study가 없는 경우

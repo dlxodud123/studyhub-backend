@@ -94,7 +94,7 @@ public class StudyService {
 
     public StudyDetailResponseDto findStudyDetailById(Long id) {
         Study study = studyRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("해당 스터디가 존재하지 않습니다."));
+                .orElseThrow(() -> new EntityNotFoundException("스터디가 존재하지 않습니다."));
 
         return new StudyDetailResponseDto(
             study.getTitle(),
@@ -158,10 +158,10 @@ public class StudyService {
 
     public Comment createComment(String content, Long userId, Long studId) {
         Member member = memberRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Member not found"));
+                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
 
         Study study = studyRepository.findById(studId)
-                .orElseThrow(() -> new IllegalArgumentException("Study not found"));
+                .orElseThrow(() -> new IllegalArgumentException("스터디가 존재하지 않습니다."));
 
         Comment comment = new Comment(content, member, study);
         return commentRepository.save(comment);
