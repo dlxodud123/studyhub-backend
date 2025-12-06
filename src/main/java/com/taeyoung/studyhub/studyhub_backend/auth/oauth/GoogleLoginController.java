@@ -36,9 +36,6 @@ public class GoogleLoginController {
             return "redirect:/login";
         }
 
-        System.out.println("email boolean : " + googleLoginService.checkEmailExists(email));
-        System.out.println("username boolean : " + googleLoginService.checkUsernameExists(username));
-
         // username 활용해 DB로 중복 체크
         if (googleLoginService.checkUsernameExists(username)){
             model.addAttribute("readonlyUsername", false);
@@ -47,6 +44,6 @@ public class GoogleLoginController {
             model.addAttribute("readonlyUsername", true);
         }
 
-        return "socialSignup";
+        return "member/socialSignup";
     }
 }

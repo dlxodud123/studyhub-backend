@@ -5,10 +5,8 @@ import com.taeyoung.studyhub.studyhub_backend.dto.admin.response.AdminDashboardR
 import com.taeyoung.studyhub.studyhub_backend.dto.admin.response.AdminMembersResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.admin.response.AdminStudiesResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.service.AdminService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

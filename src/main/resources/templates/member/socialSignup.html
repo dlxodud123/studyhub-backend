@@ -80,25 +80,38 @@
 
   <script>
     document.getElementById("signupBtn").addEventListener("click", async (e) => {
+
       e.preventDefault();
+
+      const email = document.getElementById("email").value;
       const username = document.getElementById("username").value;
       const password = document.getElementById("password").value;
-      const email = document.getElementById("email").value;
       const provider = "GOOGLE";
 
-      const res = await fetch("/api/members/signup", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, password, email, provider })
-      });
+      if (!password) {
+          alert("비밀번호를 입력해주세요.");
+          return;
+      }
 
-      const text = await res.text();
+      try{
+        const res = await fetch("/api/members/signup", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password, email, provider })
+        });
 
-      if (res.ok) {
-          alert("회원가입 성공!");
-          window.location.href = "/login";
-      } else {
-          alert(text);
+        if (!res.ok) {
+            const error = await res.json();
+            alert(error.message);
+            return;
+        }
+
+        alert("회원가입 성공!");
+        window.location.href = "/login";
+
+      } catch (err) {
+        console.error(err);
+        alert("소셜로그인 중 오류가 발생했습니다.");
       }
     });
   </script>
