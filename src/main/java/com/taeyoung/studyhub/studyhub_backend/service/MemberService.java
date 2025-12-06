@@ -86,9 +86,8 @@ public class MemberService {
     // email 찾기
     public String findByEmailByUsernameAndPassword(String username, String password) {
         Member findMember = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+                .orElseThrow(() -> new EntityNotFoundException("회원이 존재하지 않습니다."));
 
-        // 입력한 비밀번호와 암호화된 비밀번호 비교
         if (passwordEncoder.matches(password, findMember.getPassword())) {
             return findMember.getEmail();
         } else {

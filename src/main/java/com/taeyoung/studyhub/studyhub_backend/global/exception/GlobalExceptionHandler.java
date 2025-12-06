@@ -41,28 +41,28 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponseDto("INTERNAL_SERVER_ERROR", e.getMessage()));
     }
 
-    // 401 UNAUTHORIZED: username이 존재하지 않을때 / 비밀번호가 일치하지 않을 때
-    @ExceptionHandler({UsernameNotFoundException.class, BadCredentialsException.class})
+    // 401 UNAUTHORIZED: username 또는 password가 일치하지 않을 때(로그인 전용(Authentication))
+    @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorResponseDto> handleAuthenticationException(RuntimeException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(new ErrorResponseDto("INVALID_CREDENTIALS", e.getMessage()));
     }
 
-    // 401 UNAUTHORIZED: username이 존재하지 않거나 이메일이 일치하지 않을 때 발생
+    // 401 UNAUTHORIZED: 이메일이 일치하지 않을 때 발생
     @ExceptionHandler(EmailNotMatchException.class)
     public ResponseEntity<ErrorResponseDto> handleEmailNotMatch(EmailNotMatchException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(new ErrorResponseDto("EMAIL_NOT_MATCH", e.getMessage()));
     }
 
-    // 409 CONFLICT: 이미 사용 중인 아이디(username)일 때 발생
+    // 409 CONFLICT: 이미 사용 중인 username일 때 발생(exists)
     @ExceptionHandler(DuplicateUsernameException.class)
     public ResponseEntity<ErrorResponseDto> handleDuplicateUsername(DuplicateUsernameException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(new ErrorResponseDto("DUPLICATE_USERNAME", e.getMessage()));
     }
 
-    // 409 CONFLICT: 이미 사용 중인 이메일(email)일 때 발생
+    // 409 CONFLICT: 이미 사용 중인 email일 때 발생(exists)
     @ExceptionHandler(DuplicateEmailException.class)
     public ResponseEntity<ErrorResponseDto> handleDuplicateEmail(DuplicateEmailException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT)

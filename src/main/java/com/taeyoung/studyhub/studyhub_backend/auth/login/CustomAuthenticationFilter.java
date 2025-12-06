@@ -15,7 +15,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
@@ -39,7 +38,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
             // 1. username으로 회원 조회
             Member member = memberRepository.findByUsername(loginRequest.getUsername())
-                    .orElseThrow(() -> new UsernameNotFoundException("username이 일치하지 않습니다."));
+                    .orElseThrow(() -> new BadCredentialsException("username 또는 password가 일치하지 않습니다."));
 
             // 2. email 검증
             if (!member.getEmail().equals(loginRequest.getEmail())) {
@@ -75,11 +74,9 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         response.setContentType("application/json;charset=UTF-8");
         String message;
         if (failed instanceof BadCredentialsException) {
-            message = "password가 일치하지 않습니다.";
+            message = "username 또는 password가 일치하지 않습니다.";
         } else if (failed instanceof EmailNotMatchException) {
-            message = failed.getMessage(); // email이 일치하지 않습니다
-        } else if (failed instanceof UsernameNotFoundException) {
-            message = failed.getMessage(); // username이 일치하지 않습니다
+            message = failed.getMessage();
         } else {
             message = "인증 실패";
         }
