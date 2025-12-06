@@ -58,11 +58,11 @@
     const categoryId = document.getElementById('categoryId').value;
     const tagsRaw = document.getElementById('tags').value.trim();
 
-    if (!title) { alert('제목을 입력하세요.'); return; }
-    if (!content) { alert('내용을 입력하세요.'); return; }
-    if (!categoryId) { alert('카테고리를 선택하세요.'); return; }
+    if (!title) { alert('제목을 입력해주세요.'); return; }
+    if (!content) { alert('내용을 입력해주세세요.'); return; }
+    if (!categoryId) { alert('카테고리를 입력해주세세요.'); return; }
 
-    const tagIds = []; // 예시: 태그 id가 아닌 이름을 보낸다면 백엔드에서 처리 필요
+    const tagIds = [];
     const tagNames = tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : [];
 
     // 전송할 body (서버 요구사항에 맞춰 조정)
@@ -78,19 +78,21 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
-        credentials: 'include' // 필요 시 (쿠키 인증)
+        credentials: 'include'
       });
 
-      if (res.ok) {
-        alert('작성 완료!');
-        window.location.href = `/study/list`;
-      } else {
-        const text = await res.text();
-        alert('작성 실패: ' + text);
+      if (!res.ok) {
+          const error = await res.json();
+          alert(error.message);
+          return;
       }
+
+      alert('작성 완료!');
+      window.location.href = `/study/list`;
+
     } catch (err) {
       console.error(err);
-      alert('서버 요청 중 오류가 발생했습니다.');
+      alert('스터디 생성 중 오류가 발생했습니다.');
     }
   });
 </script>
