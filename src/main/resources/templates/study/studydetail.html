@@ -168,18 +168,26 @@
   async function loadComments() {
     try {
       const res = await fetch(`/api/studies/comments/${studyId}`);
-      if (!res.ok) throw new Error("댓글 조회 실패");
+
+      if (!res.ok) {
+          const error = await res.json();
+          alert(error.message);
+          return;
+      }
 
       const list = await res.json();
+
       renderComments(list);
+
     } catch (e) {
       console.error(e);
+      alert('댓글 내용 불러오는 중 오류가 발생했습니다.');
     }
   }
 
   // 댓글 렌더링
   function renderComments(comments) {
-    console.log("comments:", comments);
+
     const div = document.getElementById('commentList');
 
     if (!comments.length) {
