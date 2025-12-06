@@ -72,12 +72,12 @@ public class StudyService {
                 .orElseThrow(() -> new EntityNotFoundException("회원이 존재하지 않습니다."));
 
         Category category = categoryRepository.findById(studyCreateRequestDto.getCategoryId())
-                .orElseThrow(() -> new EntityNotFoundException("Category not found"));
+                .orElseThrow(() -> new EntityNotFoundException("카테고리가 존재하지 않습니다."));
 
         Study study = new Study(studyCreateRequestDto.getTitle(), studyCreateRequestDto.getContent(), member, category);
         Study saveStudy = studyRepository.save(study);
 
-        // 중복 태그 제거 + 순서 유지
+        // 중복 태그 제거 + 순서 유지(연관관계 설정)
         Set<String> uniqueTagNames = new LinkedHashSet<>(studyCreateRequestDto.getTagNames());
         for (String tagName : uniqueTagNames) {
             Tag tag = tagRepository.findByName(tagName)

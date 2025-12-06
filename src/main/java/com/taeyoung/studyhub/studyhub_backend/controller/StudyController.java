@@ -41,14 +41,8 @@ public class StudyController {
     public ResponseEntity<String> createStudy(@RequestBody StudyCreateRequestDto studyCreateRequestDto, Authentication authentication) {
         CustomUser user = (CustomUser) authentication.getPrincipal();
 
-        try {
-            studyService.createStudy(studyCreateRequestDto, user.getId());
-            return ResponseEntity.ok("스터디 작성 완료");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("스터디 작성 중 오류가 발생했습니다.");
-        }
+        studyService.createStudy(studyCreateRequestDto, user.getId());
+        return ResponseEntity.ok("스터디 작성 완료!");
     }
 
     @GetMapping("/detail/{id}")
