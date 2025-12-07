@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import java.util.Map;
 
 @Service
-public class GoogleOAuthService {
+public class    GoogleOAuthService {
 
     @Value("${google.client-id}")
     private String clientId;

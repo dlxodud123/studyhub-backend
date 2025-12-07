@@ -53,6 +53,7 @@
           const error = await res.json();
           alert(error.message);
           window.location.href = `/studies/${studyId}`;
+          return;
       }
 
       const data = await res.json();
@@ -96,7 +97,8 @@
       if (!res.ok) {
           const error = await res.json();
           alert(error.message);
-          window.location.href = `/study/${studyId}`;
+          window.location.href = `/studies/${studyId}`;
+          return;
       }
 
       alert('수정이 완료되었습니다.');
@@ -111,10 +113,10 @@
 
   // 취소 → 상세페이지로 이동
   document.getElementById('cancelBtn').addEventListener('click', () => {
-    window.location.href = `/study/${studyId}`;
+    window.location.href = `/studies/${studyId}`;
   });
 
-  loadDetail(); // 초기 데이터 로딩
+  loadDetail();
 </script>
 
 </body>
