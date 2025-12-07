@@ -83,15 +83,19 @@
         credentials: 'include'
       });
 
-      if (res.ok) {
-        alert("삭제되었습니다.");
-        window.location.href = "/study/list";
-      } else {
-        alert("삭제 실패: " + await res.text());
+      if (!res.ok) {
+          const error = await res.json();
+          alert(error.message);
+          window.location.href = `/studies/${studyId}`;
+          return;
       }
+
+      alert("삭제되었습니다.");
+      window.location.href = "/study/list";
+
     } catch (err) {
       console.error(err);
-      alert("서버 오류 발생");
+      alert("스터디 삭제를 실패했습니다.");
     }
   });
 

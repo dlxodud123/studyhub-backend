@@ -70,7 +70,6 @@ public class StudyController {
         CustomUser user = (CustomUser) authentication.getPrincipal();
 
         studyService.deleteStudyById(id, user.getId());
-
         return ResponseEntity.ok("삭제 완료");
     }
 
