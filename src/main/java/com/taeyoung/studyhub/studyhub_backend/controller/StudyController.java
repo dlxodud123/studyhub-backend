@@ -60,8 +60,8 @@ public class StudyController {
     @PutMapping("/edit/{id}")
     public ResponseEntity<String> editStudy(@PathVariable Long id, @RequestBody StudyEditRequestDto studyEditRequestDto, Authentication authentication) {
         CustomUser user = (CustomUser) authentication.getPrincipal();
-        studyService.editStudyById(studyEditRequestDto, id, user.getId());
 
+        studyService.editStudyById(studyEditRequestDto, id, user.getId());
         return ResponseEntity.ok("수정 완료");
     }
 

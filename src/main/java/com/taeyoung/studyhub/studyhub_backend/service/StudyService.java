@@ -140,10 +140,10 @@ public class StudyService {
 
     public void deleteStudyById(Long id, Long userId) {
         Study study = studyRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 스터디가 존재하지 않습니다."));
+                .orElseThrow(() -> new EntityNotFoundException("스터디가 존재하지 않습니다."));
 
         if (!study.getMember().getId().equals(userId)) {
-            throw new IllegalArgumentException("작성자만 삭제할 수 있습니다.");
+            throw new IdNotMatchException("작성자만 삭제할 수 있습니다.");
         }
 
         studyRepository.delete(study);

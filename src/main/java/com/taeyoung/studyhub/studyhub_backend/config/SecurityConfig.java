@@ -6,6 +6,7 @@ import com.taeyoung.studyhub.studyhub_backend.repository.member.MemberRepository
 import jakarta.servlet.http.Cookie;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -36,8 +37,8 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests((authorize) -> authorize
                 .requestMatchers("/login", "/css/**", "/js/**").permitAll()
-                .requestMatchers("/my-page/**", "/modify/**", "/study/edit/**"
-//                        , "/study/create", "/study/edit/**", "/study/delete/**", "/api/studies/delete/**"
+                .requestMatchers("/my-page/**", "/modify/**", "/study/edit/**", "/api/studies/delete/**"
+//                        , "/study/create", "/study/edit/**", "/study/delete/**",
                 ).authenticated()
                 // admin
                 .requestMatchers("/admin/**").hasRole("ADMIN")
