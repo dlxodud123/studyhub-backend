@@ -8,6 +8,7 @@ import com.taeyoung.studyhub.studyhub_backend.dto.study.response.CommentListResp
 import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyDetailResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyEditResponseDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.response.StudyListResponseDto;
+import com.taeyoung.studyhub.studyhub_backend.global.exception.IdNotMatchException;
 import com.taeyoung.studyhub.studyhub_backend.repository.member.MemberRepository;
 import com.taeyoung.studyhub.studyhub_backend.repository.study.CategoryRepository;
 import com.taeyoung.studyhub.studyhub_backend.repository.study.CommentRepository;
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -112,10 +114,10 @@ public class StudyService {
 
     public StudyEditResponseDto findStudyEditById(Long id, Long userId) {
         Study study = studyRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 스터디가 존재하지 않습니다."));
+                .orElseThrow(() -> new EntityNotFoundException("스터디가 존재하지 않습니다."));
 
         if (!study.getMember().getId().equals(userId)) {
-            throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
+            throw new IdNotMatchException("작성자만 수정할 수 있습니다.");
         }
 
         return new StudyEditResponseDto(
@@ -125,9 +127,13 @@ public class StudyService {
         );
     }
 
-    public void editStudyById(StudyEditRequestDto studyEditRequestDto, Long id) {
+    public void editStudyById(StudyEditRequestDto studyEditRequestDto, Long id, Long userId) {
         Study study = studyRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 스터디입니다."));
+                .orElseThrow(() -> new EntityNotFoundException("스터디가 존재하지 않습니다."));
+
+        if (!study.getMember().getId().equals(userId)) {
+            throw new IdNotMatchException("작성자만 수정할 수 있습니다.");
+        }
 
         study.editStudy(studyEditRequestDto.getTitle(), studyEditRequestDto.getContent());
     }

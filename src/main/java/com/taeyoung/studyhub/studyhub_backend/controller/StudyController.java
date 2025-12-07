@@ -51,20 +51,16 @@ public class StudyController {
     }
 
     @GetMapping("/edit/{id}")
-    public ResponseEntity<?> getStudyEdit(@PathVariable Long id, Authentication authentication) {
+    public ResponseEntity<StudyEditResponseDto> getStudyEdit(@PathVariable Long id, Authentication authentication) {
         CustomUser user = (CustomUser) authentication.getPrincipal();
 
-        try {
-            return ResponseEntity.ok(studyService.findStudyEditById(id, user.getId()));
-        } catch (IllegalArgumentException e) {
-            // 상태 코드 403으로 권한/접근 제한 메시지 전송
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
-        }
+        return ResponseEntity.ok(studyService.findStudyEditById(id, user.getId()));
     }
 
     @PutMapping("/edit/{id}")
-    public ResponseEntity<String> editStudy(@PathVariable Long id, @RequestBody StudyEditRequestDto studyEditRequestDto) {
-        studyService.editStudyById(studyEditRequestDto, id);
+    public ResponseEntity<String> editStudy(@PathVariable Long id, @RequestBody StudyEditRequestDto studyEditRequestDto, Authentication authentication) {
+        CustomUser user = (CustomUser) authentication.getPrincipal();
+        studyService.editStudyById(studyEditRequestDto, id, user.getId());
 
         return ResponseEntity.ok("수정 완료");
     }

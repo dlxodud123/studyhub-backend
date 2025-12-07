@@ -40,13 +40,20 @@
 <button id="cancelBtn">취소</button>
 
 <script>
-  const studyId = window.location.pathname.split('/').pop(); // /study/edit/5 → 5
+  const studyId = window.location.pathname.split('/').pop();
 
   // 상세 데이터 불러오기
   async function loadDetail() {
     try {
-      const res = await fetch(`/api/studies/edit/${studyId}`);
-<!--      if (!res.ok) throw new Error("데이터 조회 실패");-->
+      const res = await fetch(`/api/studies/edit/${studyId}`, {
+        credentials: 'include'
+      });
+
+      if (!res.ok) {
+          const error = await res.json();
+          alert(error.message);
+          window.location.href = `/studies/${studyId}`;
+      }
 
       const data = await res.json();
 
@@ -56,13 +63,21 @@
       document.getElementById('content').value = data.content;
 
     } catch (e) {
-      alert(e.message);
+      console.error(e);
+      alert('수정 페이지를 불러오는데 실패했습니다.');
       window.location.href = `/studies/${studyId}`;
     }
   }
 
-  // 저장 버튼 클릭 → PUT 요청
+  // 저장 버튼 클릭
   document.getElementById('saveBtn').addEventListener('click', async () => {
+
+    const title = document.getElementById('title').value.trim();
+    const content = document.getElementById('content').value.trim();
+
+    if (!title) return alert("제목을 입력해주세요.");
+    if (!content) return alert("내용을 입력해주세요.");
+
     const requestBody = {
       title: document.getElementById('title').value,
       content: document.getElementById('content').value
@@ -78,16 +93,19 @@
         body: JSON.stringify(requestBody)
       });
 
-      if (res.ok) {
-        alert('수정이 완료되었습니다.');
-        window.location.href = `/studies/${studyId}`;
-      } else {
-        alert("수정 실패: " + await res.text());
+      if (!res.ok) {
+          const error = await res.json();
+          alert(error.message);
+          window.location.href = `/study/${studyId}`;
       }
+
+      alert('수정이 완료되었습니다.');
+      window.location.href = `/studies/${studyId}`;
 
     } catch (e) {
       console.error(e);
-      alert("서버 오류");
+      alert('수정을 실패했습니다.');
+      window.location.href = `/studies/${studyId}`;
     }
   });
 
