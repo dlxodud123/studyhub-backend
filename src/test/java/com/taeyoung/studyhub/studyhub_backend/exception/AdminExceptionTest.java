@@ -89,4 +89,14 @@ public class AdminExceptionTest {
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessage("회원이 존재하지 않습니다.");
     }
+
+    @Test
+    public void deleteStudy() {
+        // when, then
+        assertThatThrownBy(() ->
+                adminService.deleteStudy(123L)
+        )
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessage("스터디가 존재하지 않습니다.");
+    }
 }
