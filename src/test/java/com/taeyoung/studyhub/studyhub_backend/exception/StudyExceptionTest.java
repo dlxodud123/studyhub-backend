@@ -76,4 +76,16 @@ public class StudyExceptionTest {
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessage("카테고리가 존재하지 않습니다.");
     }
+
+    @Test
+    public void findStudyDetailById() {
+        // when, then
+        assertThatThrownBy(() ->
+                studyService.findStudyDetailById(123L)
+        )
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessage("스터디가 존재하지 않습니다.");
+    }
+
+    
 }
