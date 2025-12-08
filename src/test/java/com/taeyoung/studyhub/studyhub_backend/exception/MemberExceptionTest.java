@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
@@ -100,5 +101,21 @@ public class MemberExceptionTest {
         )
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessage("회원이 존재하지 않습니다.");
+    }
+
+    @Test
+    public void findEmailException() {
+        // when, then
+        assertThatThrownBy(() ->
+                memberService.findByEmailByUsernameAndPassword("user", "password1")
+        )
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessage("회원이 존재하지 않습니다.");
+
+        assertThatThrownBy(() ->
+                memberService.findByEmailByUsernameAndPassword("user1", "password")
+        )
+                .isInstanceOf(BadCredentialsException.class)
+                .hasMessage("비밀번호가 일치하지 않습니다.");
     }
 }
