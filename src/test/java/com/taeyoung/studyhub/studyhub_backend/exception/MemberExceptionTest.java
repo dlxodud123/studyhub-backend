@@ -3,6 +3,7 @@ package com.taeyoung.studyhub.studyhub_backend.exception;
 import com.taeyoung.studyhub.studyhub_backend.domain.member.Member;
 import com.taeyoung.studyhub.studyhub_backend.domain.member.ProviderType;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.SignupRequestDto;
+import com.taeyoung.studyhub.studyhub_backend.dto.member.request.UpdateRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.global.exception.DuplicateEmailException;
 import com.taeyoung.studyhub.studyhub_backend.global.exception.DuplicateUsernameException;
 import com.taeyoung.studyhub.studyhub_backend.repository.member.MemberRepository;
@@ -60,11 +61,26 @@ public class MemberExceptionTest {
 
     @Test
     public void deleteMemberException() {
-        // given, when
+        // when, then
         assertThatThrownBy(() ->
                 memberService.deleteMember(123L)
         )
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessage("회원이 존재하지 않습니다.");
     }
+
+    @Test
+    public void updateMemberException() {
+        // given
+        UpdateRequestDto updateRequestDto = new UpdateRequestDto("updatePassword", "updateEmail");
+
+        // when, then
+        assertThatThrownBy(() ->
+                memberService.updateMember(updateRequestDto, 123L)
+        )
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessage("회원이 존재하지 않습니다.");
+    }
+
+    
 }
