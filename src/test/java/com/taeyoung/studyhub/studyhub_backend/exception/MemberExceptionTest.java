@@ -96,7 +96,7 @@ public class MemberExceptionTest {
     public void findPasswordException() {
         // when, then
         assertThatThrownBy(() ->
-                memberService.findByPasswordByUsername("email")
+                memberService.findByPasswordByUsername("user")
         )
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessage("회원이 존재하지 않습니다.");
