@@ -140,5 +140,21 @@ public class StudyExceptionTest {
                 .hasMessage("작성자만 삭제할 수 있습니다.");
     }
 
+    @Test
+    public void createComment() {
+        // when, then
+        assertThatThrownBy(() ->
+                studyService.createComment("comment3", 123L, study1.getId())
+        )
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessage("회원이 존재하지 않습니다.");
 
+        assertThatThrownBy(() ->
+                studyService.createComment("comment3", member1.getId(), 123L)
+        )
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessage("스터디가 존재하지 않습니다.");
+    }
+
+    
 }
