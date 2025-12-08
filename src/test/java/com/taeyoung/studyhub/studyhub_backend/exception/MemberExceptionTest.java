@@ -82,5 +82,23 @@ public class MemberExceptionTest {
                 .hasMessage("회원이 존재하지 않습니다.");
     }
 
-    
+    @Test
+    public void findUsernameException() {
+        // when, then
+        assertThatThrownBy(() ->
+                memberService.findByUsernameByEmail("email")
+        )
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessage("회원이 존재하지 않습니다.");
+    }
+
+    @Test
+    public void findPasswordException() {
+        // when, then
+        assertThatThrownBy(() ->
+                memberService.findByPasswordByUsername("email")
+        )
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessage("회원이 존재하지 않습니다.");
+    }
 }
