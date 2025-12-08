@@ -2,6 +2,7 @@ package com.taeyoung.studyhub.studyhub_backend.exception;
 
 import com.taeyoung.studyhub.studyhub_backend.domain.member.Member;
 import com.taeyoung.studyhub.studyhub_backend.domain.member.ProviderType;
+import com.taeyoung.studyhub.studyhub_backend.domain.member.Role;
 import com.taeyoung.studyhub.studyhub_backend.domain.study.Category;
 import com.taeyoung.studyhub.studyhub_backend.domain.study.Study;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.SignupRequestDto;
@@ -74,6 +75,16 @@ public class AdminExceptionTest {
         // when, then
         assertThatThrownBy(() ->
                 adminService.deleteMember(123L)
+        )
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessage("회원이 존재하지 않습니다.");
+    }
+
+    @Test
+    public void changeRole() {
+        // when, then
+        assertThatThrownBy(() ->
+                adminService.changeRole(123L, "USER")
         )
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessage("회원이 존재하지 않습니다.");
