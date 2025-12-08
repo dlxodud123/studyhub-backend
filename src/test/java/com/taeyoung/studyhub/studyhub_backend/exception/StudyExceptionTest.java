@@ -12,14 +12,17 @@ import com.taeyoung.studyhub.studyhub_backend.repository.study.CommentRepository
 import com.taeyoung.studyhub.studyhub_backend.repository.study.StudyRepository;
 import com.taeyoung.studyhub.studyhub_backend.service.MemberService;
 import com.taeyoung.studyhub.studyhub_backend.service.StudyService;
-import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -55,5 +58,22 @@ public class StudyExceptionTest {
         comment2 = studyService.createComment("testComment2", member1.getId(), study1.getId());
     }
 
-    
+    @Test
+    public void createStudyException() {
+        // given
+        StudyCreateRequestDto dto = new StudyCreateRequestDto("testTitle3", "testContent3", 123L, List.of("testTag5", "testTag6"));
+
+        // when, then
+        assertThatThrownBy(() ->
+                studyService.createStudy(dto, 123L)
+        )
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessage("회원이 존재하지 않습니다.");
+
+        assertThatThrownBy(() ->
+                studyService.createStudy(dto, member1.getId())
+        )
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessage("카테고리가 존재하지 않습니다.");
+    }
 }
