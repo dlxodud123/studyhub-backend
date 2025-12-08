@@ -123,4 +123,22 @@ public class StudyExceptionTest {
                 .isInstanceOf(IdNotMatchException.class)
                 .hasMessage("작성자만 수정할 수 있습니다.");
     }
+
+    @Test
+    public void deleteStudyById() {
+        // when, then
+        assertThatThrownBy(() ->
+                studyService.deleteStudyById(123L, member1.getId())
+        )
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessage("스터디가 존재하지 않습니다.");
+
+        assertThatThrownBy(() ->
+                studyService.deleteStudyById(study1.getId(), 123L)
+        )
+                .isInstanceOf(IdNotMatchException.class)
+                .hasMessage("작성자만 삭제할 수 있습니다.");
+    }
+
+
 }
