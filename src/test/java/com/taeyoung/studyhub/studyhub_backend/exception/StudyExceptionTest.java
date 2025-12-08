@@ -7,6 +7,7 @@ import com.taeyoung.studyhub.studyhub_backend.domain.study.Comment;
 import com.taeyoung.studyhub.studyhub_backend.domain.study.Study;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.SignupRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.dto.study.request.StudyCreateRequestDto;
+import com.taeyoung.studyhub.studyhub_backend.global.exception.IdNotMatchException;
 import com.taeyoung.studyhub.studyhub_backend.repository.study.CategoryRepository;
 import com.taeyoung.studyhub.studyhub_backend.repository.study.CommentRepository;
 import com.taeyoung.studyhub.studyhub_backend.repository.study.StudyRepository;
@@ -85,6 +86,22 @@ public class StudyExceptionTest {
         )
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessage("스터디가 존재하지 않습니다.");
+    }
+
+    @Test
+    public void findStudyEditById() {
+        // when, then
+        assertThatThrownBy(() ->
+                studyService.findStudyEditById(123L, member1.getId())
+        )
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessage("스터디가 존재하지 않습니다.");
+
+        assertThatThrownBy(() ->
+                studyService.findStudyEditById(study1.getId(), 123L)
+        )
+                .isInstanceOf(IdNotMatchException.class)
+                .hasMessage("작성자만 수정할 수 있습니다.");
     }
 
     
