@@ -80,12 +80,21 @@
     try {
       const res = await fetch(`/api/studies/delete/${studyId}`, {
         method: 'DELETE',
-        credentials: 'include'
+        credentials: 'include',
+        headers: {
+          "X-Requested-With": "XMLHttpRequest"
+        }
       });
 
-      if (res.status === 401 || res.status === 403) {
-        window.location.href = "/login";
-        return;
+      if (res.status === 401) {
+          window.location.href = "/login";
+          return;
+      }
+
+      if (res.status === 403) {
+          const err = await res.json();
+          alert(err.message);
+          return;
       }
 
       if (!res.ok) {

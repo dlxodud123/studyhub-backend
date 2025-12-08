@@ -57,8 +57,8 @@ public class GlobalExceptionHandler {
     // 403 FORBIDDEN: 작성자가 아닌 사용자가 수정 또는 삭제를 시도할 때 발생(.equals())
     @ExceptionHandler(IdNotMatchException.class)
     public ResponseEntity<ErrorResponseDto> handleIdNotMatch(IdNotMatchException e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(new ErrorResponseDto("ID_NOT_MATCH", e.getMessage()));
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new ErrorResponseDto("FORBIDDEN", e.getMessage()));
     }
 
     // 409 CONFLICT: 이미 사용 중인 username일 때 발생(exists)
