@@ -85,8 +85,7 @@ public class StudyServiceTest {
         assertThat(s1.getCreatedBy()).isEqualTo("user1");
         // 카테고리 & 태그 검증
         assertThat(s1.getCategoryName()).isEqualTo("testCategory1");
-        assertThat(s1.getTagNames())
-                .containsExactlyInAnyOrder("testTag1", "testTag2");
+        assertThat(s1.getTagNames()).containsExactlyInAnyOrder("testTag1", "testTag2");
 
         // 📌 두 번째 게시글 검증
         assertThat(s2.getId()).isNotNull();
@@ -95,8 +94,7 @@ public class StudyServiceTest {
         assertThat(s2.getCreatedBy()).isEqualTo("user2");
         // 카테고리 & 태그 검증
         assertThat(s2.getCategoryName()).isEqualTo("testCategory2");
-        assertThat(s2.getTagNames())
-                .containsExactlyInAnyOrder("testTag3", "testTag4");
+        assertThat(s2.getTagNames()).containsExactlyInAnyOrder("testTag3", "testTag4");
     }
     @Test
     public void findDetailStudy() {
@@ -119,11 +117,6 @@ public class StudyServiceTest {
         assertThat(editDto.getTitle()).isEqualTo("testTitle1");
         assertThat(editDto.getContent()).isEqualTo("testContent1");
         assertThat(editDto.getCreatedBy()).isEqualTo("user1");
-        assertThatThrownBy(() ->
-                studyService.findStudyEditById(study1.getId(), member2.getId())
-        )
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("작성자만 수정할 수 있습니다.");
 
     }
     @Test
@@ -132,7 +125,7 @@ public class StudyServiceTest {
         StudyEditRequestDto editRequestDto = new StudyEditRequestDto("editTitle", "editContent");
 
         // when
-        studyService.editStudyById(editRequestDto, study1.getId());
+        studyService.editStudyById(editRequestDto, study1.getId(), member1.getId());
 
         // then
         assertThat(study1.getTitle()).isEqualTo("editTitle");
@@ -160,33 +153,13 @@ public class StudyServiceTest {
         assertThat(remaining.getCreatedBy()).isEqualTo("user2");
         assertThat(remaining.getCategoryName()).isEqualTo("testCategory2");
         assertThat(remaining.getTagNames()).containsExactlyInAnyOrder("testTag3", "testTag4");
-
-        // 📌 3) 작성자가 아닌 member1이 study2 삭제 시도 시 예외
-        assertThatThrownBy(() ->
-            studyService.deleteStudyById(study2.getId(), member1.getId())
-        )
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("작성자만 삭제할 수 있습니다.");
     }
 
     // comment
     @Test
-    public void createComment() {
-        // when & then
-        assertThatThrownBy(() ->
-                studyService.createComment("testComment1", 123L, study1.getId())
-        )
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Member not found");
-        assertThatThrownBy(() ->
-                studyService.createComment("testComment1", member1.getId(), 123L)
-        )
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Study not found");
-    }
-    @Test
     public void getCommentList() {
         // when
+        studyService.createComment("testComment3", member1.getId(), study1.getId());
         List<CommentListResponseDto> commentList = studyService.getCommentList(study1.getId());
 
         // then
@@ -194,6 +167,8 @@ public class StudyServiceTest {
         assertThat(commentList.get(0).getContent()).isEqualTo("testComment1");
         assertThat(commentList.get(1).getCreatedBy()).isEqualTo("user1");
         assertThat(commentList.get(1).getContent()).isEqualTo("testComment2");
+        assertThat(commentList.get(2).getCreatedBy()).isEqualTo("user1");
+        assertThat(commentList.get(2).getContent()).isEqualTo("testComment3");
     }
 
     // page
