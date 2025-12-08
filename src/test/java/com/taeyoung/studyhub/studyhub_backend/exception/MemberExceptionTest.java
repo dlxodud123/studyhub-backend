@@ -1,11 +1,13 @@
 package com.taeyoung.studyhub.studyhub_backend.exception;
 
+import com.taeyoung.studyhub.studyhub_backend.domain.member.Member;
 import com.taeyoung.studyhub.studyhub_backend.domain.member.ProviderType;
 import com.taeyoung.studyhub.studyhub_backend.dto.member.request.SignupRequestDto;
 import com.taeyoung.studyhub.studyhub_backend.global.exception.DuplicateEmailException;
 import com.taeyoung.studyhub.studyhub_backend.global.exception.DuplicateUsernameException;
 import com.taeyoung.studyhub.studyhub_backend.repository.member.MemberRepository;
 import com.taeyoung.studyhub.studyhub_backend.service.MemberService;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +27,15 @@ public class MemberExceptionTest {
     @Autowired private MemberService memberService;
     @Autowired private PasswordEncoder passwordEncoder;
 
+    private Member member1;
+    private Member member2;
+
     @BeforeEach
     public void before() {
         SignupRequestDto signupRequestDto1 = new SignupRequestDto("user1", "password1", "email1", ProviderType.LOCAL);
         SignupRequestDto signupRequestDto2 = new SignupRequestDto("user2", "password2", "email2", ProviderType.LOCAL);
-        memberService.registerMember(signupRequestDto1);
-        memberService.registerMember(signupRequestDto2);
+        member1 = memberService.registerMember(signupRequestDto1);
+        member2 = memberService.registerMember(signupRequestDto2);
     }
 
     @Test
@@ -51,5 +56,15 @@ public class MemberExceptionTest {
         )
                 .isInstanceOf(DuplicateEmailException.class)
                 .hasMessage("이미 사용중인 email입니다.");
+    }
+
+    @Test
+    public void deleteMemberException() {
+        // given, when
+        assertThatThrownBy(() ->
+                memberService.deleteMember(123L)
+        )
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessage("회원이 존재하지 않습니다.");
     }
 }
