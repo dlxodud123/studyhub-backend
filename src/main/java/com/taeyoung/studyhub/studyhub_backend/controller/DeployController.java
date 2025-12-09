@@ -2,6 +2,7 @@ package com.taeyoung.studyhub.studyhub_backend.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -11,5 +12,10 @@ public class DeployController {
     @GetMapping("/deploy")
     public String deploy() {
         return "배포 성공!";
+    }
+
+    @GetMapping("/deploy/{number}")
+    public Long deploy2(@PathVariable Long number) {
+        return number;
     }
 }
