@@ -22,5 +22,5 @@ public class DeployController {
     @GetMapping("/deploy/3/{number}")
     public Long deploy3(@PathVariable Long number) {
         return number;
-    }
+    } 
 }
