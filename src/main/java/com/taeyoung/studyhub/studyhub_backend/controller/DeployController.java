@@ -23,4 +23,9 @@ public class DeployController {
     public Long deploy3(@PathVariable Long number) {
         return number;
     }
+
+    @GetMapping("/deploy/4")
+    public String deploy3() {
+        return "github action success";
+    }
 }
