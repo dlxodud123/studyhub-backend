@@ -14,8 +14,13 @@ public class DeployController {
         return "배포 성공!";
     }
 
-    @GetMapping("/deploy/{number}")
+    @GetMapping("/deploy/2/{number}")
     public Long deploy2(@PathVariable Long number) {
+        return number;
+    }
+
+    @GetMapping("/deploy/3/{number}")
+    public Long deploy3(@PathVariable Long number) {
         return number;
     }
 }
