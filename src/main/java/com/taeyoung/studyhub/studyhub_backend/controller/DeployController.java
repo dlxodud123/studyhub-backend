@@ -25,7 +25,7 @@ public class DeployController {
     }
 
     @GetMapping("/deploy/4")
-    public String deploy3() {
+    public String deploy4() {
         return "github action success";
     }
 }
