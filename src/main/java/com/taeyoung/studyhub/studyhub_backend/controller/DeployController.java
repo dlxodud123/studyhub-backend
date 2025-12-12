@@ -33,4 +33,9 @@ public class DeployController {
     public String deploy5() {
         return "최종 확인!";
     }
+
+    @GetMapping("/deploy/6")
+    public String deploy6() {
+        return "최종 확인! 진짜로! nginx 적용";
+    }
 }
