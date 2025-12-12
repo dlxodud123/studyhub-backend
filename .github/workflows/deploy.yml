@@ -2,7 +2,7 @@ name: Deploy to EC2
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ develop ]   # develop 브랜치에 push될 때 실행
 
 jobs:
   deploy:
@@ -12,6 +12,18 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
+    - name: Build project
+      run: ./gradlew build -x test  # CI에서 빌드
+
+    - name: Copy JAR to EC2
+      uses: appleboy/scp-action@v0.1.1
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_KEY }}
+        source: "build/libs/studyhub-backend-0.0.1-SNAPSHOT.jar"
+        target: "~/app/studyhub-backend-0.0.1-SNAPSHOT.jar"
+
     - name: Run deploy script on EC2
       uses: appleboy/ssh-action@v0.1.7
       with:
@@ -20,6 +32,5 @@ jobs:
         key: ${{ secrets.EC2_KEY }}
         script: |
           cd ~/app
-          git pull origin develop
           chmod +x ./deploy.sh
           ./deploy.sh
