@@ -17,8 +17,8 @@ jobs:
 
     - name: Create PEM file
       run: |
-        echo "${{ secrets.EC2_KEY }}" > ~/studyhub-key.pem
-        chmod 600 ~/studyhub-key.pem
+        echo "${{ secrets.EC2_KEY }}" > $GITHUB_WORKSPACE/studyhub-key.pem
+        chmod 600 $GITHUB_WORKSPACE/studyhub-key.pem
 
     - name: Build project
       run: ./gradlew build -x test  # CI에서 빌드
@@ -28,7 +28,7 @@ jobs:
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USER }}
-        key_path: ~/studyhub-key.pem
+        key_path: ${{ github.workspace }}/studyhub-key.pem
         source: "build/libs/studyhub-backend-0.0.1-SNAPSHOT.jar"
         target: "/home/ec2-user/app/studyhub-backend-0.0.1-SNAPSHOT.jar"
 
@@ -37,7 +37,7 @@ jobs:
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USER }}
-        key_path: ~/studyhub-key.pem 
+        key_path: ${{ github.workspace }}/studyhub-key.pem
         script: |
           cd ~/app
           chmod +x ./deploy.sh
