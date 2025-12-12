@@ -28,4 +28,9 @@ public class DeployController {
     public String deploy4() {
         return "github action success";
     }
+
+    @GetMapping("/deploy/5")
+    public String deploy5() {
+        return "최종 확인!";
+    }
 }
