@@ -21,7 +21,9 @@ jobs:
         chmod 600 $GITHUB_WORKSPACE/studyhub-key.pem
 
     - name: Build project
-      run: ./gradlew build -x test  # CI에서 빌드
+      run: |
+        ./gradlew build -x test  # CI에서 빌드
+        ls -lh build/libs/
 
     - name: Copy JAR to EC2
       uses: appleboy/scp-action@v0.1.4
