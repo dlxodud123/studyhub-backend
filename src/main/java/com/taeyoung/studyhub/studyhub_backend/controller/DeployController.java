@@ -48,8 +48,14 @@ public class DeployController {
     public String deploy8() {
         return "축하합니다!진짜로!";
     }
+
     @GetMapping("/deploy/9")
     public String deploy9() {
         return "축하합니다!진짜로!asdf";
+    }
+
+    @GetMapping("/deploy/10")
+    public String deploy10() {
+        return "축하합니다!진짜로!asdf101010";
     }
 }
