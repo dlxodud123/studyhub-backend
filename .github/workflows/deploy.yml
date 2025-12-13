@@ -20,6 +20,6 @@ jobs:
         key: ${{ secrets.EC2_KEY }}
         script: |
           cd ~/app
-          git pull origin develop     
+          # git pull origin develop     
           chmod +x ./deploy.sh
           ./deploy.sh
