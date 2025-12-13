@@ -58,4 +58,9 @@ public class DeployController {
     public String deploy10() {
         return "축하합니다!진짜로!asdf101010";
     }
+
+    @GetMapping("/deploy/11")
+    public String deploy11() {
+        return "축하합니다!진짜로!asdf11111111111111111";
+    }
 }
