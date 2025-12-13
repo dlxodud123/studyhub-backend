@@ -43,4 +43,9 @@ public class DeployController {
     public String deploy7() {
         return "축하합니다!";
     }
+
+    @GetMapping("/deploy/8")
+    public String deploy8() {
+        return "축하합니다!진짜로!";
+    }
 }
