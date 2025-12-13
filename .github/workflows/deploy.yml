@@ -20,7 +20,7 @@ jobs:
         key: ${{ secrets.EC2_KEY }}
         script: |
           cd ~/app
-          # git pull origin develop     
-          git reset --hard origin/develop # master → develop으로 변경
+          git pull origin develop     
+          # git reset --hard origin/develop master → develop으로 변경
           chmod +x ./deploy.sh
           ./deploy.sh
