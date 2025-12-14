@@ -50,5 +50,7 @@ jobs:
             cd ~/app
             # 기존 서버 종료
             pkill -f studyhub-backend-0.0.1-SNAPSHOT.jar || true
+            GOOGLE_CLIENT_ID="${{ secrets.GOOGLE_CLIENT_ID }}" \
+            GOOGLE_CLIENT_SECRET="${{ secrets.GOOGLE_CLIENT_SECRET }}" \
             # 새 서버 실행
             nohup java -jar build/libs/studyhub-backend-0.0.1-SNAPSHOT.jar > backend.log 2>&1 &
