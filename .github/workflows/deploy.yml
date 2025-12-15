@@ -47,11 +47,13 @@ jobs:
           # 타임아웃 충분히 늘리기
           command_timeout: 10m
           script: |
-            cd ~/app
-            # 기존 서버 종료
+            cd ~/app || exit 1
+            
+            echo "> Kill old process"
             pkill -f studyhub-backend-0.0.1-SNAPSHOT.jar || true
+
+            echo "> Start new server"
             GOOGLE_CLIENT_ID="${{ secrets.GOOGLE_CLIENT_ID }}" \
             GOOGLE_CLIENT_SECRET="${{ secrets.GOOGLE_CLIENT_SECRET }}" \
-            # 새 서버 실행
-            nohup java -jar build/libs/studyhub-backend-0.0.1-SNAPSHOT.jar > backend.log 2>&1 & 
-            disown
+            nohup setsid java -jar build/libs/studyhub-backend-0.0.1-SNAPSHOT.jar \
+              > backend.log 2>&1 < /dev/null &
