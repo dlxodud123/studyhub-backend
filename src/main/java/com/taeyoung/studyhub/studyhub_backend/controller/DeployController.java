@@ -68,4 +68,9 @@ public class DeployController {
     public String deploy12() {
         return "축하합니다!진짜로!12";
     }
+
+    @GetMapping("/deploy/success")
+    public String deploySuccess() {
+        return "마지막 배포 테스트";
+    }
 }
