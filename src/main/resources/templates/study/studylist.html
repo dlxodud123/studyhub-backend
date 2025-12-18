@@ -81,7 +81,7 @@
       });
 
       try {
-        const res = await fetch(`/api/studies?` + query.toString());
+        const res = await fetch(`/api/studies?` + query.toString()); 
 
         if (!res.ok) {
             const error = await res.json();
